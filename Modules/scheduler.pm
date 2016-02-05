@@ -207,8 +207,10 @@ sub slurmRun
     
     #Adding slurm options
     my $launcherCommand = "sbatch ".$slurmOptions;
+    my $date =`date +%Y_%m_%d_%H_%M_%S`;
+    chomp $date;
     #Creating the bash script for slurm to launch the command
-    my $scriptName="~/slurmScript_".date.".sh";
+    my $scriptName="~/slurmScript_".$date.".sh";
     my $bashScriptCreationCommand= "echo \"#!/bin/bash\n".$commandLine."\nexit 0;\" | cat - > $scriptName && chmod 777 $scriptName";
     toolbox::run($bashScriptCreationCommand);
     ##DEBUG toolbox::exportLog("INFOS : $0 : Created the slurm bash file",1);
