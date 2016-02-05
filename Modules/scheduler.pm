@@ -273,7 +273,7 @@ sub slurmRun
 sub mprunRun
 { #for SLURM  MPRUN cluster, running using ccc_msub
     
-    my $msubOptionsHash=toolbox::extractHashSoft($configInfo,"msub");
+    my $msubOptionsHash=toolbox::extractHashSoft($configInfo,"mprun");
     my $msubOptions=toolbox::extractOptions($msubOptionsHash);
     
     #Adding slurm options
