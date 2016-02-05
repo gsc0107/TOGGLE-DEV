@@ -541,7 +541,7 @@ sub mprunWait
     sleep 25;#Needed for ccc_macct to register infos...
     toolbox::exportLog("\n#########################################\nJOBS SUMMARY\n#########################################
 \n---------------------------------------------------------
-Individual\tJobID\tNode\tExitStatus
+Individual\tJobID\tExitStatus
 ---------------------------------------------------------",1);
     
     foreach my $individual (sort {$a cmp $b} keys %jobHash)
