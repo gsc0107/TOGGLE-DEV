@@ -559,7 +559,7 @@ Individual\tJobID\tNode\tExitStatus
       }
       my @fields = split /\s+/, $macctOutput;
 
-      if ($fields[5] eq "COMPLETED") #No errors
+      if ($$macctOutput=~ m/COMPLETED/) #No errors
       {
 	$outputLine .= "Normal";
       }
