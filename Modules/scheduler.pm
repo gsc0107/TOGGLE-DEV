@@ -68,7 +68,7 @@ sub launcher { #Global function for launching, will recover the command to be la
     {
         case ($hashCapability->{"sge"} && defined $$configInfo{"sge"}){$runOutput = &sgeRun} #For SGE running
         case ($hashCapability->{"slurm"} && defined $$configInfo{"slurm"}){$runOutput = &slurmRun} #For SLURM running
-	case ($hashCapability->{"mprun"} && defined $$configInfo{"mprun"}){$runOutput = &smprunRun} #For mprun running
+	case ($hashCapability->{"mprun"} && defined $$configInfo{"mprun"}){$runOutput = &mprunRun} #For mprun running
         
         #If no scheduler available or configurated in the config info file, let's run it in a normal way
         else {$runOutput = &normalRun};
