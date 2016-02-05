@@ -360,7 +360,7 @@ sub waiter
     {
         case ($hashCapability->{"sge"} && defined $$configInfo{"sge"}){$stopWaiting = &sgeWait} #For SGE running
         case ($hashCapability->{"slurm"} && defined $$configInfo{"slurm"}){$stopWaiting = &slurmWait} #For SLURM running
-	case ($hashCapability->{"mprun"} && defined $$configInfo{"mprun"}){$stopWaiting = &smprunWait} #For mprun running
+	case ($hashCapability->{"mprun"} && defined $$configInfo{"mprun"}){$stopWaiting = &mprunWait} #For mprun running
 
     }
     return $stopWaiting;
