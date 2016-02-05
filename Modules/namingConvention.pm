@@ -99,6 +99,9 @@ sub correctName
 	#FOR SLURM
 	case ($name =~ m/slurm/i){$correctedName="slurm";} #Correction for slurm configuration
 	
+	#FOR MPRUN
+	case ($name =~ m/mprun/i){$correctedName="mprun";} #Correction for mprun configuration
+	
         #FOR bwa.pm
         case ($name =~ m/bwa[\s|\.|\-| \/|\\|\|]*aln/i){$correctedName="bwaAln"; } #Correction for bwaAln
         case ($name =~ m/bwa[\s|\.|\-| \/|\\|\|]*sampe/i){$correctedName="bwaSampe"} # Correction for bwaSampe
