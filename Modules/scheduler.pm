@@ -561,12 +561,12 @@ Individual\tJobID\tNode\tExitStatus
 
       if ($$macctOutput=~ m/COMPLETED/) #No errors
       {
-	$outputLine .= "Normal";
+	$outputLine = "$individual\t$jobHash{$individual}\tNormal";
       }
       else
       {
 	push @jobsInError, $individual;
-	$outputLine .= "Error";
+	$outputLine = "$individual\t$jobHash{$individual}\tError";
       }
 
       
