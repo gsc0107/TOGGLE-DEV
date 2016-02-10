@@ -2,7 +2,18 @@ MANUAL for TOGGLEv3 using ONTHEFLY creation of PIPELINES
 ===========
 SUMMARY
 
-[PRE REQUISITES](#prerequisites)
+* [PRE REQUISITES](#prerequisites)
+* [LAUNCHING AN ANALYSIS](#launching)
+* [SENDING OPTIONS](#sendingOptions)
+* [CREATING A PIPELINE](#creatingPipeline)
+ *  [PROVIDING AN ORDER](#order)
+ * [SAME SOFTWARE REPEATED MULTIPLE TIMES](#samesoftmultiple)
+ * [GIVING A COMMON STEP TO ALL INDIVIDUALS](#commonstep)
+* [CLEANING STEPS](#cleaning)
+* [COMPRESSING STEPS](#compressing)
+* [SCHEDULER AND PARALLEL RUNS](#scheduling)
+* [DRAWING THE PIPELINE](#drawing)
+
 
 The *onTheFly* version allows users to create their own customized pipelines.
 You can modify not only the different options for each software but also define specific organization for your analysis.
@@ -19,7 +30,7 @@ For *Fastq* files, only one underscore ('_') is authorized, before the direction
 
 Please use only UTF-8 standard symbols, no weird characters or space, pipe, tilde or any type of commas.
 
-# Launching an analysis
+# <a name="launching"></a>Launching an analysis
 The current version is based on the **toggleGenerator.pl** script
 
 ````
@@ -52,7 +63,7 @@ Any software configuration will start as follows:
  option2
  ````
 
-# Sending options
+# <a name="sendingOptions"></a>Sending options
 As for the previous version, you can address any option to any given software (as soon as the given option exists for the given software ^^) as follows:
 ````
 $bwaAln
@@ -70,7 +81,7 @@ $BWA ALN
 The software name is not case sensitive and the subprogram can be "glued" to the name (bwaALN is recognized, as well as bwa aln).
 
 
-# Creating a pipeline
+# <a name="creatingPipeline"></a>Creating a pipeline
 
 The **toggleGenerator.pl** script will use the configuration file informations (generally named as *software.config.txt* file, but not mandatory) to create specific pipeline scripts in the output folder called **toggleBzz.pl** for individual treatments (individual mapping e.g.) and **toggleMultiple.pl** for global treatment (global SNP calling e.g.).
 
@@ -78,7 +89,7 @@ The order will be verified before creating the scripts, by checking if the outpu
 
 ![TOGGLE pipeline](TogglePipeline.png)
 
-### Providing an order
+### <a name="order"></a>Providing an order
 The order of a specific pipeline is provided in the *software.config.txt* as the software *order*
 
 Thus, if you provide option such as:
@@ -100,7 +111,7 @@ $order
 2=gatkSelectVariants
 ````
 
-### Same software repeated multiple times
+### <a name="samesoftmultiple"></a>Same software repeated multiple times
 
 If you want to adress multiple times the same step BUT with different configurations (e.g. a first samtools view to obtain a BAM then a second samtools view to clean this BAM using the -f option), you have to indicate as follows
 ````
@@ -120,7 +131,7 @@ $samtools View 2
 -f 0x02
 ````
 
-### Giving a common step to all individuals (multiple entry files)
+### <a name="commonstep"></a>Giving a common step to all individuals (multiple entry files)
 
 If you want for instance to map all individuals (multiple files) separately then perform a common SNP calling, please add a step number higher than 999.
 
@@ -146,7 +157,7 @@ $order
 
 The pipeline will treat the data as a global pipeline in this case, without separating the individual files.
 
-# Cleaning steps
+# <a name="cleaning"></a>Cleaning steps
 In order to gain hard drive space, you may want to remove some steps from your complete analysis.
 
 In this case, you can specify in the configuration file which step must be REMOVED along the pipeline (as soon as the step following them has been correctly completed), using the key *cleaner*.
@@ -165,7 +176,7 @@ $cleaner
 
 There only the last step result (samtools sort) will be conserved. The folders and logs of the cleaned steps are conserved, but not the resulting files.
 
-# Compressing steps
+# <a name="compressing"></a>Compressing steps
 In order to gain hard drive space but conserving data, you may want to compress some steps from your complete analysis.
 
 In this case, you can specify in the configuration file which step must be COMPRESSED in tar.gz along the pipeline (as soon as the step following them has been correctly completed), using the key *compress*.
@@ -186,7 +197,7 @@ There only the last step result (samtools sort) will be conserved, the other bei
 
 BE CAREFUL: CLEANING IS OF HIGHER ORDER THAN COMPRESS. If the same step is required to be cleaned AND compressed, it will be only cleaned!
 
-# Scheduler and parallel runs
+# <a name="scheduling"></a>Scheduler and parallel runs
 The current version is scheduler-aware (**SGE**, **MPRUN** and **Slurm** on v0.3), and is able to decide by itself to launch on such a system.
 The jobs will be launched in parallel however only if the *software.config* file contains informations for scheduling, *i.e.* the queue name, number of core/threads per jobs, etc...
 
@@ -205,6 +216,6 @@ If the *software.config* file contains those **SGE/Slurm/MPRUN** informations AN
 
 Moreover, in parallel as in linear mode, an error in one individual will not stop the whole process. This individual will be marked as error in the error log, but the others will continue.
 
-# Drawing the pipeline
+# <a name="drawing"></a>Drawing the pipeline
 If *Graphviz* is installed on the running server, the **toggleGenerator.pl** script will also generate a graphical view of the pipeline in the output folder.
 If *Graphviz* is not installed, a .dot file is nevertheless created, allowing the user to create a graphical view on another machine having *Graphviz*
