@@ -395,7 +395,7 @@ sub samToolsFlagstat
 #SNP calling, using a list of BAM as input
 sub samToolsMpileUp
 {
-     my($bamFileList,$snpFileOut,$optionsHachees)=@_;
+     my($bamFileList,$mpileupFileOut,$optionsHachees)=@_;
      
      #Verifying the input BAM list if they are true bam
      my $inputBam;
@@ -429,7 +429,7 @@ sub samToolsMpileUp
      }
      
      #samtools mpileup command output the result in STDOUT, thus we use the ">" to redirect it to the output file
-     my $command=$samtools." mpileup ".$options." ".$inputBam." > ".$snpFileOut;
+     my $command=$samtools." mpileup ".$options." ".$inputBam." > ".$mpileupFileOut;
      
      #toolbox::exportLog($command."\n",1);
      #Execute command
