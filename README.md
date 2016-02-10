@@ -93,6 +93,7 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 - samToolsIdxstats
 - samToolsDepth
 - samToolsFlagstat
+- samToolsMpileUp
 
 #####PicardTools (http://broadinstitute.github.io/picard/)
 

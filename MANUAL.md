@@ -1,6 +1,6 @@
 MANUAL for TOGGLEv3 using ONTHEFLY creation of PIPELINES
 ===========
-SUMMARY
+# SUMMARY
 
 * [PRE REQUISITES](#prerequisites)
 * [LAUNCHING AN ANALYSIS](#launching)
@@ -13,6 +13,7 @@ SUMMARY
 * [CLEANING STEPS](#cleaning)
 * [COMPRESSING STEPS](#compressing)
 * [SCHEDULER AND PARALLEL RUNS](#scheduling)
+* [OUTPUT AND ERROR LOGS](#logs)
 * [DRAWING THE PIPELINE](#drawing)
 
 
@@ -216,6 +217,13 @@ $sge
 If the *software.config* file contains those **SGE/Slurm/MPRUN** informations AND the machine is **SGE/Slurm/MPRUN** capable, the *toggleBzz.pl* and the *toggleMultiple.pl* scripts will be launched as parallel jobs.
 
 Moreover, in parallel as in linear mode, an error in one individual will not stop the whole process. This individual will be marked as error in the error log, but the others will continue.
+
+# <a name="logs"></a>Output and Error Logs
+
+TOGGLE will generate two main types of logs, the *.o* for normal output and the *.e* for the errors and warnings (these last ones are normally empty files).
+Each level of TOGGLE will generate this pair of log:
+* **GLOBAL_ANALYSIS_date.o/.e** logs represent the general output for the complete analysis (*toggleGenerator.pl* logs). They are located at the root of the output directory.
+* **IndividualName_global_log.o/.e** logs represent the local output for sub analysis (*toggleBzz.pl* and *toggleMultiple.pl* logs). They are located in their respective subdirectories in the output folder.
 
 # <a name="drawing"></a>Drawing the pipeline
 If *Graphviz* is installed on the running server, the **toggleGenerator.pl** script will also generate a graphical view of the pipeline in the output folder.
