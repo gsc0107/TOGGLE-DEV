@@ -64,7 +64,7 @@ OUT=NA
 
 $samToolsMpileUp
 IN=bam
-OUT=vcf
+OUT=mpileup
 
 $fastqc
 IN=fastq,bam
