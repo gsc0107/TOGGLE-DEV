@@ -184,7 +184,7 @@ There only the last step result (samtools sort) will be conserved, the other bei
 BE CAREFUL: CLEANING IS OF HIGHER ORDER THAN COMPRESS. If the same step is required to be cleaned AND compressed, it will be only cleaned!
 
 # Scheduler and parallel runs
-The current version is scheduler-aware (**SGE** and **Slurm** on v0.3), and is able to decide by itself to launch on such a system.
+The current version is scheduler-aware (**SGE**, **MPRUN** and **Slurm** on v0.3), and is able to decide by itself to launch on such a system.
 The jobs will be launched in parallel however only if the *software.config* file contains informations for scheduling, *i.e.* the queue name, number of core/threads per jobs, etc...
 
 As an example for **SGE**:
@@ -198,7 +198,7 @@ $sge
 
 ````
 
-If the *software.config* file contains those **SGE** informations AND the machine is **SGE** capable, the *toggleBzz.pl* and the *toggleMultiple.pl* scripts will be launched as parallel jobs.
+If the *software.config* file contains those **SGE/Slurm/MPRUN** informations AND the machine is **SGE/Slurm/MPRUN** capable, the *toggleBzz.pl* and the *toggleMultiple.pl* scripts will be launched as parallel jobs.
 
 Moreover, in parallel as in linear mode, an error in one individual will not stop the whole process. This individual will be marked as error in the error log, but the others will continue.
 
