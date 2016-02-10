@@ -9,6 +9,7 @@ SUMMARY
  *  [PROVIDING AN ORDER](#order)
  * [SAME SOFTWARE REPEATED MULTIPLE TIMES](#samesoftmultiple)
  * [GIVING A COMMON STEP TO ALL INDIVIDUALS](#commonstep)
+ * [STARTING ONLY A COMMON TREATMENT](#commononly)
 * [CLEANING STEPS](#cleaning)
 * [COMPRESSING STEPS](#compressing)
 * [SCHEDULER AND PARALLEL RUNS](#scheduling)
@@ -146,7 +147,7 @@ This pipeline will map FASTQ then sort per coordinates the SAM for each individu
 
 **Warnings**: if you want to map and call SNP from only one file, you do not need to call a 1000+ step (here *gatkUnifiedGenotyper* would be then the 4th step).
 
-### Starting only as a common treatment
+### <a name="commononly"></a>Starting only as a common treatment
 If you want only a global treatment **for multiple files** (you may have all your formatted BAM and you want to perform the calling and subsequent steps), you can create the following pipeline:
 ````
 $order
