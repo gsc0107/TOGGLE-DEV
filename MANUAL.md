@@ -1,12 +1,15 @@
 MANUAL for TOGGLEv3 using ONTHEFLY creation of PIPELINES
 ===========
+SUMMARY
+
+[PRE REQUISITES](#prerequisites)
 
 The *onTheFly* version allows users to create their own customized pipelines.
 You can modify not only the different options for each software but also define specific organization for your analysis.
 
 You can therefore remove some steps compared to the previous version, starting from SAM/BAM or VCF files instead of FASTQ only, asking for individual treatments only, individual then common (such as mapping followed by common calling), or even only common treatment.
 
-# PRE REQUISITES
+# <a name="prerequisites"></a>PRE REQUISITES
 
 THE FILE NAMES MUST BE UNDER THE FORM **individual1_1.fastq**, **mapping1.sam**, **myVcf.vcf**
 
