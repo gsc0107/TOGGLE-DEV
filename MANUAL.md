@@ -4,6 +4,7 @@ MANUAL for TOGGLEv3 using ONTHEFLY creation of PIPELINES
 
 * [PRE REQUISITES](#prerequisites)
 * [LAUNCHING AN ANALYSIS](#launching)
+* [RESULTING FOLDER](#finalFolder)
 * [SENDING OPTIONS](#sendingOptions)
 * [CREATING A PIPELINE](#creatingPipeline)
  *  [PROVIDING AN ORDER](#order)
@@ -64,6 +65,16 @@ Any software configuration will start as follows:
  option1
  option2
  ````
+
+ # <a name="finalFolder"></a>What will you have in results ?
+
+TOGGLE will generate an output folder containing different files and subfolders, as follows:
+
+ ![TOGGLE Final Folder](toggleOutputFolder.png)
+
+ The final results are contained in the **finalResults** folder.
+ TOGGLE will also copy the *software config* file corresponding to the analysis, in order users can recover their options.
+ The **output** folder contains all sub analyses, i.e.
 
 # <a name="sendingOptions"></a>Sending options
 As for the previous version, you can address any option to any given software (as soon as the given option exists for the given software ^^) as follows:
