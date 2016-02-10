@@ -62,6 +62,10 @@ $samToolsFlagstat
 IN=bam
 OUT=NA
 
+$samToolsMpileUp
+IN=bam
+OUT=vcf
+
 $fastqc
 IN=fastq,bam
 OUT=NA

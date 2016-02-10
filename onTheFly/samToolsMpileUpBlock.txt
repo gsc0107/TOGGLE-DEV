@@ -1,0 +1,28 @@
+
+##########################################
+# Block for samTools::samToolsMpileUp
+##########################################
+
+$listOfBam=\();
+foreach my $file (@{$fileList}) #Checking the type of files that must be SAM or BAM
+{
+    if ($file =~ m/bam$/) # the file type is normally sam of bam
+    {
+        push @$listOfBam, $file;
+    }
+}
+
+if (scalar @$listOfBam == 0) #No BAM file found in the previous folder
+{
+    toolbox::exportLog("ERROR : $0 : No SAM/BAM file found in $previousDir at step $stepName.\n",0);
+}
+
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);       # recovery of specific parameters of samtools mpileup
+
+
+
+#Verifying the output type
+$fileWithoutExtention=toolbox::extractName($$listOfBam[0]);
+$vcfOut = "$newDir"."/".$fileWithoutExtention.".SAMTOOLSMPILEUP.vcf";  # name for the output file of samtools view
+samTools::samToolsMpileUp($listOfBam,$vcfOut,$softParameters);
+

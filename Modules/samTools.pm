@@ -390,6 +390,62 @@ sub samToolsFlagstat
      }
 }
 
+
+##SAMTOOLS mpileup
+#SNP calling, using a list of BAM as input
+sub samToolsMpileUp
+{
+     my($bamFileList,$snpFileOut,$optionsHachees)=@_;
+     
+     #Verifying the input BAM list if they are true bam
+     my $inputBam;
+     foreach my $bamFileIn (@$bamFileList)
+     {
+          next if $bamFileList =~ m/\.bai$/;#Index file, not to be check
+          
+          if (toolbox::sizeFile($bamFileIn)==1)
+          { ##Check if entry file exist and is not empty
+               
+               #Check if the format is correct
+               if (toolbox::checkSamOrBamFormat($bamFileIn)==0)
+               {#The file is not a BAM/SAM file
+                    toolbox::exportLog("ERROR: samTools::samToolsMpileUp : The file $bamFileIn is not a SAM/BAM file\n",0);
+                    return 0;
+               }
+          #Creating the input bam list
+          $inputBam .= " ".$bamFileIn;
+          }
+          else
+          {
+               toolbox::exportLog("ERROR: samTools::samToolsMpileUp : The file $bamFileIn is uncorrect\n",0);
+               return 0;#File not Ok
+          }
+     }
+
+     my $options="";
+     if ($optionsHachees)
+     {
+          $options=toolbox::extractOptions($optionsHachees); ##Get given options
+     }
+     
+     #samtools mpileup command output the result in STDOUT, thus we use the ">" to redirect it to the output file
+     my $command=$samtools." mpileup ".$options." ".$inputBam." > ".$snpFileOut;
+     
+     #toolbox::exportLog($command."\n",1);
+     #Execute command
+     if(toolbox::run($command)==1)
+     {
+          return 1;#Command Ok
+     }
+     else
+     {
+          toolbox::exportLog("ERROR: samTools::samToolsMpileUp : Uncorrectly done\n",0);
+          return 0;#Command not Ok
+     }
+
+     
+}
+
 1;
 
 =head1 NAME
@@ -425,6 +481,9 @@ sub samToolsFlagstat
 =item samToolsSort (Sorts in different ways a BAM file: coordinates, random, reads)
 
 =item samToolsView (Allows to see a BAM in SAM, or to extract a subregion or with specific qualifiers - correctly mapped...)
+
+=item samToolsMpileUp (Calls SNP from a list of BAMs)
+
 
 =back
 

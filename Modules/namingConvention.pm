@@ -120,7 +120,8 @@ sub correctName
         case ($name =~ m/samtools[\s|\.|\-| \/|\\|\|]*idxstats/i){$correctedName="samToolsIdxstats"} # Correction for samToolsIdxstats
         case ($name =~ m/samtools[\s|\.|\-| \/|\\|\|]*depth/i){$correctedName="samToolsDepth"} # Correction for samToolsDepth
         case ($name =~ m/samtools[\s|\.|\-| \/|\\|\|]*flagstat/i){$correctedName="samToolsFlagstat"} # Correction for samToolsFlagstat
-        
+        case ($name =~ m/samtools[\s|\.|\-| \/|\\|\|]*mpileup/i){$correctedName="samToolsMpileUp"} # Correction for samToolsMpileUp
+
         #FOR picardTools.pm
         case ($name =~ m/picardtools[\s|\.|\-| \/|\\|\|]*mark[\s|\.|\-| \/|\\|\|]*duplicates/i){$correctedName="picardToolsMarkDuplicates"} # Correction for picardToolsMarkDuplicates
         case ($name =~ m/picardtools[\s|\.|\-| \/|\\|\|]*create[\s|\.|\-| \/|\\|\|]*sequence[\s|\.|\-| \/|\\|\|]*dictionary/i){$correctedName="picardToolsCreateSequenceDictionary"} # Correction for picardToolsCreateSequenceDictionary
