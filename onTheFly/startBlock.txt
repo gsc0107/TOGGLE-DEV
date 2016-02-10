@@ -87,8 +87,6 @@ Mesg
 }
 
 
-my $cmd_line=$0." @ARGV";
-
 ##########################################
 # recovery of initial informations/files
 ##########################################
