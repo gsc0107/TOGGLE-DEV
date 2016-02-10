@@ -145,13 +145,7 @@ sub generateScript
 	if ($$hashSoftware{$currentSoft}{'OUT'} eq "NA")
 	{# will not add the switcher of previous directory for 'dead end' protgrams such as fastqc, samtools flagstats....
 	    $cleanerCounter++;
-	    if (defined $$hashCompressor{$step-$compressorCounter})
-	    {
-		# The previous step has to be compressed even if dead end
-	    
-		$catCommand .= " ".$toggle."/onTheFly/compressorBlock.txt";
-		$compressorCounter=1;
-	    }
+	    $compressorCounter++;
 	    next;
 	}
         if (defined $$hashCompressor{$step-$compressorCounter})
