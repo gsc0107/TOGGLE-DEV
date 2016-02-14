@@ -54,21 +54,25 @@ use toolbox;
 sub execution
 {
 
-    toolbox::exportLog("ERROR: cutadapt::execution : should get at least three arguments\n",0) if (@_ <3 );	# Check if the number of arguments is good
+    #toolbox::exportLog("ERROR: cutadapt::execution : should get at least three arguments\n",0) if (@_ <=3 );	# Check if the number of arguments is good
 
     my ($fileIn1,$fileOut1,$fileIn2, $fileOut2, $optionsHachees)=@_;	 # recovery of arguments
     my $cmd;
     my $singleMode=0;
-    $singleMode=1 if (not defined $fileIn2 or not defined $fileOut2);
+    $singleMode=1 if (not (defined $fileIn2) and not (defined $fileOut2));# @ARGVnot defined $fileIn2 or not defined $fileOut2);
     
     ## Lancement de cutadapt        
     my $options=toolbox::extractOptions($optionsHachees, " ");		##Get given options
     if ($singleMode)
     {
+	##DEBUG
+	toolbox::exportLog("DEBUG: SINGLE MODE",2);
 	$cmd="$cutadapt $options -o $fileOut1 $fileIn1";			# command line to execute cutadapt
     }
     else
     {
+	#DEBUG
+	toolbox::exportLog("DEBUG: PAIRED MODE",2);
 	$cmd="$cutadapt $options -o $fileOut1 -p $fileOut2 $fileIn1 $fileIn2";			# command line to execute cutadapt
     }
     
