@@ -23,7 +23,7 @@ if (scalar(@{$fileList})==2)                                                    
 }
 else                                                                                                 # single mode
 {
-    cutadapt::execution($fastqForward,$fastqForwardOut,$softParameters);                          # run cutadapt program on current file
+    cutadapt::execution($fastqForward,$fastqForwardOut,undef,undef,$softParameters);                          # run cutadapt program on current file
 }
 
 
