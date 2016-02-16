@@ -8,8 +8,9 @@ and utilities to easily design pipelines able to handle hundreds of samples. Mor
 options of the different softwares through the pipelines in using a single basic configuration file, that can be changed for each assay without
 having to change the code itself.
 
-We present also the implementation of TOGGLE in a complete analysis pipeline designed for SNP discovery for large sets of NGS data, ready to use
-in different environments (single machine to HPC clusters).
+Users can also create their own pipeline through an easy and user-friendly approach. The pipelines can starts from Fastq (plain or gunzipped), SAM, BAM or VCF (plain of gunzipped) files, with parallel and global analyses. Samples pipelines are provided for SNP discovery and RNAseq counts.
+
+The system is able to detect parallel/scheduling launching and to manage large amount of samples on large cluster machines.
 
 
 ##  Contributing
