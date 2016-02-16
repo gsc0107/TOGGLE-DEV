@@ -74,7 +74,7 @@ TOGGLE will generate an output folder containing different files and subfolders,
 
  The final results are contained in the **finalResults** folder.
  TOGGLE will also copy the *software config* file corresponding to the analysis, in order users can recover their options.
- The **output** folder contains all sub analyses, i.e.
+ The **output** folder contains all sub analyses, i.e. the individual analyses or intermediate data.
 
 # <a name="sendingOptions"></a>Sending options
 As for the previous version, you can address any option to any given software (as soon as the given option exists for the given software ^^) as follows:
