@@ -170,7 +170,8 @@ sub sgeRun
     my $runningNodeCommand="qstat | grep $currentJID";
     my $runningNode="x";
     my $trying=0;
-    while ($runningNode ne "r") #If the job is not yet launched or already finished
+    my $stopWaiting = 0;
+    while ($stopWaiting == 0) #If the job is not yet launched or already finished
     {
         sleep 3;#Waiting for the job to be launched
         $runningNode=`$runningNodeCommand`;
@@ -179,20 +180,20 @@ sub sgeRun
         if ($runningNode !~ /\s+r\s+/)
         {# not running yet
             $trying++;
-	    ## DEBUG
-	    toolbox::exportLog("WARNING : $trying trys for $currentJID.",2);
+	    ## DEBUG	    toolbox::exportLog("WARNING : $trying trys for $currentJID.",2);
         }
 	if ($trying > 4)
         {
             #We already tryed to pick up the node infos 5 times, let's stop
             $runningNode = "Still unknown (either not running, or already finished)";
             ## DEBUG toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for the job $currentJID: $!\n",2);
-            last;
+            $stopWaiting = 1;
         }
 	next unless $runningNode =~ /\s+r\s+/; # Next if the job is still not running 
-        my @runningFields = split /\s+/,$runningNode; #To obtain the correct field
-        $runningNode = $runningFields[7];
-        $runningNode =~ s/.+@//;#removing queue name providing only node name
+        #my @runningFields = split /\s+/,$runningNode; #To obtain the correct field
+        #$runningNode = $runningFields[7];
+        #$runningNode =~ s/.+@//;#removing queue name providing only node name
+	$stopWaiting = 1;
     }
     ## DEBUG    toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",2);
     
