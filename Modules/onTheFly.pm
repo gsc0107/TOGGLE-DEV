@@ -355,6 +355,9 @@ sub generateGraphviz
 	##DEBUG print $soft,"-->";
 	##DEBUG toolbox::exportLog("DEBUG : $0 : onTheFly::generateGraphviz, step = $step, soft = $soft.\n",2);
 
+	#Removing anything after a space. E.g a samtoolsview 1 will become samtoolsView2
+	$soft =~ s/ *+$//;
+	
 	$input=$$hashInOut{$soft}{"IN"};
 	##DEBUG print $input,"\n";
 	$output=$$hashInOut{$soft}{"OUT"};
