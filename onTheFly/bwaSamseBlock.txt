@@ -3,6 +3,7 @@
 # Block for bwa::bwaSamse
 ##########################################
 
+$fastq1=undef;
 
 if ($$fileList[0] !~ m/\.sai$/) # There are no .sai, the bwaAln was not performed before
 {
@@ -15,6 +16,7 @@ if ($$fileList[0] !~ m/\.sai$/) # There are no .sai, the bwaAln was not performe
         ($fileWithoutExtention,$readGroup) = pairing::extractName($$fileList[$i]);                          # extract name of file without the extention
         my $saiFileOut = "$newDir"."/"."$fileWithoutExtention".".BWAALN.sai";                                 # name for the output file of bwa aln
         bwa::bwaAln($refFastaFile,$$fileList[$i],$saiFileOut,$softParameters);                                # find the SA coordinates of the current file
+        $fastq1=$$fileList[$i];
     }
     $fileList = toolbox::readDir($newDir);
 }
