@@ -2,6 +2,7 @@
 # Block for bwa::bwaAln
 ##############################################
 
+($fastq1,$fastq2) = undef;
 
 ##DEBUG print LOG "INFOS toolbox ReadDir: @$fileList\n";
 
@@ -18,6 +19,7 @@ for (my $i=0; $i<=$#fileList; $i++)
     ($fileWithoutExtention,$readGroup) = pairing::extractName($fileList[$i]);                             # extract name of file without the extention
     my $saiFileOut = "$newDir"."/"."$fileWithoutExtention".".BWAALN.sai";                                # name for the output file of bwa aln
     bwa::bwaAln($refFastaFile,$fileList[$i],$saiFileOut,$softParameters);                                # find the SA coordinates of the current file
+    (not defined($fastq1))?$fastq1= $$fileList[$i]:$fastq2=$$fileList[$i];
 }
 
 
