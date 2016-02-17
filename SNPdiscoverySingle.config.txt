@@ -48,7 +48,7 @@ CREATE_INDEX=TRUE
 $samToolsView
 -h
 -b
--f=0x02
+-F=4
 
 $gatkRealignerTargetCreator
 -T=RealignerTargetCreator
