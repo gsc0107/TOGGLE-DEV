@@ -178,8 +178,11 @@ sub sgeRun
         $runningNode = "x" unless $runningNode; #if empty variable, problem after...
         if ($runningNode !~ /\s+r\s+/)
         {# not running yet
+	    $runningNode=`$runningNodeCommand`;
+	    chomp $runningNode;
+	    $runningNode = "x" unless $runningNode; #if empty variable, problem after...
             $trying++;
-            if ($trying == 5)
+            if ($trying > 5)
             {
                 #We already tryed to pick up the node infos 5 times, let's stop
                 $runningNode = "Still unknown (either not running, or already finished)";
