@@ -153,16 +153,18 @@ sub generateScript
 	    unless (defined $$hashCleaner{$step-$cleanerCounter})
 	    {
 	    $catCommand .= " ".$toggle."/onTheFly/compressorBlock.txt";
-	    $compressorCounter=1;
 	    }
 	}
 	
 	if (defined $$hashCleaner{$step-$cleanerCounter})
 	{# The previous step has to be cleaned
 	    $catCommand .= " ".$toggle."/onTheFly/cleanerBlock.txt";
-	    $cleanerCounter=1;
 	}
-	
+	#Re-initializing the counters for compressing and cleaning data
+	$compressorCounter=1;
+	$cleanerCounter=1;
+
+
 	$catCommand .= " ".$toggle."/onTheFly/afterBlock.txt"; # adding infos for next block
     }
     
