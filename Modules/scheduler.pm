@@ -180,7 +180,7 @@ sub sgeRun
         {# not running yet
             $trying++;
 	    ## DEBUG
-	    toolbox::exportLog("WARNING : $trying trys for $currentJID: $!\n",2);
+	    toolbox::exportLog("WARNING : $trying trys for $currentJID.",2);
         }
 	if ($trying > 4)
         {
