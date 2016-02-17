@@ -182,9 +182,9 @@ sub sgeRun
 	    ## DEBUG
 	    toolbox::exportLog("WARNING : $trying trys for $currentJID: $!\n",2);
         }
-	if ($trying > 5)
+	if ($trying > 4)
         {
-            #We already tryed to pick up the node infos more than 5 times, let's stop
+            #We already tryed to pick up the node infos 5 times, let's stop
             $runningNode = "Still unknown (either not running, or already finished)";
             ## DEBUG toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for the job $currentJID: $!\n",2);
             last;
