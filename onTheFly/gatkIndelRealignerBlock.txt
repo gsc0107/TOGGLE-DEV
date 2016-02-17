@@ -4,10 +4,13 @@
 ##########################################
 
 #VERIFYING IF INTERVAL FILE IS DEFINED
+my $cleanerIntervals=0;
 
 unless ($intervalsFile)
 {
     toolbox::exportLog("ERROR : $0 : gatkIndelRealigner: the intervals file is not defined, will generate it automatically.\n",2);
+    $cleanerIntervals=1;
+    
     #########################################
     # GATK REALIGNER TARGET CREATOR
     #########################################
@@ -35,4 +38,4 @@ gatk::gatkIndelRealigner($refFastaFile, $bamFile, $intervalsFile, $bamRealigned,
 
 #Cleaning and removing the intervals file that may cause a problem in the next steps
 my $intervalsFileRemoverCommand= " rm -f ".$intervalsFile;
-toolbox::run($intervalsFileRemoverCommand,"noprint");
+toolbox::run($intervalsFileRemoverCommand,"noprint") if ($cleanerIntervals==1);
