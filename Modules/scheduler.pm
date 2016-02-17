@@ -145,7 +145,7 @@ sub sgeRun
     
     if ($!) #There are errors in the launching...
     {
-        warn ("WARNING : $0 : Cannot launch the job for $sample: $!\n");
+        toolbox::exportLog ("WARNING : $0 : Cannot launch the job for $sample: $!\n",2);
         $currentJID = "";
     }
         
