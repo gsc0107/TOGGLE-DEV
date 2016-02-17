@@ -178,19 +178,18 @@ sub sgeRun
         $runningNode = "x" unless $runningNode; #if empty variable, problem after...
         if ($runningNode !~ /\s+r\s+/)
         {# not running yet
-	    $runningNode=`$runningNodeCommand`;
-	    chomp $runningNode;
-	    $runningNode = "x" unless $runningNode; #if empty variable, problem after...
             $trying++;
-            if ($trying > 5)
-            {
-                #We already tryed to pick up the node infos 5 times, let's stop
-                $runningNode = "Still unknown (either not running, or already finished)";
-                ## DEBUG toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for the job $currentJID: $!\n",2);
-                last;
-            }
-            next;
+	    ## DEBUG
+	    toolbox::exportLog("WARNING : $trying trys for $currentJID: $!\n",2);
         }
+	if ($trying > 5)
+        {
+            #We already tryed to pick up the node infos more than 5 times, let's stop
+            $runningNode = "Still unknown (either not running, or already finished)";
+            ## DEBUG toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for the job $currentJID: $!\n",2);
+            last;
+        }
+	next unless $runningNode =~ /\s+r\s+/; # Next if the job is still not running 
         my @runningFields = split /\s+/,$runningNode; #To obtain the correct field
         $runningNode = $runningFields[7];
         $runningNode =~ s/.+@//;#removing queue name providing only node name
