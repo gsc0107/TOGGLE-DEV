@@ -16,6 +16,5 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be BAM
 }
 
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                       # recovery of specific parameters of GATK Realigner Target Creator
-$fileWithoutExtention = toolbox::extractName($$fileList[0]);                                             # extract name of file without extention
-$intervalsFile = "$newDir"."/"."$fileWithoutExtention".".GATKREALIGNERTARGETCREATOR.intervals";      # name for the output file of gatk realigner target creator
+$intervalsFile = "$newDir"."/".$readGroup.".GATKREALIGNERTARGETCREATOR.intervals";      # name for the output file of gatk realigner target creator
 gatk::gatkRealignerTargetCreator($refFastaFile, $bamFileOut, $intervalsFile, $softParameters);          # determine (small) suspicious intervals which are likely in need of realignment
