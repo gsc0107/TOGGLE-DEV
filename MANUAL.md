@@ -123,6 +123,8 @@ $order
 1=gatkVariantFiltrator
 2=gatkSelectVariants
 ````
+**BE CAREFUL**: You can comment any step using a '#' symbol before it (ex *#3=bwaAln*) to avoid to retype all numbers. However, such a comment will provoke anomalies in cleaning and compressing steps. The best approach is to provide a list of following numbers (e.g. 1, 2, 3, 4 and not 1, 3, 4). This is also true for steps higher than 1000.
+
 
 ### <a name="samesoftmultiple"></a>Same software repeated multiple times
 
