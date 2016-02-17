@@ -189,6 +189,8 @@ $cleaner
 
 There only the last step result (samtools sort) will be conserved. The folders and logs of the cleaned steps are conserved, but not the resulting files.
 
+**NOTE**: the last step will never be cleaned. This is true for single analyses (steps lower than 999 - *toggleBzz.pl* script) as well as for common steps (higher than 1000 - *toggleMultiple.pl* script)
+
 # <a name="compressing"></a>Compressing steps
 In order to gain hard drive space but conserving data, you may want to compress some steps from your complete analysis.
 
@@ -207,6 +209,8 @@ $compress
 ````
 
 There only the last step result (samtools sort) will be conserved, the other being compressed in their respective tar.gz archive. The folders and logs of the compressed steps are conserved, but not the resulting files.
+
+**NOTE**: as for the cleaner system, the last step will never be compressed. This is true for single analyses (steps lower than 999 - *toggleBzz.pl* script) as well as for common steps (higher than 1000 - *toggleMultiple.pl* script).
 
 BE CAREFUL: CLEANING IS OF HIGHER ORDER THAN COMPRESS. If the same step is required to be cleaned AND compressed, it will be only cleaned!
 
