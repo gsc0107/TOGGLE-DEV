@@ -84,10 +84,10 @@ OUT=bam
 
 $gatkRealignerTargetCreator
 IN=bam,fasta
-OUT=NA
+OUT=intervals
 
 $gatkIndelRealigner
-IN=bam,fasta
+IN=intervals,bam,fasta
 OUT=bam
 
 $gatkSelectVariants
