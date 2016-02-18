@@ -10,8 +10,7 @@ foreach my $file (@{$fileList})
     $fileIn = $file;
 }
 toolbox::exportLog("ERROR : $0 : No SAM/BAM file provided at step $stepName\n",0) unless $fileIn;
-$fileWithoutExtention = pairing::extractName($fileIn);                                                  # extract name of file without the extention
-my $duplicatesMetrics = $fileWithoutExtention.".metrics";
-$bamFileOut = $newDir."/"."$fileWithoutExtention".".PICARDTOOLSMARKDUPLICATES.bam";                              # name for the output file of picardtools markduplicates sam
+my $duplicatesMetrics = $readGroup.".metrics";
+$bamFileOut = $newDir."/"."$readGroup".".PICARDTOOLSMARKDUPLICATES.bam";                              # name for the output file of picardtools markduplicates sam
 $softParameters = toolbox::extractHashSoft($optionRef,"picardToolsMarkDuplicates");                           # recovery of specific parameters of picard markduplicates sam
 picardTools::picardToolsMarkDuplicates($fileIn,$bamFileOut,$duplicatesMetrics,$softParameters); 

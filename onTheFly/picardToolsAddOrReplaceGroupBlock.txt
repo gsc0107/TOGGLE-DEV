@@ -10,7 +10,6 @@ foreach my $file (@{$fileList})
     $bamFile = $file;
 }
 toolbox::exportLog("ERROR : $0 : No SAM/BAM file provided at step $stepName\n",0) unless $bamFile;
-$fileWithoutExtention = pairing::extractName($bamFile);                                                  # extract name of file without the extention
-$bamFileOut = $newDir."/"."$fileWithoutExtention".".PICARDTOOLSRG.bam";                              # name for the output file of picardtools CleanSam
+$bamFileOut = $newDir."/"."$readGroup".".PICARDTOOLSRG.bam";                              # name for the output file of picardtools CleanSam
 $softParameters = toolbox::extractHashSoft($optionRef,"picardToolsAddOrReplaceGroup");                           # recovery of specific parameters of picard AddOrReplaceGroup
 picardTools::picardToolsAddOrReplaceGroup($bamFile,$bamFileOut,$softParameters); 
