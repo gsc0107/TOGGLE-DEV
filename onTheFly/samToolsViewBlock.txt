@@ -28,7 +28,6 @@ $softParameters = toolbox::extractHashSoft($optionRef,$stepName);               
 #Verifying the output type
 $extension = ".sam";
 $extension = ".bam" if (defined $$softParameters{'-b'}); # If the -b option is specified the output file is a BAM
-$fileWithoutExtention=toolbox::extractName($samFile);
-$samFileOut = "$newDir"."/"."$fileWithoutExtention".".SAMTOOLSVIEW".$extension;                         # name for the output file of samtools view
+$samFileOut = "$newDir"."/".$readGroup.".SAMTOOLSVIEW".$extension;                         # name for the output file of samtools view
 samTools::samToolsView($samFile,$samFileOut,$softParameters);
 
