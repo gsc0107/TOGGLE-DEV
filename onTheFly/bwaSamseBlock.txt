@@ -3,10 +3,11 @@
 # Block for bwa::bwaSamse
 ##########################################
 
-$fastq1=undef;
+
 
 if ($$fileList[0] !~ m/\.sai$/) # There are no .sai, the bwaAln was not performed before
 {
+    $fastq1=undef;
     for (my $i=0; $i<scalar @{$fileList}; $i++)
     {
         ##########################################
