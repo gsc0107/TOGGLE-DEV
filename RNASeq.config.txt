@@ -2,11 +2,11 @@ $order
 1=fastqc
 2=cutadapt
 3=tophat2
-5=picardToolsSortSam
-6=htseqcount
+4=picardToolsSortSam
+5=htseqcount
 
 $cleaner
-5
+3
 
 #PUT YOUR OWN SGE CONFIGURATION HERE
 #$sge
