@@ -6,15 +6,19 @@
 # GATK REALIGNER TARGET CREATOR
 #########################################
 
+$bamFile=undef;
+
 foreach my $file (@{$fileList}) #Checking the type of files that must be BAM
 {
     if ($file =~ m/bam$/) # the file type is normally sam of bam
     {
-        $bamFileOut = $file;
+        $bamFile = $file;
         last;
     }
 }
 
+toolbox::exportLog("ERROR : $0 : there is no BAM file at $stepName step.\n",0) if (not defined ($bamFile));
+
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                       # recovery of specific parameters of GATK Realigner Target Creator
 $intervalsFile = "$newDir"."/".$readGroup.".GATKREALIGNERTARGETCREATOR.intervals";      # name for the output file of gatk realigner target creator
-gatk::gatkRealignerTargetCreator($refFastaFile, $bamFileOut, $intervalsFile, $softParameters);          # determine (small) suspicious intervals which are likely in need of realignment
+gatk::gatkRealignerTargetCreator($refFastaFile, $bamFile, $intervalsFile, $softParameters);          # determine (small) suspicious intervals which are likely in need of realignment
