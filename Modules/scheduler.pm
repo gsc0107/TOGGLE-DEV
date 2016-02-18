@@ -243,31 +243,33 @@ sub slurmRun
     
     my @infosList=split /\s/, $currentJID; #the format is such as "Submitted batch job 3"
     $currentJID = $infosList[3];
-    
-    my $runningNodeCommand="squeue -u \$USER | grep \"  $currentJID \"";
-    my $runningNode="x";
-    my $trying=0;
-    while ($runningNode ne "R") #If the job is not yet launched or already finished
-    {
-        sleep 3;#Waiting for the job to be launched
-        $runningNode=`$runningNodeCommand`;
-        chomp $runningNode;
-        $runningNode = "x" unless $runningNode; #if empty variable, problem after...
-        if ($runningNode !~ /\s+R\s+/)
-        {# not running yet
-            $trying++;
-            if ($trying == 5)
-            {
-                #We already tryed to pick up the node infos 5 times, let's stop
-                $runningNode = "still unknown (either not running, or already finished)";
-                ## DEBUG toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for the job $currentJID: $!\n",2);
-                last;
-            }
-            next;
-        }
-        my @runningFields = split /\s+/,$runningNode; #To obtain the correct field
-        $runningNode = $runningFields[8];
-    }
+
+    ##THIS PART IS ONLY FOR DEBUGGING  -  MUST STAY COMMENTED OR MAY PROVOKE TROUBLES!!
+
+    #my $runningNodeCommand="squeue -u \$USER | grep \"  $currentJID \"";
+    #my $runningNode="x";
+    #my $trying=0;
+    #while ($runningNode ne "R") #If the job is not yet launched or already finished
+    #{
+    #    sleep 3;#Waiting for the job to be launched
+    #    $runningNode=`$runningNodeCommand`;
+    #    chomp $runningNode;
+    #    $runningNode = "x" unless $runningNode; #if empty variable, problem after...
+    #    if ($runningNode !~ /\s+R\s+/)
+    #    {# not running yet
+    #        $trying++;
+    #        if ($trying == 5)
+    #        {
+    #            #We already tryed to pick up the node infos 5 times, let's stop
+    #            $runningNode = "still unknown (either not running, or already finished)";
+    #            ## DEBUG toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for the job $currentJID: $!\n",2);
+    #            last;
+    #        }
+    #        next;
+    #    }
+    #    my @runningFields = split /\s+/,$runningNode; #To obtain the correct field
+    #    $runningNode = $runningFields[8];
+    #}
     ## DEBUG toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
     
     #Provide the job ID
@@ -316,30 +318,32 @@ sub mprunRun
     my @infosList=split /\s/, $currentJID; #the format is such as "Submitted batch job 3"
     $currentJID = $infosList[3];
     
-    my $runningNodeCommand="ccc_mstat -u \$USER| grep \"  $currentJID \"";
-    my $runningNode="x";
-    my $trying=0;
-    while ($runningNode ne "R01") #If the job is not yet launched or already finished
-    {
-        sleep 3;#Waiting for the job to be launched
-        $runningNode=`$runningNodeCommand`;
-        chomp $runningNode;
-        $runningNode = "x" unless $runningNode; #if empty variable, problem after...
-        if ($runningNode !~ /\s+R\s+/)
-        {# not running yet
-            $trying++;
-            if ($trying == 5)
-            {
-                #We already tryed to pick up the node infos 5 times, let's stop
-                $runningNode = "still unknown (either not running, or already finished)";
-                ## DEBUG toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for the job $currentJID: $!\n",2);
-                last;
-            }
-            next;
-        }
-        my @runningFields = split /\s+/,$runningNode; #To obtain the correct field
-        $runningNode = $runningFields[8];
-    }
+    ##THIS PART IS ONLY FOR DEBUGGING  -  MUST STAY COMMENTED OR MAY PROVOKE TROUBLES!!
+
+    #my $runningNodeCommand="ccc_mstat -u \$USER| grep \"  $currentJID \"";
+    #my $runningNode="x";
+    #my $trying=0;
+    #while ($runningNode ne "R01") #If the job is not yet launched or already finished
+    #{
+    #    sleep 3;#Waiting for the job to be launched
+    #    $runningNode=`$runningNodeCommand`;
+    #    chomp $runningNode;
+    #    $runningNode = "x" unless $runningNode; #if empty variable, problem after...
+    #    if ($runningNode !~ /\s+R\s+/)
+    #    {# not running yet
+    #        $trying++;
+    #        if ($trying == 5)
+    #        {
+    #            #We already tryed to pick up the node infos 5 times, let's stop
+    #            $runningNode = "still unknown (either not running, or already finished)";
+    #            ## DEBUG toolbox::exportLog("WARNING : $0 : Cannot pickup the running node for the job $currentJID: $!\n",2);
+    #            last;
+    #        }
+    #        next;
+    #    }
+    #    my @runningFields = split /\s+/,$runningNode; #To obtain the correct field
+    #    $runningNode = $runningFields[8];
+    #}
     ## DEBUG toolbox::exportLog("INFOS: $0 : Running node for job $currentJID is $runningNode\n\n",1);
     
     #Provide the job ID
