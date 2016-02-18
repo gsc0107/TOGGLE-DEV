@@ -3,6 +3,19 @@
 # Block for gatk::gatkIndelRealigner
 ##########################################
 
+$bamFile=undef;
+
+foreach my $file (@{$fileList}) #Checking the type of files that must be BAM
+{
+    if ($file =~ m/bam$/) # the file type is normally sam of bam
+    {
+        $bamFile = $file;
+        last;
+    }
+}
+
+toolbox::exportLog("ERROR : $0 : there is no BAM file at $stepName step.\n",0) if (not defined ($bamFile));
+
 #VERIFYING IF INTERVAL FILE IS DEFINED
 my $cleanerIntervals=0;
 
@@ -14,14 +27,6 @@ unless ($intervalsFile)
     #########################################
     # GATK REALIGNER TARGET CREATOR
     #########################################
-    foreach my $file (@{$fileList}) #Checking the type of files that must be BAM
-    {
-        if ($file =~ m/bam$/) # the file type is normally sam of bam
-        {
-            $bamFile = $file;
-            last;
-        }
-    }
     $softParameters = toolbox::extractHashSoft($optionRef,"gatkRealignerTargetCreator");                    # recovery of specific parameters of GATK Realigner Target Creator
     $intervalsFile = "$newDir"."/".$readGroup.".GATKREALIGNERTARGETCREATOR.intervals";         # name for the output file of gatk realigner target creator
     gatk::gatkRealignerTargetCreator($refFastaFile, $bamFile, $intervalsFile, $softParameters);          # determine (small) suspicious intervals which are likely in need of realignment
