@@ -4,10 +4,12 @@
 ##########################################
 
 #VERIFYING IF TABLE REPORT FILE IS DEFINED
+my $cleanerTable=0;
 
 unless ($tableReport)
 {
     toolbox::exportLog("ERROR : $0 : gatk::gatkPrintReads: the tableReport file is not defined, will generate it automatically.\n",2);
+    $cleanerTable = 1;
     #########################################
     # GATK BASE RECALIBRATOR
     #########################################
@@ -22,8 +24,7 @@ unless ($tableReport)
         samTools::samToolsIndex($bamFileOut);
     }
     $softParameters = toolbox::extractHashSoft($optionRef,"gatkBaseRecalibrator");                  # recovery of specific parameters of GATK Base Recalibrator
-    $fileWithoutExtention = toolbox::extractName($$fileList[0]);                                    # extract name of file without extention
-    $tableReport = "$newDir"."/"."$fileWithoutExtention".".GATKBASERECALIBRATOR.tableReport";       # name for the output file of gatk base recalibrator
+    $tableReport = "$newDir"."/"."$readGroup".".GATKBASERECALIBRATOR.tableReport";       # name for the output file of gatk base recalibrator
     gatk::gatkBaseRecalibrator($refFastaFile, $bamFileOut, $tableReport, $softParameters);  
 }
 
@@ -32,10 +33,10 @@ unless ($tableReport)
 #########################################
 
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                       # recovery of specific parameters of GATK PrintReads
-my $bamOut = "$newDir"."/"."$fileWithoutExtention".".GATKPRINTREADS.bam";                  # name for the output file of gatk print reads
+my $bamOut = "$newDir"."/"."$readGroup".".GATKPRINTREADS.bam";                  # name for the output file of gatk print reads
 gatk::gatkPrintReads($refFastaFile, $bamFileOut, $bamOut, $tableReport, $softParameters);   # run the realigner over the intervals producted by gatk::gatkRealignerTargetCreator (see above)
 
 
 #Cleaning and removing the table report file that may cause a problem in the next steps
 my $tableReportRemoverCommand= " rm -f ".$tableReport;
-toolbox::run($tableReportRemoverCommand);
+toolbox::run($tableReportRemoverCommand) if $cleanerTable == 1;
