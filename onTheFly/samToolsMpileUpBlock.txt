@@ -22,7 +22,6 @@ $softParameters = toolbox::extractHashSoft($optionRef,$stepName);       # recove
 
 
 #Verifying the output type
-$fileWithoutExtention=toolbox::extractName($$listOfBam[0]);
-$mpileupOut = "$newDir"."/".$fileWithoutExtention.".SAMTOOLSMPILEUP.mpileup";  # name for the output file of samtools view
+$mpileupOut = "$newDir"."/".$readGroup.".SAMTOOLSMPILEUP.mpileup";  # name for the output file of samtools view
 samTools::samToolsMpileUp($listOfBam,$mpileupOut,$softParameters);
 
