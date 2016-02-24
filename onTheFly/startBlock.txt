@@ -139,27 +139,47 @@ my $optionRef=toolbox::readFileConf($fileConf); # Picking up the global options
 
 my $hashOrder=toolbox::extractHashSoft($optionRef,"order"); #Picking up the options for the order of the pipeline
 
-#Switch and populating variable
+#Global variables declaration
 
-#Standard variables
+##FASTQ associated variables
+my ($fastqForwardIn, $fastqForwardOut, $fastqReverseIn, $fastqReverseOut);
 
-my ($softParameters, $newDir,$stepOrder,$stepName,$fileWithoutExtention,$fastqForward,$fastqReverse,$samFile,$extension,$samFileOut,$shortDirName,$stepF1,$vcfCalled,$vcfOut,$listOfBam,$bamFile,$bamFileOut,$cleanerCommand,$compressorCommand,$intervalsFile,$replacementCommand,$tableReport,$mpileupOut);
+##SAM associated variables
+my ($samFileIn, $samFileOut); #Those variables are to be used for sam standard but also if the block can treat SAM as well as BAM (eg samtools view)
 
-#Variable variables
-my ($fastq1,$fastq2,$sam,$bam,$vcf);
+##BAM associated variables
+my ($bamFileIn, $bamFileOut,$listOfBam);
+
+##VCF associated variables
+my ($vcfFileIn,$vcfFileOut);
+
+##Intervals/Report associated variables
+my ($intervalsFile,$tableReport);
+
+##MpileUp associated variables
+my ($mpileupOut);
+
+##Internal variables
+###Directory and file variables
+my ($newDir, $fileWithoutExtension, $extension, $shortDirName);
+### Step variables
+my ($stepF1, $stepOrder, $stepName, $softParameters);
+### Various command variables
+my ($cleanerCommand, $compressorCommand,$replacementCommand);
+
 my $fileList=toolbox::readDir($previousDir);
 my $globalAnalysis=0; #to check if all data are to be treated one by one  (0) or in group (1)
 
 switch (1)
 {
-  case (scalar @$fileList == 2 && $$fileList[0] =~ m/fastq|fq$/ && $$fileList[1] =~ m/fastq|fq$/) {$fastq1=$$fileList[0];$fastq2=$$fileList[1]; print "\nPaired fastq files"} #Two paired fastq files
-  case (scalar @$fileList == 2 && $$fileList[0] =~ m/fastq\.gz|fq\.gz$/ && $$fileList[1] =~ m/fastq\.gz|fq\.gz$/) {$fastq1=$$fileList[0];$fastq2=$$fileList[1]; print "\nPaired fastq.gz files"} #Two paired fastq files
-  case (scalar @$fileList == 1 && $$fileList[0] =~ m/fastq|fq$/) {$fastq1=$$fileList[0]; print "\nSingle fastq file"} # Single fastq file
-  case (scalar @$fileList == 1 && $$fileList[0] =~ m/fastq\.gz|fq\.gz$/) {$fastq1=$$fileList[0]; print "\nSingle fastq.gz file"} # Single fastq file
-  case (scalar @$fileList == 1 && $$fileList[0] =~ m/sam$/) {$sam=$$fileList[0]; print "\nSingle SAM file"} # single SAM file
-  case (scalar @$fileList == 1 && $$fileList[0] =~ m/bam$/) {$bam = $$fileList[0]; print "\nSingle BAM file"} # single BAM file
-  case (scalar @$fileList == 1 && $$fileList[0] =~ m/vcf$/) {$vcf = $$fileList[0]; print "\nSingle VCF file"} #single VCF file
-  case (scalar @$fileList == 1 && $$fileList[0] =~ m/vcf\.gz$/) {$vcf = $$fileList[0]; print "\nSingle VCF.gz file"} #single VCF file
+  case (scalar @$fileList == 2 && $$fileList[0] =~ m/fastq|fq$/ && $$fileList[1] =~ m/fastq|fq$/) {$fastqForwardIn=$$fileList[0];$fastqReverseIn=$$fileList[1]; print "\nPaired fastq files"}
+  case (scalar @$fileList == 2 && $$fileList[0] =~ m/fastq\.gz|fq\.gz$/ && $$fileList[1] =~ m/fastq\.gz|fq\.gz$/) {$fastqForwardIn=$$fileList[0];$fastqReverseIn=$$fileList[1]; print "\nPaired fastq.gz files"}
+  case (scalar @$fileList == 1 && $$fileList[0] =~ m/fastq|fq$/) {$fastqForwardIn=$$fileList[0]; print "\nSingle fastq file"} 
+  case (scalar @$fileList == 1 && $$fileList[0] =~ m/fastq\.gz|fq\.gz$/) {$fastqForwardIn=$$fileList[0]; print "\nSingle fastq.gz file"}
+  case (scalar @$fileList == 1 && $$fileList[0] =~ m/sam$/) {$samFileIn=$$fileList[0]; print "\nSingle SAM file"}
+  case (scalar @$fileList == 1 && $$fileList[0] =~ m/bam$/) {$bamFileIn = $$fileList[0]; print "\nSingle BAM file"}
+  case (scalar @$fileList == 1 && $$fileList[0] =~ m/vcf$/) {$vcfFileIn = $$fileList[0]; print "\nSingle VCF file"}
+  case (scalar @$fileList == 1 && $$fileList[0] =~ m/vcf\.gz$/) {$vcfFileIn = $$fileList[0]; print "\nSingle VCF.gz file"} 
   case (scalar @$fileList >= 2 && $$fileList[0] =~ m/sam|bam|vcf|bai|vcf\.gz$/) {$globalAnalysis =1;print "Multiple files, steps higher than 1000"} #multiple file for the case of step higher than 1000
   else { toolbox::exportLog("ERROR: The input files are not in a format usable by TOGGLE",0); } # Not the good formats
   
