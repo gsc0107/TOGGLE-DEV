@@ -149,7 +149,8 @@ my ($fastqForwardIn, $fastqForwardOut, $fastqReverseIn, $fastqReverseOut)=("NA",
 my ($samFileIn, $samFileOut)=("NA","NA"); #Those variables are to be used for sam standard but also if the block can treat SAM as well as BAM (eg samtools view)
 
 ##BAM associated variables
-my ($bamFileIn, $bamFileOut,$listOfBam)=("NA","NA","NA");
+my ($bamFileIn, $bamFileOut)=("NA","NA");
+my $listOfBam=();
 
 ##VCF associated variables
 my ($vcfFileIn,$vcfFileOut)=("NA","NA");

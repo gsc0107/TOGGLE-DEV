@@ -21,7 +21,7 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be SAM or 
     }
 }
 
-if ($samFileIn eq "NA") #No SAM/BAM file found in the previous folder
+if ($vcfFileIn eq "NA") #No SAM/BAM file found in the previous folder
 {
     toolbox::exportLog("ERROR : $0 : No VCF file found in $previousDir at step $stepName.\n",0);
 }
