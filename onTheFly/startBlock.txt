@@ -143,16 +143,16 @@ my $hashOrder=toolbox::extractHashSoft($optionRef,"order"); #Picking up the opti
 #Global variables declaration
 
 ##FASTQ associated variables
-my ($fastqForwardIn, $fastqForwardOut, $fastqReverseIn, $fastqReverseOut)=(0,0,0,0);
+my ($fastqForwardIn, $fastqForwardOut, $fastqReverseIn, $fastqReverseOut)=("NA","NA","NA","NA");
 
 ##SAM associated variables
-my ($samFileIn, $samFileOut)=(0,0); #Those variables are to be used for sam standard but also if the block can treat SAM as well as BAM (eg samtools view)
+my ($samFileIn, $samFileOut)=("NA","NA"); #Those variables are to be used for sam standard but also if the block can treat SAM as well as BAM (eg samtools view)
 
 ##BAM associated variables
-my ($bamFileIn, $bamFileOut,$listOfBam)=(0,0,0);
+my ($bamFileIn, $bamFileOut,$listOfBam)=("NA","NA","NA");
 
 ##VCF associated variables
-my ($vcfFileIn,$vcfFileOut)=(0,0);
+my ($vcfFileIn,$vcfFileOut)=("NA","NA");
 
 ##Intervals/Report associated variables
 my ($intervalsFile,$tableReport);

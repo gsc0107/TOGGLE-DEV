@@ -3,4 +3,4 @@
 $previousDir=$newDir;
 
 #Re-initializing all variables to avoid error propagation
-($fastqForwardIn, $fastqReverseIn, $samFileIn, $bamFileIn, $listOfBam, $vcfFileIn)=(0,0,0,0,0,0);
+($fastqForwardIn, $fastqReverseIn, $samFileIn, $bamFileIn, $listOfBam, $vcfFileIn)=("NA","NA","NA","NA","NA","NA");

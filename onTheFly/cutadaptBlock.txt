@@ -10,23 +10,28 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ o
 {
     if ($file =~ m/fastq$|fastq.gz$|fq$|fq.gz$/) 
     {
-        if ($fastqForwardIn ne '0') # $fastqForwardIn is already known
+        if ($fastqForwardIn ne "NA") # $fastqForwardIn is already known
         {
-            if ($fastqReverseIn ne '0')
+            if ($fastqReverseIn ne "NA")
             {
                 toolbox::exportLog("ERROR : $0 : there are more than two FASTQ files at $stepName step.\n",0);
             }
-            $fastqReverseIn = $file;
+            else
+            {
+                $fastqReverseIn = $file;
+            }
         }
-        
-        $fastqForwardIn = $file;
+        else
+        {
+            $fastqForwardIn = $file;
+        }
     }
 }
 
 ($fileWithoutExtension) = pairing::extractName($fastqForwardIn);                           # extract name of file without the extension
 $fastqForwardOut = "$newDir"."/"."$fileWithoutExtension".".CUTADAPT.fastq";                      # name for the forward output file of cutadapt execution
 
-if ($fastqReverseIn ne '0')                                                                        # paired mode
+if ($fastqReverseIn ne "NA")                                                                        # paired mode
 {
     ($fileWithoutExtension) = pairing::extractName($fastqReverseIn);                           # extract name of file without the extension
     my $fastqReverseOut = "$newDir"."/"."$fileWithoutExtension".".CUTADAPT.fastq";                  # name for the reverse output file of cutadapt execution
