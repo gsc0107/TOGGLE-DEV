@@ -159,5 +159,5 @@ IN=fasta
 OUT=NA
 
 $htseqCount
-IN=bam
+IN=sam,bam
 OUT=NA
