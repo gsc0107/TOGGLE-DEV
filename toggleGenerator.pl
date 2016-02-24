@@ -275,7 +275,7 @@ elsif ($firstOrder<1000) #Other types of data requesting a single treatment
         my ($noNeed,$basicName)=pairing::extractName($completeName);
         my $dirName=$workingDir."/".$basicName;
         toolbox::makeDir($dirName);
-        my $mvCommand = "mv $file $dirName/$basicName";
+        my $mvCommand = "mv $file $dirName/$completeName";
         if (toolbox::run($mvCommand,"noprint") == 1)
         {
             toolbox::exportLog("INFOS : $0 : Transferring $file to $dirName\n",1);
