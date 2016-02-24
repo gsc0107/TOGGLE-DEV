@@ -26,9 +26,9 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ o
 }
 
 ($fileWithoutExtension) = pairing::extractName($fastqForwardIn);                           # extract name of file without the extension
-my $fastqForwardOut = "$newDir"."/"."$fileWithoutExtension".".CUTADAPT.fastq";                      # name for the forward output file of cutadapt execution
+$fastqForwardOut = "$newDir"."/"."$fileWithoutExtension".".CUTADAPT.fastq";                      # name for the forward output file of cutadapt execution
 
-if ($fastqReverseIn != 0)                                                                        # paired mode
+if ($fastqReverseIn ne '0')                                                                        # paired mode
 {
     ($fileWithoutExtension) = pairing::extractName($fastqReverseIn);                           # extract name of file without the extension
     my $fastqReverseOut = "$newDir"."/"."$fileWithoutExtension".".CUTADAPT.fastq";                  # name for the reverse output file of cutadapt execution
