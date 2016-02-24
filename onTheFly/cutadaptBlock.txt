@@ -5,25 +5,43 @@
 
 $softParameters = toolbox::extractHashSoft($optionRef, $stepName);                                  # recovery of specific informations for cutadapt
 
-$fastqForward=$$fileList[0];
-($fileWithoutExtention,$readGroup) = pairing::extractName($fastqForward);                           # extract name of file without the extention
-my $fastqForwardOut = "$newDir"."/"."$fileWithoutExtention".".CUTADAPT.fastq";                      # name for the forward output file of cutadapt execution
-
-if (scalar(@{$fileList})==2)                                                                        # paired mode
+#reinitializing variables for correct variable populating
+$fastqForwardIn=0;
+$fastqReverseIn=0;
+foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ only
 {
-    $fastqReverse=$$fileList[1];
-    ($fileWithoutExtention,$readGroup) = pairing::extractName($fastqReverse);                           # extract name of file without the extention
-    my $fastqReverseOut = "$newDir"."/"."$fileWithoutExtention".".CUTADAPT.fastq";                  # name for the reverse output file of cutadapt execution
+    if ($file =~ m/fastq$|fastq.gz$|fq$|fq.gz$/) 
+    {
+        if ($fastqForwardIn != 0) # $fastqForwardIn is already known
+        {
+            if ($fastqReverseIn != 0)
+            {
+                toolbox::exportLog("ERROR : $0 : there are more than two FASTQ files at $stepName step.\n",0);
+            }
+            $fastqReverseIn = $file;
+        }
+        
+        $fastqForwardIn = $file;
+    }
+}
+
+($fileWithoutExtension) = pairing::extractName($fastqForwardIn);                           # extract name of file without the extension
+my $fastqForwardOut = "$newDir"."/"."$fileWithoutExtension".".CUTADAPT.fastq";                      # name for the forward output file of cutadapt execution
+
+if ($fastqReverseIn != 0)                                                                        # paired mode
+{
+    ($fileWithoutExtension) = pairing::extractName($fastqReverseIn);                           # extract name of file without the extension
+    my $fastqReverseOut = "$newDir"."/"."$fileWithoutExtension".".CUTADAPT.fastq";                  # name for the reverse output file of cutadapt execution
     
     ##########################################
     # cutadapt::execution
     ##########################################
     ##DEBUG print LOG "CHANGE DIRECTORY TO $newDir\n";
-    cutadapt::execution($fastqForward,$fastqForwardOut,$fastqReverse,$fastqReverseOut,$softParameters);                     # run cutadapt program on current file
+    cutadapt::execution($fastqForwardIn,$fastqForwardOut,$fastqReverseIn,$fastqReverseOut,$softParameters);                     # run cutadapt program on current file
 }
 else                                                                                                 # single mode
 {
-    cutadapt::execution($fastqForward,$fastqForwardOut,undef,undef,$softParameters);                          # run cutadapt program on current file
+    cutadapt::execution($fastqForwardIn,$fastqForwardOut,undef,undef,$softParameters);                          # run cutadapt program on current file
 }
 
 
