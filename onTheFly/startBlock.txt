@@ -173,7 +173,7 @@ my $globalAnalysis=0; #to check if all data are to be treated one by one  (0) or
 
 if ($$fileList[0] !~ m/fastq|fq|fastq\.gz|fq\.gz|sam|bam|vcf|bai|vcf\.gz$/)
 {
-  toolbox::exportLog("ERROR: The input files are not in a format usable by TOGGLE",0); } # Not the good formats
+  toolbox::exportLog("ERROR: The input files are not in a format usable by TOGGLE",0); # Not the good formats
 }
 
 if (scalar @$fileList >=2 && $$fileList[0] =~ m/sam|bam|vcf|bai|vcf\.gz$/)
