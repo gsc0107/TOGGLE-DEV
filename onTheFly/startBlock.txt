@@ -97,7 +97,6 @@ Mesg
 my $initialDir = $param{'-d'};               # recovery of the name of the directory to analyse
 my $fileConf = $param{'-c'};                 # recovery of the name of the software.configuration.txt file
 my $refFastaFile = $param{'-r'};             # recovery of the reference file
-#my $lastDir = $param{'-o'};                  # recovery of the last directory
 my $gffFile;                                  # recovery of the gff file used by topHat and rnaseq analysis
 $gffFile = $param{'-g'} if (defined $param{'-g'}); 
 
@@ -110,9 +109,7 @@ toolbox::existsDir($initialDir);        # check if this directory exists
 my @pathIndividu = toolbox::extractPath($initialDir);
 my $individu = $pathIndividu[0];
 chdir "$initialDir";
-#system("mkdir LOGS") and die "Cannot create the LOGS directory for $individu: \n$0\n";
 my $infosFile = "individuSoft.txt";
-#my $infosFile = "$pathIndividu[1]/individuSoft.txt";
 open (F1, ">",$infosFile) or die ("ERROR: $0 : Cannot open the file $infosFile\n$!\n");
 print F1 "$individu\n";
 print F1 "global\n";
