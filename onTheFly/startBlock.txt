@@ -112,6 +112,7 @@ chdir "$initialDir";
 my $infosFile = "individuSoft.txt";
 open (F1, ">",$infosFile) or die ("ERROR: $0 : Cannot open the file $infosFile\n$!\n");
 print F1 "$readGroup\n";
+print F1 "global\n";
 
 
 toolbox::exportLog("#########################################\nINFOS: TOGGLE analysis start \n#########################################\n",1);
