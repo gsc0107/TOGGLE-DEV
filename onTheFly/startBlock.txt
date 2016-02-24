@@ -82,8 +82,10 @@ my %param = @ARGV;                                                              
 if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined($param{'-r'}))
 {
   print <<"Mesg";
-  ERROR: Parameters -d and -c are required.
-  perldoc $nomprog display the help
+  ERROR: Parameters -d, -r and -c are mandatory.
+  the -g parameter is required for some analyses, such as for TopHat or snpEff.
+  
+  perldoc $nomprog display complete the help
 Mesg
   exit;
 }
