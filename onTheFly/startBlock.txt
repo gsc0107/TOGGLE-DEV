@@ -173,15 +173,15 @@ my $globalAnalysis=0; #to check if all data are to be treated one by one  (0) or
 
 switch (1)
 {
-  case (scalar @$fileList == 2 && $$fileList[0] =~ m/fastq|fq$/ && $$fileList[1] =~ m/fastq|fq$/) {$fastqForwardIn=$$fileList[0];$fastqReverseIn=$$fileList[1]; print "\nPaired fastq files"}
-  case (scalar @$fileList == 2 && $$fileList[0] =~ m/fastq\.gz|fq\.gz$/ && $$fileList[1] =~ m/fastq\.gz|fq\.gz$/) {$fastqForwardIn=$$fileList[0];$fastqReverseIn=$$fileList[1]; print "\nPaired fastq.gz files"}
-  case (scalar @$fileList == 1 && $$fileList[0] =~ m/fastq|fq$/) {$fastqForwardIn=$$fileList[0]; print "\nSingle fastq file"} 
-  case (scalar @$fileList == 1 && $$fileList[0] =~ m/fastq\.gz|fq\.gz$/) {$fastqForwardIn=$$fileList[0]; print "\nSingle fastq.gz file"}
-  case (scalar @$fileList == 1 && $$fileList[0] =~ m/sam$/) {$samFileIn=$$fileList[0]; print "\nSingle SAM file"}
-  case (scalar @$fileList == 1 && $$fileList[0] =~ m/bam$/) {$bamFileIn = $$fileList[0]; print "\nSingle BAM file"}
-  case (scalar @$fileList == 1 && $$fileList[0] =~ m/vcf$/) {$vcfFileIn = $$fileList[0]; print "\nSingle VCF file"}
-  case (scalar @$fileList == 1 && $$fileList[0] =~ m/vcf\.gz$/) {$vcfFileIn = $$fileList[0]; print "\nSingle VCF.gz file"} 
-  case (scalar @$fileList >= 2 && $$fileList[0] =~ m/sam|bam|vcf|bai|vcf\.gz$/) {$globalAnalysis =1;print "Multiple files, steps higher than 1000"} #multiple file for the case of step higher than 1000
+  case (scalar @$fileList == 2 && $$fileList[0] =~ m/fastq|fq$/ && $$fileList[1] =~ m/fastq|fq$/) {$fastqForwardIn=$$fileList[0];$fastqReverseIn=$$fileList[1]; }#Paired fastq files
+  case (scalar @$fileList == 2 && $$fileList[0] =~ m/fastq\.gz|fq\.gz$/ && $$fileList[1] =~ m/fastq\.gz|fq\.gz$/) {$fastqForwardIn=$$fileList[0];$fastqReverseIn=$$fileList[1];}# Paired fastq.gz files
+  case (scalar @$fileList == 1 && $$fileList[0] =~ m/fastq|fq$/) {$fastqForwardIn=$$fileList[0];}# Single fastq file
+  case (scalar @$fileList == 1 && $$fileList[0] =~ m/fastq\.gz|fq\.gz$/) {$fastqForwardIn=$$fileList[0]; }#Single fastq.gz file
+  case (scalar @$fileList == 1 && $$fileList[0] =~ m/sam$/) {$samFileIn=$$fileList[0];}# Single SAM file
+  case (scalar @$fileList == 1 && $$fileList[0] =~ m/bam$/) {$bamFileIn = $$fileList[0];}#  Single BAM file
+  case (scalar @$fileList == 1 && $$fileList[0] =~ m/vcf$/) {$vcfFileIn = $$fileList[0];}# Single VCF file
+  case (scalar @$fileList == 1 && $$fileList[0] =~ m/vcf\.gz$/) {$vcfFileIn = $$fileList[0];}# Single VCF.gz file
+  case (scalar @$fileList >= 2 && $$fileList[0] =~ m/sam|bam|vcf|bai|vcf\.gz$/) {$globalAnalysis =1;} #multiple file for the case of step higher than 1000
   else { toolbox::exportLog("ERROR: The input files are not in a format usable by TOGGLE",0); } # Not the good formats
   
 }
