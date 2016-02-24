@@ -107,15 +107,12 @@ toolbox::existsDir($initialDir);        # check if this directory exists
 # Creation of IndividuSoft.txt for creation of logs files later
 ##########################################
 my @pathIndividu = toolbox::extractPath($initialDir);
-my $individu = $pathIndividu[0];
+my $readGroup = $pathIndividu[0];
 chdir "$initialDir";
 my $infosFile = "individuSoft.txt";
 open (F1, ">",$infosFile) or die ("ERROR: $0 : Cannot open the file $infosFile\n$!\n");
-print F1 "$individu\n";
-print F1 "global\n";
+print F1 "$readGroup\n";
 
-my $indivName = `head -n 1 individuSoft.txt`;
-chomp $indivName;
 
 
 
@@ -193,6 +190,4 @@ foreach my $position (sort {$a <=>$b} keys %{$hashOrder})
   }
 }
 
-# Getting the readGroup used as part of next filenames created
-my ($fineName,$readGroup) = pairing::extractName($$fileList[0]);                                                  # extract name of file without the extention
 
