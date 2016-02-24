@@ -123,6 +123,7 @@ toolbox::checkFile($refFastaFile);                                              
 
 my $initialFileList = toolbox::readDir($initialDir);
 
+#Reorganizing initial files
 my $previousDir = $initialDir."/0_initialFiles";
 toolbox::makeDir($previousDir);
 
@@ -131,9 +132,9 @@ foreach my $currentFile (@$initialFileList)
   my ($basicName) = toolbox::extractPath($currentFile);
   next if ($basicName =~ m/individuSoft|log\.[e|o]|Global_log$/); # Passing the individuSoft file
   my $mvCommand = "mv ".$currentFile." ".$previousDir."/".$basicName;
-  print $mvCommand,"\n";
   toolbox::run($mvCommand,"noprint");
 }
+
 my $optionRef=toolbox::readFileConf($fileConf); # Picking up the global options
 
 my $hashOrder=toolbox::extractHashSoft($optionRef,"order"); #Picking up the options for the order of the pipeline
