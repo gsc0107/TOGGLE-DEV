@@ -272,8 +272,8 @@ elsif ($firstOrder<1000) #Other types of data requesting a single treatment
     foreach my $file (@$listOfFiles)
     {
         my ($completeName)=toolbox::extractPath($file);
-        my $basicName=toolbox::extractName($completeName);
-        my $dirName=$workingDir."/".$basicName."Directory";
+        my ($noNeed,$basicName)=pairing::extractName($completeName);
+        my $dirName=$workingDir."/".$basicName;
         toolbox::makeDir($dirName);
         my $mvCommand = "mv $file $dirName/$basicName";
         if (toolbox::run($mvCommand,"noprint") == 1)
