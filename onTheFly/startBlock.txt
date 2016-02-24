@@ -161,7 +161,7 @@ my ($mpileupOut);
 
 ##Internal variables
 ###Directory and file variables
-my ($newDir, $fileWithoutExtension, $extension, $shortDirName);
+my ($newDir, $fileWithoutExtension, $extension, $shortDirName, @dirList);
 ### Step variables
 my ($stepF1, $stepOrder, $stepName, $softParameters);
 ### Various command variables
@@ -186,7 +186,6 @@ switch (1)
 }
 
 
-my @dirList; #List that will contain in order the different step directories
 foreach my $position (sort {$a <=>$b} keys %{$hashOrder})
 {
   if ($globalAnalysis == 0)
