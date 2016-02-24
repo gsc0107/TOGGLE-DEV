@@ -5,9 +5,7 @@
 
 $softParameters = toolbox::extractHashSoft($optionRef, $stepName);                                  # recovery of specific informations for cutadapt
 
-#reinitializing variables for correct variable populating
-$fastqForwardIn=0;
-$fastqReverseIn=0;
+#Correct variable populating
 foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ only
 {
     if ($file =~ m/fastq$|fastq.gz$|fq$|fq.gz$/) 
