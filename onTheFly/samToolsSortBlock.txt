@@ -2,28 +2,32 @@
 # Block for samtools sort
 ##########################################
 
-$samFile=0;
-foreach my $file (@{$fileList}) #Checking the type of files that must be SAM or BAM
+#Correct variable populating
+
+foreach my $file (@{$fileList}) #Checking the type of files that must be BAM
 {
-    if ($file =~ m/sam$|bam$/) # the file type is normally sam of bam
+    if ($file =~ m/bam$/) # the file type is normally bam
     {
-        if ($samFile != 0) # Already a sam of a bam recognized, but more than one in the previous folder
+        if ($bamFileIn ne "NA") # Already a bam recognized, but more than one in the previous folder
         {
-            toolbox::exportLog("ERROR : $0 : there are more than one single SAM/BAM file at $stepName step.\n",0);
+            toolbox::exportLog("ERROR : $0 : there are more than one single BAM file at $stepName step.\n",0);
         }
-        $samFile = $file;
+        else
+        {
+            $bamFileIn = $file;
+        }
     }
 }
 
-if ($samFile eq '0') #No SAM/BAM file found in the previous folder
+if ($bamFileIn eq "NA") #No BAM file found in the previous folder
 {
-    toolbox::exportLog("ERROR : $0 : No SAM/BAM file found in $previousDir at step $stepName.\n",0);
+    toolbox::exportLog("ERROR : $0 : No BAM file found in $previousDir at step $stepName.\n",0);
 }
 
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                # recovery of specific parameters of samtools sort
 
 $bamFileOut = "$newDir"."/"."$readGroup".".SAMTOOLSSORT.bam";
-samTools::samToolsSort($samFile,$bamFileOut,$softParameters);   # Sending to samtools sort function
+samTools::samToolsSort($bamFileIn,$bamFileOut,$softParameters);   # Sending to samtools sort function
 
 
 

@@ -3,25 +3,39 @@
 # Block for tophat::tophat2
 ##########################################
 
-$fastqForward=$$fileList[0];
-
-if (scalar(@{$fileList})==2)        # paired mode
+#Correct variable populating
+foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ only
 {
-    $fastqReverse=$$fileList[1];
-}
-else
-{
-    $fastqReverse=undef;            # single mode
+    if ($file =~ m/fastq$|fastq.gz$|fq$|fq.gz$/) 
+    {
+        if ($fastqForwardIn ne "NA") # $fastqForwardIn is already known
+        {
+            if ($fastqReverseIn ne "NA")
+            {
+                toolbox::exportLog("ERROR : $0 : there are more than two FASTQ files at $stepName step.\n",0);
+            }
+            else
+            {
+                $fastqReverseIn = $file;
+            }
+        }
+        else
+        {
+            $fastqForwardIn = $file;
+        }
+    }
 }
 
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                # recovery of specific parameters of samtools view pair
 
-print LOG "INFOS tophats argument: $newDir,$refFastaFile,$fastqForward,$fastqReverse,$gffFile";
-tophat::tophat2($newDir,$refFastaFile,$fastqForward,$fastqReverse,$gffFile,$softParameters);
+$fastqReverseIn = undef if $fastqReverseIn eq "NA";
+
+## DEBUG print LOG "INFOS tophats argument: $newDir,$refFastaFile,$fastqForwardIn,$fastqReverseIn,$gffFile";
+tophat::tophat2($newDir,$refFastaFile,$fastqForwardIn,$fastqReverseIn,$gffFile,$softParameters);
 
 # Move the tophat log subdirectory into the upper directory
 # The log subdirectory will not be transfered into the final directory
-my $moveCmd = "mv ".$newDir."/".$individu.".logs ".$initialDir."/TOPHAT_".$individu."_LOGS";
+my $moveCmd = "mv ".$newDir."/".$readGroup.".logs ".$initialDir."/TOPHAT_".$readGroup."_LOGS";
 toolbox::run($moveCmd);
 
 # Create a tempory directory
