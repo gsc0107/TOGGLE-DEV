@@ -4,8 +4,8 @@
 # gatk UNIFIED GENOTYPER block
 ##########################################
 
-$vcfCalled = $newDir."/".$readGroup.".GATKUNIFIEDGENOTYPER.vcf";                                         # name of the first VCF file
-$softParameters = toolbox::extractHashSoft($optionRef, "gatkUnifiedGenotyper");                         # recovery of specific parameters of gatk UnifiedGenotyper
+#Correct variable populating
+
 foreach my $file (@{$fileList})
 {
     next if ($file =~ m/bai$/);# The index file
@@ -18,4 +18,8 @@ foreach my $file (@{$fileList})
     }
     
 }
-gatk::gatkUnifiedGenotyper($refFastaFile, $listOfBam, $vcfCalled, $softParameters);
+
+$vcfFileOut = $newDir."/".$readGroup.".GATKUNIFIEDGENOTYPER.vcf";                                         # name of the first VCF file
+$softParameters = toolbox::extractHashSoft($optionRef, "gatkUnifiedGenotyper");                         # recovery of specific parameters of gatk UnifiedGenotyper
+
+gatk::gatkUnifiedGenotyper($refFastaFile, $listOfBam, $vcfFileOut, $softParameters);
