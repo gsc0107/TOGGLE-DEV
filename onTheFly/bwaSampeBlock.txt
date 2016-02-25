@@ -3,31 +3,49 @@
 # Block for bwa::bwaSampe
 ##########################################
 
-if ($$fileList[0] !~ m/\.sai$/) # There are no .sai, the bwaAln was not performed before
+#Correct variable populating
+foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ only
 {
-    ($fastq1,$fastq2) = undef;
-    for (my $i=0; $i<scalar @{$fileList}; $i++)
+    if ($file =~ m/fastq$|fastq.gz$|fq$|fq.gz$/)
     {
-        ##########################################
-        # bwa::bwaAln
-        ##########################################
-        $softParameters = toolbox::extractHashSoft($optionRef,"bwaAln");                                      # recovery of specific parameters of bwa aln
-        ($fileWithoutExtention,$readGroup) = pairing::extractName($$fileList[$i]);                          # extract name of file without the extention
-        my $saiFileOut = "$newDir"."/"."$fileWithoutExtention".".BWAALN.sai";                                 # name for the output file of bwa aln
-        bwa::bwaAln($refFastaFile,$$fileList[$i],$saiFileOut,$softParameters);                                # find the SA coordinates of the current file
-        (not defined($fastq1))?$fastq1= $$fileList[$i]:$fastq2=$$fileList[$i];
+        if ($fastqForwardIn ne "NA") # $fastqForwardIn is already known
+        {
+            if ($fastqReverseIn ne "NA")
+            {
+                toolbox::exportLog("ERROR : $0 : there are more than two FASTQ files at $stepName step.\n",0);
+            }
+            else
+            {
+                $fastqReverseIn = $file;
+            }
+        }
+        else
+        {
+            $fastqForwardIn = $file;
+        }
     }
-    $fileList = toolbox::readDir($newDir);
 }
+toolbox::exportLog("DEBUG: bwaSampe fastqForwardIn file $fastqForwardIn",2);
+toolbox::exportLog("DEBUG: bwaSampe fastqReverseIn file $fastqReverseIn",2);
+toolbox::exportLog("DEBUG: bwaSampe saiForwardOut file $saiForwardOut",2);
+toolbox::exportLog("DEBUG: bwaSampe saiReverseOut file $saiReverseOut",2);
 
-my @listOfSai = @$fileList; #Recovery of list of sai
-
-if (scalar @listOfSai != 2) # Two sai and only two are required for bwa sampe
+if ( $fastqForwardIn eq "NA" or $fastqReverseIn eq "Na")	# Only one fastq find error for run bwaSampe
 {
-    toolbox::exportLog("ERROR : $0 : BWA sampe requires two and only two sai files.\n",0);
+	toolbox::exportLog("ERROR : $0 : BWA sampe requires two fastq files.\n",0);
 }
+else
+{
+	if ($saiForwardOut eq "NA" and $saiReverseOut eq "Na") # There are no .sai, the bwaAln was not performed before
+	{
+		toolbox::exportLog("ERROR : $0 : BWA sampe requires two sai files.\n",0);
+	}
+	else #  There are .sai, the bwaAln
+	{
+		($fileWithoutExtension,$readGroup) = pairing::extractName($fastqForwardIn);                   # extract name of file without the extention
 
-$samFileOut = "$newDir"."/"."$readGroup".".BWASAMPE.sam";                                     # name for the output file of bwa sampe
-$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                      # recovery of specific parameters of bwa sampe
-bwa::bwaSampe($samFileOut,$refFastaFile,$listOfSai[0],$listOfSai[1],$fastq1,$fastq2,$readGroup,$softParameters); # generate alignement in SAM format
-
+		$samFileOut = "$newDir"."/"."$readGroup".".BWASAMPE.sam";                                     # name for the output file of bwa sampe
+		$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                             # recovery of specific parameters of bwa sampe
+		bwa::bwaSampe($samFileOut,$refFastaFile,$saiForwardOut,$saiReverseOut,$fastqForwardIn,$fastqReverseIn,$readGroup,$softParameters); # generate alignement in SAM format
+	}
+}
