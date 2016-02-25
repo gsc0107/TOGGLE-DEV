@@ -2,24 +2,61 @@
 # Block for bwa::bwaAln
 ##############################################
 
-($fastq1,$fastq2) = undef;
-
-##DEBUG print LOG "INFOS toolbox ReadDir: @$fileList\n";
-
-my @fileList = @$fileList;
-for (my $i=0; $i<=$#fileList; $i++)
+#Correct variable populating
+foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ only
 {
+    if ($file =~ m/fastq$|fastq.gz$|fq$|fq.gz$/)
+    {
+        if ($fastqForwardIn ne "NA") # $fastqForwardIn is already known
+        {
+            if ($fastqReverseIn ne "NA")
+            {
+                toolbox::exportLog("ERROR : $0 : there are more than two FASTQ files at $stepName step.\n",0);
+            }
+            else
+            {
+                $fastqReverseIn = $file;
+            }
+        }
+        else
+        {
+            $fastqForwardIn = $file;
+        }
+    }
+}
+toolbox::exportLog("DEBUG: fastqForwardIn file $fastqForwardIn",2);
+toolbox::exportLog("DEBUG: fastqReverseIn file $fastqReverseIn",2);
 
-    next if ($fileList[$i] !~ m/fastq|fastq\.gz$/);
-    
+
+if ($fastqForwardIn ne "NA" and $fastqReverseIn eq "Na")	# Single data
+{
+	toolbox::exportLog("DEBUG: Single mode",2);
     ##########################################
-    # bwa::bwaAln
+    # bwa::bwaAln for fastqForwardIn
     ##########################################
     $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                    # recovery of specific parameters of bwa aln
-    ($fileWithoutExtention,$readGroup) = pairing::extractName($fileList[$i]);                             # extract name of file without the extention
-    my $saiFileOut = "$newDir"."/"."$fileWithoutExtention".".BWAALN.sai";                                # name for the output file of bwa aln
-    bwa::bwaAln($refFastaFile,$fileList[$i],$saiFileOut,$softParameters);                                # find the SA coordinates of the current file
-    (not defined($fastq1))?$fastq1= $$fileList[$i]:$fastq2=$$fileList[$i];
+    ($fileWithoutExtension,$readGroup) = pairing::extractName($fastqForwardIn);                          # extract name of file without the extention
+    $saiForwardOut = "$newDir"."/"."$fileWithoutExtension".".BWAALN.sai";                                # name for the output file of bwa aln
+    bwa::bwaAln($refFastaFile,$fastqForwardIn,$saiForwardOut,$softParameters);                           # find the SA coordinates of the current file
+}
+elsif ($fastqForwardIn ne "NA" and $fastqReverseIn ne "Na")	# Paired data
+{
+	toolbox::exportLog("DEBUG: Paired mode",2);
+    ##########################################
+    # bwa::bwaAln for fastqForwardIn
+    ##########################################
+    $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                    # recovery of specific parameters of bwa aln
+    ($fileWithoutExtension,$readGroup) = pairing::extractName($fastqForwardIn);                          # extract name of file without the extention
+    $saiForwardOut = "$newDir"."/"."$fileWithoutExtension".".BWAALN.sai";                                # name for the output file of bwa aln
+    bwa::bwaAln($refFastaFile,$fastqForwardIn,$saiForwardOut,$softParameters);                           # find the SA coordinates of the current file
+
+    ##########################################
+    # bwa::bwaAln for fastqReverseIn
+    ##########################################
+    ($fileWithoutExtension,$readGroup) = pairing::extractName($fastqReverseIn);                          # extract name of file without the extention
+    $saiReverseOut = "$newDir"."/"."$fileWithoutExtension".".BWAALN.sai";                                # name for the output file of bwa aln
+    bwa::bwaAln($refFastaFile,$fastqReverseIn,$saiReverseOut,$softParameters);                           # find the SA coordinates of the current file
 }
 
-
+toolbox::exportLog("DEBUG: saiForwardOut file $saiForwardOut",2);
+toolbox::exportLog("DEBUG: saiReverseOut file $saiReverseOut",2);
