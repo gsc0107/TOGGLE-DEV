@@ -148,7 +148,7 @@ my ($fastqForwardIn, $fastqForwardOut, $fastqReverseIn, $fastqReverseOut)=("NA",
 ##SAM associated variables
 my ($samFileIn, $samFileOut)=("NA","NA"); #Those variables are to be used for sam standard but also if the block can treat SAM as well as BAM (eg samtools view)
 ## SAI associated variables
-my ($saiForwardIn, $saiReverseIn)=("NA","NA"); # Use for bwa alnBlock, bwaSampe and bwaSamse
+my ($saiForwardOut, $saiReverseOut)=("NA","NA"); # Use for bwa alnBlock, bwaSampe and bwaSamse
 
 ##BAM associated variables
 my ($bamFileIn, $bamFileOut)=("NA","NA");
