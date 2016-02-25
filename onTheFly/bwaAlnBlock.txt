@@ -24,13 +24,13 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ o
         }
     }
 }
-toolbox::exportLog("DEBUG: bwaAln fastqForwardIn file $fastqForwardIn",2);
-toolbox::exportLog("DEBUG: bwaAln fastqReverseIn file $fastqReverseIn",2);
+#toolbox::exportLog("DEBUG: bwaAln fastqForwardIn file $fastqForwardIn",2);
+#toolbox::exportLog("DEBUG: bwaAln fastqReverseIn file $fastqReverseIn",2);
 
 
 if ( ($fastqForwardIn ne "NA") && ($fastqReverseIn eq "NA") )	# Single data
 {
-	toolbox::exportLog("DEBUG: bwaAln Single mode",2);
+	#toolbox::exportLog("DEBUG: bwaAln Single mode",2);
     ##########################################
     # bwa::bwaAln for fastqForwardIn
     ##########################################
@@ -46,9 +46,9 @@ if ( ($fastqForwardIn ne "NA") && ($fastqReverseIn eq "NA") )	# Single data
 }
 elsif ( ($fastqForwardIn ne "NA") && ($fastqReverseIn ne "NA") )	# Paired data
 {
-	toolbox::exportLog("DEBUG: bwaAln Paired mode",2);
-	toolbox::exportLog("DEBUG: bwaAln2 fastqForwardIn file $fastqForwardIn",2);
-	toolbox::exportLog("DEBUG: bwaAln2 fastqReverseIn file $fastqReverseIn",2);
+	#toolbox::exportLog("DEBUG: bwaAln Paired mode",2);
+	#toolbox::exportLog("DEBUG: bwaAln2 fastqForwardIn file $fastqForwardIn",2);
+	#toolbox::exportLog("DEBUG: bwaAln2 fastqReverseIn file $fastqReverseIn",2);
 
     ##########################################
     # bwa::bwaAln for fastqForwardIn
@@ -75,5 +75,5 @@ elsif ( ($fastqForwardIn ne "NA") && ($fastqReverseIn ne "NA") )	# Paired data
 
 }
 
-toolbox::exportLog("DEBUG: bwaAln saiForwardOut file $saiForwardOut",2);
-toolbox::exportLog("DEBUG: bwaAln saiReverseOut file $saiReverseOut",2);
+#toolbox::exportLog("DEBUG: bwaAln saiForwardOut file $saiForwardOut",2);
+#toolbox::exportLog("DEBUG: bwaAln saiReverseOut file $saiReverseOut",2);
