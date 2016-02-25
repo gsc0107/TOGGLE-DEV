@@ -28,7 +28,7 @@ toolbox::exportLog("DEBUG: bwaAln fastqForwardIn file $fastqForwardIn",2);
 toolbox::exportLog("DEBUG: bwaAln fastqReverseIn file $fastqReverseIn",2);
 
 
-if ($fastqForwardIn ne "NA" and $fastqReverseIn eq "Na")	# Single data
+if ( ($fastqForwardIn ne "NA") && ($fastqReverseIn eq "Na") )	# Single data
 {
 	toolbox::exportLog("DEBUG: bwaAln Single mode",2);
     ##########################################
@@ -44,7 +44,7 @@ if ($fastqForwardIn ne "NA" and $fastqReverseIn eq "Na")	# Single data
 	my $linkForwardCommand = "ln -s $fastqForwardIn $newDir/";
 	toolbox::run($linkForwardCommand,"noprint");
 }
-elsif ($fastqForwardIn ne "NA" and $fastqReverseIn ne "Na")	# Paired data
+elsif ( ($fastqForwardIn ne "NA") && ($fastqReverseIn ne "Na") )	# Paired data
 {
 	toolbox::exportLog("DEBUG: bwaAln Paired mode",2);
     ##########################################
