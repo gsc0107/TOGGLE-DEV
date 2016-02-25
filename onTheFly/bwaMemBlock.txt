@@ -26,17 +26,21 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ o
 toolbox::exportLog("DEBUG: bwaMem fastqForwardIn file $fastqForwardIn",2);
 toolbox::exportLog("DEBUG: bwaMem fastqReverseIn file $fastqReverseIn",2);
 
-if ( ($fastqForwardIn eq "NA") || ($fastqReverseIn eq "NA") )	# Only one fastq find error for run bwaMem
+if ( ($fastqForwardIn eq "NA") && ($fastqReverseIn eq "NA") )	# zero fastq find error for run bwaMem
 {
-	toolbox::exportLog("ERROR : $0 : BWA mem requires two fastq files.\n",0);
+	toolbox::exportLog("ERROR : $0 : BWA mem requires one or two fastq files.\n",0);
 }
-else
+elsif ( ($fastqForwardIn ne "NA") && ($fastqReverseIn eq "NA") )	# Single Mode
+{
+	$fastqReverseIn=undef:
+	$samFileOut=$newDir."/".$readGroup."BWAMEM.sam";
+	$softParameters = toolbox::extractHashSoft($optionRef,$stepName);        # recovery of specific parameters of bwa mem
+	bwa::bwaMem($samFileOut,$refFastaFile,$fastqForwardIn,$fastqReverseIn,$readGroup,$softParameters);
+}
+elsif ( ($fastqForwardIn ne "NA") && ($fastqReverseIn ne "NA") )	# Paired Mode
 {
 
 	$samFileOut=$newDir."/".$readGroup."BWAMEM.sam";
 	$softParameters = toolbox::extractHashSoft($optionRef,$stepName);        # recovery of specific parameters of bwa mem
-
-
 	bwa::bwaMem($samFileOut,$refFastaFile,$fastqForwardIn,$fastqReverseIn,$readGroup,$softParameters);
-
 }
