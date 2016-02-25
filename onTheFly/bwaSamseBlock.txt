@@ -25,8 +25,8 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ o
         }
     }
 }
-toolbox::exportLog("DEBUG: bwaSamse fastqForwardIn file $fastqForwardIn",2);
-toolbox::exportLog("DEBUG: bwaSamse fastqReverseIn file $fastqReverseIn",2);
+#toolbox::exportLog("DEBUG: bwaSamse fastqForwardIn file $fastqForwardIn",2);
+#toolbox::exportLog("DEBUG: bwaSamse fastqReverseIn file $fastqReverseIn",2);
 
 
 
