@@ -59,7 +59,7 @@ use onTheFly;
 use tophat;
 use HTSeq;
 
-#TO BE COMPLETED 
+#TO BE COMPLETED
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
@@ -70,21 +70,21 @@ unless ($#ARGV>=0)                                                              
 {
   print <<"Mesg";
   Usage: toggleGenerator.pl -d dataFolder -r referenceFile -c configurationFile [-g gffFile]
-  
+
   perldoc $nomprog display the complete help
 Mesg
 
   exit;
 }
 
-my %param = @ARGV;                                                                                          # get the parameters 
+my %param = @ARGV;                                                                                          # get the parameters
 @param{ map { lc $_ } keys %param } = values %param;
 if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined($param{'-r'}))
 {
   print <<"Mesg";
   ERROR: Parameters -d, -r and -c are mandatory.
   the -g parameter is required for some analyses, such as for TopHat or snpEff.
-  
+
   perldoc $nomprog display complete the help
 Mesg
   exit;
@@ -98,7 +98,7 @@ my $initialDir = $param{'-d'};               # recovery of the name of the direc
 my $fileConf = $param{'-c'};                 # recovery of the name of the software.configuration.txt file
 my $refFastaFile = $param{'-r'};             # recovery of the reference file
 my $gffFile;                                  # recovery of the gff file used by topHat and rnaseq analysis
-$gffFile = $param{'-g'} if (defined $param{'-g'}); 
+$gffFile = $param{'-g'} if (defined $param{'-g'});
 
 toolbox::existsDir($initialDir);        # check if this directory exists
 
@@ -147,6 +147,8 @@ my ($fastqForwardIn, $fastqForwardOut, $fastqReverseIn, $fastqReverseOut)=("NA",
 
 ##SAM associated variables
 my ($samFileIn, $samFileOut)=("NA","NA"); #Those variables are to be used for sam standard but also if the block can treat SAM as well as BAM (eg samtools view)
+## SAI associated variables
+my ($saiForwardIn, $saiReverseIn)=("NA","NA"); # Use for bwa alnBlock, bwaSampe and bwaSamse
 
 ##BAM associated variables
 my ($bamFileIn, $bamFileOut)=("NA","NA");
@@ -202,5 +204,3 @@ foreach my $position (sort {$a <=>$b} keys %{$hashOrder})
     push (@dirList,$directory); # Adding the newly created folder to the list of folders
   }
 }
-
-
