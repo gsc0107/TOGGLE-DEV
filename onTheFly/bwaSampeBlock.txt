@@ -25,10 +25,10 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ o
         }
     }
 }
-toolbox::exportLog("DEBUG: bwaSampe fastqForwardIn file $fastqForwardIn",2);
-toolbox::exportLog("DEBUG: bwaSampe fastqReverseIn file $fastqReverseIn",2);
-toolbox::exportLog("DEBUG: bwaSampe saiForwardOut file $saiForwardOut",2);
-toolbox::exportLog("DEBUG: bwaSampe saiReverseOut file $saiReverseOut",2);
+#toolbox::exportLog("DEBUG: bwaSampe fastqForwardIn file $fastqForwardIn",2);
+#toolbox::exportLog("DEBUG: bwaSampe fastqReverseIn file $fastqReverseIn",2);
+#toolbox::exportLog("DEBUG: bwaSampe saiForwardOut file $saiForwardOut",2);
+#toolbox::exportLog("DEBUG: bwaSampe saiReverseOut file $saiReverseOut",2);
 
 if ( $fastqForwardIn eq "NA" or $fastqReverseIn eq "Na")	# Only one fastq find error for run bwaSampe
 {
@@ -36,7 +36,7 @@ if ( $fastqForwardIn eq "NA" or $fastqReverseIn eq "Na")	# Only one fastq find e
 }
 else
 {
-	if ($saiForwardOut eq "NA" and $saiReverseOut eq "Na") # There are no .sai, the bwaAln was not performed before
+	if ($saiForwardOut eq "NA" or $saiReverseOut eq "Na") # There are no .sai, the bwaAln was not performed before
 	{
 		toolbox::exportLog("ERROR : $0 : BWA sampe requires two sai files.\n",0);
 	}
