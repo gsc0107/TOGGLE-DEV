@@ -146,6 +146,7 @@ sub generateScript
 	{# will not add the switcher of previous directory for 'dead end' protgrams such as fastqc, samtools flagstats....
 	    $cleanerCounter++;
 	    $compressorCounter++;
+	    $catCommand .= " ".$toggle."/onTheFly/afterBlockNa.txt"; # adding infos for next block
 	    next;
 	}
         if (defined $$hashCompressor{$step-$compressorCounter})
