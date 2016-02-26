@@ -7,23 +7,23 @@
 #Correct variable populating
 foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ only
 {
-    if ($file =~ m/fastq$|fastq.gz$|fq$|fq.gz$/)
-    {
-        if ($fastqForwardIn ne "NA") # $fastqForwardIn is already known
-        {
-            if ($fastqReverseIn ne "NA")
-            {
-                toolbox::exportLog("ERROR : $0 : there are more than two FASTQ files at $stepName step.\n",0);
-            }
-            else
-            {
-                $fastqReverseIn = $file;
-            }
-        }
-        else
-        {
-            $fastqForwardIn = $file;
-        }
+	if ($file =~ m/fastq$|fastq.gz$|fq$|fq.gz$/)
+	{
+		if ($fastqForwardIn ne "NA") # $fastqForwardIn is already known
+		{
+			if ($fastqReverseIn ne "NA")
+			{
+				toolbox::exportLog("ERROR : $0 : there are more than two FASTQ files at $stepName step.\n",0);
+			}
+			else
+			{
+				$fastqReverseIn = $file;
+			}
+		}
+		else
+		{
+			$fastqForwardIn = $file;
+		}
 	if ($file =~ m/sai$/)
 	{
 		if ($saiForwardOut ne "NA") # $fastqForwardIn is already known
@@ -42,7 +42,7 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ o
 			$saiForwardOut = $file;
 		}
 	}
-    }
+	}
 }
 #toolbox::exportLog("DEBUG: bwaSamse fastqForwardIn file $fastqForwardIn",2);
 #toolbox::exportLog("DEBUG: bwaSamse fastqReverseIn file $fastqReverseIn",2);
@@ -57,10 +57,10 @@ if ( ($fastqForwardIn ne "NA") && ($fastqReverseIn eq "NA") )		# Only one fastq 
 	}
 	else 															#  There are .sai, the bwaAln was performed before
 	{
-		($fileWithoutExtension,$readGroup) = pairing::extractName($fastqForwardIn);                   # extract name of file without the extention
-		$samFileOut = "$newDir"."/"."$readGroup".".BWASAMSE.sam";                                     # name for the output file of bwa sampe
-		$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                             # recovery of specific parameters of bwa sampe
-		bwa::bwaSamse($samFileOut,$refFastaFile,$saiForwardOut,$fastqForwardIn,$readGroup,$softParameters);    # generate alignement in SAM format
+		($fileWithoutExtension,$readGroup) = pairing::extractName($fastqForwardIn);				   # extract name of file without the extention
+		$samFileOut = "$newDir"."/"."$readGroup".".BWASAMSE.sam";									 # name for the output file of bwa sampe
+		$softParameters = toolbox::extractHashSoft($optionRef,$stepName);							 # recovery of specific parameters of bwa sampe
+		bwa::bwaSamse($samFileOut,$refFastaFile,$saiForwardOut,$fastqForwardIn,$readGroup,$softParameters);	# generate alignement in SAM format
 	}
 }
 else
