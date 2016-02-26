@@ -3,6 +3,7 @@
 # Block for bwa::bwaSamse
 ##########################################
 
+
 #Correct variable populating
 foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ only
 {
@@ -23,6 +24,24 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ o
         {
             $fastqForwardIn = $file;
         }
+	if ($file =~ m/sai$/)
+	{
+		if ($saiForwardOut ne "NA") # $fastqForwardIn is already known
+		{
+			if ($saiReverseOut ne "NA")
+			{
+				toolbox::exportLog("ERROR : $0 : there are more than two SAI files at $stepName step.\n",0);
+			}
+			else
+			{
+				$saiReverseOut = $file;
+			}
+		}
+		else
+		{
+			$saiForwardOut = $file;
+		}
+	}
     }
 }
 #toolbox::exportLog("DEBUG: bwaSamse fastqForwardIn file $fastqForwardIn",2);
