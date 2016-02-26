@@ -5,30 +5,33 @@
 #
 ############################
 
-$bamFile=0;
+#Correct variable populating
+
 foreach my $file (@{$fileList}) #Checking the type of files that must be SAM or BAM
 {
-
-    if ($file =~ m/bam$/) # the file type is normally bam
+    if ($file =~ m/bam$/) # the file type is normally sam of bam
     {
-        if ($bamFile != 0) # Already a sam of a bam recognized, but more than one in the previous folder
+        if ($bamFileIn ne "NA") # Already a bam recognized, but more than one in the previous folder
         {
-            toolbox::exportLog("ERROR : $0 : there are more than one single SAM/BAM file at $stepName step.\n",0);
+            toolbox::exportLog("ERROR : $0 : there are more than one single BAM file at $stepName step.\n",0);
         }
-        $bamFile = $file;
+        else
+        {
+            $bamFileIn = $file;
+        }
     }
 }
 
-if ($bamFile eq '0') #No BAM file found in the previous folder
+if ($bamFileIn eq "NA") #No BAM file found in the previous folder
 {
-    toolbox::exportLog("ERROR : $0 : No SAMfile found in $previousDir at step $stepName.\n",0);
+    toolbox::exportLog("ERROR : $0 : No BAM file found in $previousDir at step $stepName.\n",0);
 }
 
 #########################################
 # SAMtools INDEX  
 #########################################    
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                       # recovery of specific parameters of bwa aln
-samTools::samToolsIndex($bamFile);
+samTools::samToolsIndex($bamFileIn);
 
 #########################################
 #Modifying the folder in a link to previousDir, to avoid empty data transfer is samtools index is the last dir.
