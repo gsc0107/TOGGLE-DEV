@@ -70,7 +70,7 @@ sub gatkBaseRecalibrator
 sub gatkPrintReads
 {
     my ($refFastaFileIn, $bamToRecalibrate, $bamOut, $tableReport, $optionsHachees) = @_;      # recovery of information
-    if ((toolbox::checkSamOrBamFormat($bamToRecalibrate)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamToRecalibrate)==1) and (toolbox::sizeFile($tableReport)==1))     # check if files exists and arn't empty and stop else
+    if ((toolbox::checkSamOrBamFormat($bamToRecalibrate)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamToRecalibrate)==1))     # check if files exists and arn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);       # extraction of options parameters
         if ($options !~ m/-T/) # The type of walker is not informed in the options
@@ -82,7 +82,7 @@ sub gatkPrintReads
         
         if (defined $tableReport)
         {
-            if (-e $tableReport)
+            if (toolbox::sizeFile($tableReport)==1)
             {
                 $comGatkPrintReads .= " -BQSR $tableReport";
             }
@@ -105,7 +105,7 @@ sub gatkPrintReads
     }
     else        # if one or some previous files doesn't exist or is/are empty or if gatkPrintReads failed
     {
-        toolbox::exportLog("ERROR: gatk::gatkPrintReads : The files $refFastaFileIn, $tableReport or/and $bamToRecalibrate are incorrects\n", 0);     # returns the error message
+        toolbox::exportLog("ERROR: gatk::gatkPrintReads : The files $refFastaFileIn or/and $bamToRecalibrate are incorrects\n", 0);     # returns the error message
         return 0;
     }    
     
