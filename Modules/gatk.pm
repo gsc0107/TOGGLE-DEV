@@ -78,7 +78,20 @@ sub gatkPrintReads
             $options .= " -T PrintReads";
         }
     
-        my $comGatkPrintReads = "$GATK"."$options"." -I $bamToRecalibrate -R $refFastaFileIn -BQSR $tableReport -o $bamOut  ";       # command line
+        my $comGatkPrintReads = "$GATK"."$options"." -I $bamToRecalibrate -R $refFastaFileIn -o $bamOut  ";       # command line
+        
+        if (defined $tableReport)
+        {
+            if (-e $tableReport)
+            {
+                $comeGatkPrintReads .= " -BQSR $tableReport";
+            }
+            else
+            {
+                   toolbox::exportLog("ERROR : $0 : gatkIndelRealigner: the Input covariates table file don't exist\n",1);
+            }
+        }
+        
         if(toolbox::run($comGatkPrintReads)==1)
         {
             toolbox::exportLog("INFOS: gatk::gatkPrintReads : Correctly done\n",1);
