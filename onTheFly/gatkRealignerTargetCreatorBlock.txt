@@ -37,3 +37,5 @@ gatk::gatkRealignerTargetCreator($refFastaFile, $bamFileIn, $intervalsFile, $sof
 my $lnGatkRTCCommand = "ln -s $bamFileIn $newDir/";
 toolbox::run($lnGatkRTCCommand ,"noprint");
 
+$lnGatkRTCCommand = "ln -s $bamFileIn*bai $newDir/";
+toolbox::run($lnGatkRTCCommand ,"noprint");
