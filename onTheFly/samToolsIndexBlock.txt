@@ -30,7 +30,6 @@ if ($bamFileIn eq "NA") #No BAM file found in the previous folder
 #########################################
 # SAMtools INDEX  
 #########################################    
-$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                                       # recovery of specific parameters of bwa aln
 samTools::samToolsIndex($bamFileIn);
 
 #########################################
