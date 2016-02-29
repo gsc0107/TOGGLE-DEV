@@ -84,7 +84,7 @@ sub gatkPrintReads
         {
             if (-e $tableReport)
             {
-                $comeGatkPrintReads .= " -BQSR $tableReport";
+                $comGatkPrintReads .= " -BQSR $tableReport";
             }
             else
             {
