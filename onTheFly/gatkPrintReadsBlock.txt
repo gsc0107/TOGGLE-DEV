@@ -43,7 +43,7 @@ my $cleanerTable=0;
 #########################################
 $softParameters = toolbox::extractHashSoft($optionRef,$stepName);                       # recovery of specific parameters of GATK PrintReads
 $bamFileOut = "$newDir"."/"."$readGroup".".GATKPRINTREADS.bam";                  # name for the output file of gatk print reads
-gatk::gatkPrintReads($refFastaFile, $bamFileIn, $bamFileOut, $tableReport, $softParameters);   # run the realigner over the intervals producted by gatk::gatkRealignerTargetCreator (see above)
+gatk::gatkPrintReads($refFastaFile, $bamFileIn, $bamFileOut, undef, $softParameters);   # run the realigner over the intervals producted by gatk::gatkRealignerTargetCreator (see above)
 
 #Cleaning and removing the table report file that may cause a problem in the next steps
 my $tableReportRemoverCommand= " rm -f ".$tableReport;
