@@ -46,7 +46,6 @@ use lib qw(../Modules/);
 use_ok('toolbox');
 use_ok('fastqc');
 can_ok('fastqc','execution');
-can_ok('fastqc','parse');
 
 use toolbox;
 use fastqc;
@@ -96,31 +95,9 @@ $makeDirCmd = "mkdir $fastqcDir";
 system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
 is(fastqc::execution($fastqcFile,$fastqcDir),1,'fastqc::execution');     # test if fastqc::execution works
 
-my @expectedOutput = ('fastqcOut/RC3_2_fastqc.zip',
-                      '',
-                      'fastqcOut/RC3_2_fastqc:',
-                      'fastqc_data.txt',
-                      'fastqc_report.html',
-                      'Icons',
-                      'Images',
-                      'summary.txt');
+my @expectedOutput = ('fastqcOut/RC3_2_fastqc.zip');
 
 my @observedOutput = toolbox::readDir($fastqcDir);
 ##DEBUG print "ICI :\n"; print Dumper(@observedOutput);
 is_deeply(@observedOutput,\@expectedOutput,'fastqc::execution');        # test if the observed output of fastqc::execution is ok
 
-#########################################
-#Fastqc  parse test
-#########################################   
-my $expectedOutput= {
-            'Filename' => 'RC3_2.fastq',
-            'File type' => 'Conventional base calls',
-            'Encoding' => 'Sanger / Illumina 1.9',
-            'Total Sequences' => '1000',    
-            'Filtered Sequences' => '0',       
-            'Sequence length' => '38-101',      
-            '%GC' => '42'};
-
-my $observedoutput=fastqc::parse($fastqcDir);      # test if fastqc::parse works and will give the observed output in the same time
-##DEBUG print Dumper($observedoutput);
-is_deeply($observedoutput,$expectedOutput,'fastqc::parse');      # test if the observed output of fastqc::parse is ok
