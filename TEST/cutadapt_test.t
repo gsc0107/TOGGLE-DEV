@@ -33,7 +33,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 5;
 use lib qw(../Modules/);
 
 
@@ -42,7 +42,6 @@ use lib qw(../Modules/);
 ########################################
 use_ok('toolbox') or exit;                                                                          # Check if toolbox is usable
 use_ok('cutadapt') or exit;                                                                         # Check if cutadapt is usable
-can_ok('cutadapt','createConfFile');                                                                # Check if cutadapt::createConfFile is find
 can_ok('cutadapt','execution');                                                                     # Check if cutadapt::execution is find
 
 use toolbox;
@@ -90,32 +89,22 @@ my $originalAdaptatorFile = $expectedData.$adaptatorFile;     # adaptator file
 $lnCmd = "ln -s $originalAdaptatorFile .";             # command to copy the original adaptator file into the test directory
 system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalAdaptatorFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
 
-my $confFile = "cutadapt.conf";                             # fastqc file for test
-my $originalConfFile = $expectedData.$confFile;
-$lnCmd = "ln -s $originalConfFile .";  # command to copy the original fastqc file into the test directory
-system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalConfFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
-
 my $fileOut = "RC3_2.CUTADAPT.fastq";                                                  # Output file without adaptators sequences
 ######################
 
 
-#######################################
-### Test of cutadapt::createConfFile ###
-my %optionsRef = ("-q" => "20","-O" => "10","-m" => "35");                                          # Hash containing informations to put into the configuration file
-my $optionref = \%optionsRef;                                                                       # Ref of the hash
-is ((cutadapt::createConfFile($confFile, $optionref)),1, 'cutadapt::createConfFile');   # TEST IF FONCTION WORKS
-#my $refConf = "../DATA/RC1/2_CUTADAPT/cutadapt.conf";                                               # configuration file for checking
-my $md5sumRefConf = "5d5257635d148cca42caf5a23ec68c82";                                             # structure of the ref configuration file
-my $md5sumFileConf = `md5sum $confFile`;                                                            # structure of the test configuration file
-my @withoutName = split (" ", $md5sumFileConf);                                                     # to separate the structure and the name of file
-$md5sumFileConf = $withoutName[0];                                                                  # just to have the md5sum result
-is_deeply ($md5sumFileConf, $md5sumRefConf, "cutadapt::createConfFile... Cutadapt configuration file checkout");                     # TEST IF THE STRUCTURE OF THE CONFIGURATION FILE IS GOOD
-########################################
 
 
 ### Test of cutadapt::exec ###
-is ((cutadapt::execution($confFile, $fastqFile, $fileOut)),1, 'cutadapt::execution');                      # TEST IF FONCTION WORKS
-my $md5sumOfRefOut = "64bb8aebb3afe426548bd822bd57e5d2";                                            # structure of the ref file for checking
+my %optionsHachees = (
+                    "-O" => 10,
+                    "-m" => 35,
+                    "-q" => 20,
+                    "--overlap" => 7
+);        # Hash containing informations
+my $optionsHachees = \%optionsHachees;   
+is ((cutadapt::execution($fastqFile,$fileOut,undef, undef, $optionsHachees)),1, 'cutadapt::execution');                      # TEST IF FONCTION WORKS
+my $md5sumOfRefOut = "3275afc598641cd5ed97ab21d371194b";                                            # structure of the ref file for checking
 my $md5sumOfFileOut = `md5sum $fileOut`;                                                            # structure of the test file for checking
 my @nameless = split (" ", $md5sumOfFileOut);                                                       # to separate the structure and the name of file
 $md5sumOfFileOut = $nameless[0];                                                                    # just to have the md5sum result
