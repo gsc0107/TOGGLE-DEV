@@ -194,7 +194,7 @@ $optionRef = \%optionsRef;                           # Ref of the hash
 is(picardTools::picardToolsMarkDuplicates($bamFile, $bamFileOut, $duplicatesFileOut, $optionRef),1,'picardTools::picardToolsMarkDuplicates... Running');  # test if picardTools::picardToolsMarkDuplicates works
 
 #### TEST OF STRUCTURE
-my $expectedBam = "1c3687f4e0dcfe532cdcd8e2488317a2";
+my $expectedBam = "63aa7627a3658ad513351fa73f5d8f93";
 my $observedBam = `md5sum $bamFileOut`;
 @nameless = split (" ", $observedBam);           # to separate the structure and the name of file
 $observedBam = $nameless[0];                        # just to have the md5sum result
