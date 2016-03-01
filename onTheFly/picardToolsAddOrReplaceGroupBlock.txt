@@ -3,13 +3,27 @@
 # picardToolsAddOrReplaceGroup
 ##########################################
 
-foreach my $file (@{$fileList})
+#Correct variable populating
+foreach my $file (@{$fileList}) #Checking the type of files that must be SAM or BAM
 {
-    ## DEBUG toolbox::exportLog($file,1);
-    next unless $file =~ m/bam$|sam$/;
-    $bamFile = $file;
+    if ($file =~ m/bam$/) # the file type is normally bam
+    {
+        if ($bamFileIn ne "NA") # Already a bam recognized, but more than one in the previous folder
+        {
+            toolbox::exportLog("ERROR : $0 : there are more than one single BAM file at $stepName step.\n",0);
+        }
+        else
+        {
+            $bamFileIn = $file;
+        }
+    }
 }
-toolbox::exportLog("ERROR : $0 : No SAM/BAM file provided at step $stepName\n",0) unless $bamFile;
-$bamFileOut = $newDir."/"."$readGroup".".PICARDTOOLSRG.bam";                              # name for the output file of picardtools CleanSam
+
+if ($bamFileIn eq "NA") #No BAM file found in the previous folder
+{
+    toolbox::exportLog("ERROR : $0 : No BAM file found in $previousDir at step $stepName.\n",0);
+}
+
+$bamFileOut = $newDir."/"."$readGroup".".PICARDTOOLSADDORREPLACEGROUP.bam";                              # name for the output file of picardtools CleanSam
 $softParameters = toolbox::extractHashSoft($optionRef,"picardToolsAddOrReplaceGroup");                           # recovery of specific parameters of picard AddOrReplaceGroup
-picardTools::picardToolsAddOrReplaceGroup($bamFile,$bamFileOut,$softParameters); 
+picardTools::picardToolsAddOrReplaceGroup($bamFileIn,$bamFileOut,$softParameters); 
