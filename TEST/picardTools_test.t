@@ -126,7 +126,7 @@ is_deeply($m5Observed[1],$lastM5Expected,'picardTools::picardToolsCreateSequence
 ## Input files test for single analysis
 my $samFile = "RC3.BWASAMSE.sam";              # SAM file of test
 my $originalSamFile = $expectedData."/".$samFile;        # original SAM file
-my $lnCmd = "ln -s $originalSamFile .";                  # command to copy the original Ref fasta file into the test directory
+$lnCmd = "ln -s $originalSamFile .";                  # command to copy the original Ref fasta file into the test directory
 system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalSamFile in the test directory with the command $lnCmd\n$!\n");
 
 my $bamFileOut = "RC3Single.PICARDTOOLSSORT.bam";
@@ -180,7 +180,7 @@ is_deeply ($md5sumObserved,$md5sumExpected, 'picardTools::picardToolsSortSam... 
 my $bamFile = "RC3.GATKINDELREALIGNER.bam";                         # BAM file of test
 my $originalBamFile = $expectedData."/".$bamFile;        # original BAM file
 
-my $lnCmd = "ln -s $originalBamFile .";                            # command to copy the original Ref fasta file into the test directory
+$lnCmd = "ln -s $originalBamFile .";                            # command to copy the original Ref fasta file into the test directory
 system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalBamFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
 
 $bamFileOut = "RC3.PICARDTOOLSMARKDUPLICATES.bam";
