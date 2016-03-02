@@ -9,7 +9,7 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be BAM
     {
         if ($bamFileIn ne "NA") # Already a bam recognized, but more than one in the previous folder
         {
-            #toolbox::exportLog("ERROR : $0 : there are more than one single BAM file at $stepName step.\n",0);
+            toolbox::exportLog("INFO : $0 : there are more than one single BAM file at $stepName step.\n",1);
         }
         else
         {
