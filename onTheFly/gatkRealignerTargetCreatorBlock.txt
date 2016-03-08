@@ -38,5 +38,5 @@ my $lnGatkRTCCommand = "ln -s $bamFileIn $newDir/";
 toolbox::run($lnGatkRTCCommand ,"noprint");
 
 my @baiFileIn=split /.bam/, $bamFileIn;
-$lnGatkRTCCommand = "ln -s $baiFileIn[0].bai $newDir/";
+$lnGatkRTCCommand = "ln -s $baiFileIn[0]*bai $newDir/";
 toolbox::run($lnGatkRTCCommand ,"noprint");
