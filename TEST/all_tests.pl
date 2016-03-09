@@ -34,7 +34,8 @@
 # *** FASTQ ***
 #   - TOGGLE fastq pairedOneIndividuArcad
 #   - TOGGLE fastq pairedTwoIndividusGzippedIrigin
-#   - TOGGLE fastq pairedTwoIndividusIrigin
+#   - TOGGLE fastq pairedTwoIndividusIrigin 
+#   - TOGGLE fastq pairedTwoIndividusIrigin en QSUB
 #   - TOGGLE fastq singleOneIndividuIrigin
 #   - TOGGLE fastq singleTwoIndividuIrigin
 
@@ -53,3 +54,41 @@
 
 use strict;
 use warnings;
+
+
+#####################
+## CONFIGURATION FILES FOR TESTS
+#####################
+
+# Copy file config SNPdiscoveryPaired for no SGE mode
+my $fileSNPPairedIni="../SNPdiscoveryPaired.config.txt";          # Path of the SNPdiscoveryPaired.config.txt
+my $fileSNPPaired="SNPdiscoveryPairedTest.config.txt";
+
+my $cmd="cp $fileSNPPairedIni $fileSNPPaired";
+print "#### Copy conf file SNPdiscoveryPaired : $cmd\n";
+system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TEST
+
+# Change the TOGGLE addaptator configuration file
+my $sed="sed -i -e 's|-b ADAPTATOR1REVERSE -B ADAPTATOR1REVERSE|-b GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG  -B GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG|' ". $fileSNPPaired;
+#print $sed."\n\n";
+system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+$sed="sed -i -e 's|-b ADAPTATOR1FORWARD -B ADAPTATOR1FORWARD|-b GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG -B GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG|' ". $fileSNPPaired;
+#print $sed."\n\n";
+system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+
+
+
+
+my $fileSNPSingleIni="../SNPdiscoverySingle.config.txt";          # Path of the SNPdiscoverySingle.config.txt
+my $fileSNPSingle="SNPdiscoverySingleTest.config.txt";
+
+
+my $fileRNASeqIni="../RNASeq.config.txt";          # Path of the RNASeq.config.txt
+my $fileRNASeq="RNASeqTest.config.txt";
+
+
+
+
+# *** FASTQ ***
+#   - TOGGLE fastq pairedOneIndividuArcad
+
