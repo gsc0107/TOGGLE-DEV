@@ -44,10 +44,32 @@ sub htseqCount
     my ($bamFileIn,$htseqFileOut,$annotGffFile,$optionsHachees)=@_;
     if (toolbox::sizeFile($bamFileIn)==1 and toolbox::sizeFile($annotGffFile)==1)            ##Check if the bamfileIn exist and is not empty
     {
-        my $options=toolbox::extractOptions($optionsHachees, " ");  ##Get given options by software.config
-        ## DEBUG toolbox::exportLog("DEBUG: HTSeq::htseqcount : htseqcount option equals to $options",1);
-        my $command=$htseqcount." ".$options." ".$bamFileIn." ".$annotGffFile." -o ".$htseqFileOut; ## Command initialization
         
+        my $options=toolbox::extractOptions($optionsHachees, " ");  ##Get given options by software.config
+        ## DEBUG toolbox::exportLog("DEBUG: HTSeq::htseqcount : htseqcount option equals to options $options",1);
+        
+        my $command;
+        my ($bamFileOut,$readGroup) = pairing::extractName($bamFileIn);
+        
+        # Verify if $bamFileIn is a bam or sam
+        if ($bamFileIn =~ m/.sam$/) # if the file type is sam
+            {
+                $command="$htseqcount $options $bamFileIn $annotGffFile > $htseqFileOut"; ## Command initialization
+            }
+        if ($bamFileIn =~ m/.bam$/) # if the file type is bam, samtools view is used. HTseq-count does not count reads if bam is used.
+            {
+                #$command=samTools::samToolsView($bamFileIn,$bamFileOut, XX?); # pbm avec $optionsHachees
+                $command="samtools view -h  $bamFileIn"; ## Command initialization to samtools view
+                if (toolbox::run($command)==1)
+                {
+                    toolbox::exportLog("INFOS: samTools::samToolsView : correctly done\n",1);
+                    $command="$htseqcount $options $bamFileIn $annotGffFile > $htseqFileOut" ;
+                }
+                else
+                {
+                    toolbox::exportLog("ERROR: samTools::samToolsView : ABORTED\n",0);
+                }
+            }
         # Command is executed with the run function (package toolbox)
         if (toolbox::run($command)==1)
         {
