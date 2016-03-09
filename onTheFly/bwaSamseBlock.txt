@@ -24,6 +24,7 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ o
 		{
 			$fastqForwardIn = $file;
 		}
+	}
 	if ($file =~ m/sai$/)
 	{
 		if ($saiForwardOut ne "NA") # $fastqForwardIn is already known
@@ -42,12 +43,11 @@ foreach my $file (@{$fileList}) #Checking the type of files that must be FASTQ o
 			$saiForwardOut = $file;
 		}
 	}
-	}
 }
 #toolbox::exportLog("DEBUG: bwaSamse fastqForwardIn file $fastqForwardIn",2);
 #toolbox::exportLog("DEBUG: bwaSamse fastqReverseIn file $fastqReverseIn",2);
-
-
+#toolbox::exportLog("DEBUG: bwaSamse saiForwardOut file $saiForwardOut",2);
+#toolbox::exportLog("DEBUG: bwaSamse saiReverseOut file $saiReverseOut",2);
 
 if ( ($fastqForwardIn ne "NA") && ($fastqReverseIn eq "NA") )		# Only one fastq find
 {
