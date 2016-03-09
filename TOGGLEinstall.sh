@@ -2,7 +2,7 @@
 
 ###################################################################################################################################
 #
-# Copyright 2014-2015 IRD-CIRAD-INRA-ADNid
+# Copyright 2014-2016 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -187,6 +187,12 @@ TOGGLE
 
 sleep 5
 
+echo "!! BE CAREFUL !!
+
+We cannot automatically install HTSeqCount, as it requires PySam to be installed as an administrator..."
+
+sleep 2
+
 #######################################################
 ## TOGGLE installation per se
 #######################################################
@@ -225,7 +231,7 @@ cd $INSTALLPATH
 
 #Adding binaries, libraries and a basic localConfig.pm to change
 
-echo "\nDownloading the compiled version for CutAdapt, bwa, SAMtools, Picard-Tools, FastQC, GATK, TopHat, Bowtie2 and FASTX-Trimmer"
+echo "\nDownloading the version to be compiled for CutAdapt, bwa, SAMtools, Picard-Tools, FastQC, GATK, TopHat, Bowtie2 and FASTX-Trimmer"
 
 wget http://bioinfo-web.mpl.ird.fr/toggle/bin.tar.gz
 
@@ -250,11 +256,61 @@ BINARIES=$INSTALLPATH"/bin"
 
 sleep 1
 
-echo "\Decompressing compiled versions and Perl modules"
+#COMPILATION
+echo "\tDecompressing, compiling and installing softwares"
 
 tar xzvf bin.tar.gz
 
 rm -Rf bin.tar.gz
+
+cd $BINARIES
+
+## compiling bwa
+cd bwa
+
+make
+
+cd $BINARIES
+
+##compiling samtools
+cd samtools
+
+./configure
+
+make
+
+cd $BINARIES
+
+##compiling picardTools
+#NO NEED, JAVA ARCHIVE AVAILABLE
+
+##compiling GATK
+#NO NEED, JAVA ARCHIVE AVAILABLE
+
+##compiling cutadapt
+cd cutadapt
+
+python setup.py build_ext -i
+
+cd $BINARIES
+
+##compiling fastQC
+#NO NEED, JAVA ARCHIVE AVAILABLE
+
+##compiling TopHat
+#NO NEED we used a Linux x64 already compiled version from original website
+
+##compiling bowtie and bowtie2
+#NO NEED we used a Linux x64 already compiled version from original website
+
+## compiling Fastx_toolkit
+#NO NEED we used a Linux x64 already compiled version from original website
+
+sleep 1
+
+echo "\tDecompressing Perl Modules"
+
+cd $INSTALLPATH
 
 tar xvzf perlModules.tar.gz
 
