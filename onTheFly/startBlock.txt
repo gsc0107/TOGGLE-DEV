@@ -108,6 +108,11 @@ toolbox::existsDir($initialDir);        # check if this directory exists
 ##########################################
 my @pathIndividu = toolbox::extractPath($initialDir);
 my $readGroup = $pathIndividu[0];
+if ($0 =~ m/toggleMultiple/)
+{
+  #The script will be running for a globalAnalysis thus we must change the readGroup value
+  $readGroup = "multipleAnalysis";
+}
 chdir "$initialDir";
 my $infosFile = "individuSoft.txt";
 open (F1, ">",$infosFile) or die ("ERROR: $0 : Cannot open the file $infosFile\n$!\n");
@@ -202,5 +207,6 @@ foreach my $position (sort {$a <=>$b} keys %{$hashOrder})
     $directory =~ s/ /_/g; #Removing the spaces
     toolbox::makeDir($directory); # Create the folder associated with each steps
     push (@dirList,$directory); # Adding the newly created folder to the list of folders
+    
   }
 }
