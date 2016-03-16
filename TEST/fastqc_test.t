@@ -43,11 +43,9 @@ use lib qw(../Modules/);
 ########################################
 #use of fastqc module ok
 ########################################
-use_ok('toolbox');
 use_ok('fastqc');
 can_ok('fastqc','execution');
 
-use toolbox;
 use fastqc;
 
 my $expectedData="../../DATA/expectedData/";
