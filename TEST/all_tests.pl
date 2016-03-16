@@ -56,25 +56,97 @@ use strict;
 use warnings;
 
 
-#####################
-## CONFIGURATION FILES FOR TESTS
-#####################
+######################
+## SUB
+######################
 
+sub sedFunction(my $file):
+{
+    # Change the TOGGLE addaptator configuration file
+    my $sed="sed -i -e 's|-b ADAPTATOR1REVERSE -B ADAPTATOR1REVERSE|-b GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG  -B GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG|' ". $file;
+    #print $sed."\n\n";
+    system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+    $sed="sed -i -e 's|-b ADAPTATOR1FORWARD -B ADAPTATOR1FORWARD|-b GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG -B GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG|' ". $file;
+    #print $sed."\n\n";
+    system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+}
+
+
+
+
+
+
+
+
+#####################
+## PATH for datas test
+#####################
+#fastq
+my $dataFastqpairedOneIndividuArcad = "../DATA/testData/fastq/pairedOneIndividuArcad";
+my $dataFastqpairedTwoIndividusGzippedIrigin = "../DATA/testData/fastq/pairedTwoIndividusGzippedIrigin";
+my $dataFastqpairedTwoIndividusIrigin = "../DATA/testData/fastq/pairedTwoIndividusIrigin";
+my $dataFastqsingleOneIndividuIrigin = "../DATA/testData/fastq/singleOneIndividuIrigin";
+my $dataFastqsingleTwoIndividuIrigin = "../DATA/testData/fastq/singleTwoIndividuIrigin";
+#rnaseq
+my $dataRNAseqPairedOneIndividu = "../DATA/testData/rnaseq/pairedOneIndividu";
+my $dataRNAseqSingleOneIndividu = "../DATA/testData/rnaseq/singleOneIndividu";
+#samBam
+my $dataSamBamOneBam = "../DATA/testData/samBam/oneBam";
+my $dataSamBamOneSam = "../DATA/testData/samBam/oneSam";
+my $dataSamBamTwoBamsIrigin = "../DATA/testData/samBam/twoBamsIrigin";
+#vcf
+my $dataVcfSingleVCF = "../DATA/testData/vcf/singleVCF";
+my $dataVcfVcfForRecalibration = "../DATA/testData/vcf/vcfForRecalibration";
+# references files
+my $dataRefIrigin = "../DATA/Bank/referenceIrigin.fasta";
+my $dataRefArcad = "../DATA/Bank/referenceArcad.fasta";
+my $dataRefRnaseq = "../DATA/Bank/referenceRnaseq.fasta";
+my $dataRefRnaseqGFF = "../DATA/Bank/referenceRnaseq.gff3";
+
+
+
+#####################
+## SNPdiscoveryPaired for no SGE mode pairedOneIndividuArcad
+#####################
 # Copy file config SNPdiscoveryPaired for no SGE mode
 my $fileSNPPairedIni="../SNPdiscoveryPaired.config.txt";          # Path of the SNPdiscoveryPaired.config.txt
-my $fileSNPPaired="SNPdiscoveryPairedTest.config.txt";
+my $fileSNPPairedNoSGE="SNPdiscoveryPairedTest.config.txt";
 
-my $cmd="cp $fileSNPPairedIni $fileSNPPaired";
+my $cmd="cp $fileSNPPairedIni $fileSNPPairedNoSGE";
 print "#### Copy conf file SNPdiscoveryPaired : $cmd\n";
 system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TEST
 
 # Change the TOGGLE addaptator configuration file
-my $sed="sed -i -e 's|-b ADAPTATOR1REVERSE -B ADAPTATOR1REVERSE|-b GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG  -B GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG|' ". $fileSNPPaired;
+
+sedFunction($fileSNPPairedNoSGE);
+exit;
+
+my $sed="sed -i -e 's|-b ADAPTATOR1REVERSE -B ADAPTATOR1REVERSE|-b GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG  -B GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG|' ". $fileSNPPairedNoSGE;
 #print $sed."\n\n";
 system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
-$sed="sed -i -e 's|-b ADAPTATOR1FORWARD -B ADAPTATOR1FORWARD|-b GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG -B GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG|' ". $fileSNPPaired;
+$sed="sed -i -e 's|-b ADAPTATOR1FORWARD -B ADAPTATOR1FORWARD|-b GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG -B GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG|' ". $fileSNPPairedNoSGE;
 #print $sed."\n\n";
 system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+
+#run with new fileconf SNPdiscoveryPaired for no SGE mode to pairedOneIndividuArcad
+my $testingDir="../DATA-TEST/pairedOneIndividuArcad";
+my $cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+my $runcmd = "toggleGenerator.pl -c ".$fileSNPPairedNoSGE." -d ".$dataFastqpairedOneIndividuArcad." -r ".$dataRefArcad." -o ".$testingDir;
+system("$runcmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuArcad";
+
+# check final results
+
+
+
+
+
+
+
+
+
+
 
 
 
