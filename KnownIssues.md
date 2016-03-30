@@ -1,6 +1,6 @@
 # Known Issues
 
-## Release 0.3.0
+## Release 0.3.+
 
 * BWA ALN driving to a 'EOF error' on some FASTQ:
  * you are probably using a BWA version between 0.7.2 and 0.7.6. Please use either a 0.6x version or a 0.7.8+ version.
