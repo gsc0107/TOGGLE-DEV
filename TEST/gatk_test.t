@@ -45,6 +45,7 @@ use lib qw(../Modules/);
 use_ok('toolbox') or exit;
 use_ok('gatk') or exit;
 
+can_ok('gatk','gatkPrintReads');
 can_ok('gatk','gatkBaseRecalibrator');
 can_ok('gatk','gatkRealignerTargetCreator');
 can_ok('gatk','gatkIndelRealigner');
@@ -53,8 +54,20 @@ can_ok('gatk','gatkSelectVariants');
 can_ok('gatk','gatkVariantFiltration');
 can_ok('gatk','gatkUnifiedGenotyper');
 can_ok('gatk','gatkReadBackedPhasing');
+
 use toolbox;
 use gatk;
+
+my $expectedData="../../DATA/expectedData/";
+
+#########################################
+#Remove files and directory created by previous test
+#########################################
+my $testingDir="../DATA-TEST/gatkTestDir";
+my $creatingDirCom="rm -Rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
+system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingDirCom\n$!\n");
+
+chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
 
 
 #######################################
@@ -69,32 +82,88 @@ system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt
 my $cleaningCommand="rm -Rf gatk_TEST_log.*";
 system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
 
+
+##########################################
+##### gatk::gatkPrintReads
+##########################################
+
+##########################################
+##### gatk::gatkBaseRecalibrator
+##########################################
+
+##########################################
+##### gatk::gatkRealignerTargetCreator
+##########################################
+
+# input file
+my $bamIn=$expectedData."/RC3.SAMTOOLSVIEW.bam";
+my $fastaRef=$expectedData."/Reference.fasta";
+my $fastaRefFai=$expectedData."/Reference.fasta.fai";
+my $fastaRefDict=$expectedData."/Reference.dict";
+
+# output file
+my $intervalsFile="RC3.GATKREALIGNERTARGETCREATOR.intervals";
+
+# execution test
+is(gatk::gatkRealignerTargetCreator($fastaRef, $bamIn, $intervalsFile),1, 'gatk::gatkRealignerTargetCreator');
+
+# expected output test
+my $observedOutput = `ls`;
+my @observedOutput = split /\n/,$observedOutput;
+my @expectedOutput = ('gatk_TEST_log.e','gatk_TEST_log.o','individuSoft.txt','RC3.GATKREALIGNERTARGETCREATOR.intervals');
+
+is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkRealignerTargetCreator - output list');
+
+# expected content test
+my $expectedMD5sum="ad6d03974c93118e47e2149c7a5f916e";      # structure of the ref file
+my $observedMD5sum=`md5sum $intervalsFile`;       # structure of the test file
+my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
+$observedMD5sum = $withoutName[0];       # just to have the md5sum result
+is($observedMD5sum,$expectedMD5sum,'gatk::gatkRealignerTargetCreator - output content');
+
+
+##########################################
+#### Test for gatkIndelRealigner
+##########################################
+
+# output File
+my $bamOut="RC3.GATKINDELREALIGNER.bam";
+
+# execution test
+is(gatk::gatkIndelRealigner($fastaRef, $bamIn, $intervalsFile, $bamOut),1, 'gatk::gatkIndelRealigner');
+
+# expected output test
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('gatk_TEST_log.e','gatk_TEST_log.o','individuSoft.txt','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals');
+
+is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkIndelRealigner - output list');
+
+
+# expected output content
+$observedOutput = `samtools view $bamOut | wc -l `;
+chomp $observedOutput;
+my $expectedOutput = 1998;
+is($observedOutput,$expectedOutput, 'gatk::gatkIndelRealigner - output content 1');
+
+
+$observedOutput = `samtools view $bamOut |grep "H2:C381HACXX:5:1101:1433:2214"`;
+chomp $observedOutput;
+$expectedOutput = "H2:C381HACXX:5:1101:1433:2214	99	2187676	10	29	101M	=	199	269	AGCCCGAAGACCCGCAGTGCGAGGATTTCGAGGATCAAGCTCAAGATCTCGAGCAAAGCAAGTCACCTTTGATCATCTTGCACCTATAATTTAAATCTAAG	CCCFFFFFHHHHHJJJJGIJJIIJIJJJJJIJIIJJGJIJJJJJIHGHHHFFFFDEEEDDDDCDEDDDDDDDDDECDDDDDDDDDDDDDEEECDCDDDDDD	X0:i:1	X1:i:0	MC:Z:6S80M15S	MD:Z:38T0G16G44	RG:Z:RC3	XG:i:0	AM:i:29	NM:i:3	SM:i:29	XM:i:3	XO:i:0	MQ:i:29	XT:A:U
+H2:C381HACXX:5:1101:1433:2214	147	2187676	199	29	6S80M15S	=	10	-269	ATCCTAAATTGCTGCAAATACCCTCCGTGAATTATTGAACACTTAAACCTCCTTTGTCGACCGTTGTGCTTCGATGCACGGGCCTTCGGACACGCGCATCA	DCDDDDDDDDDDEDEEDC>2BDDDDDDDEDEDEEEEDDCCCDDDCA<DDBCCDDDDFFHCHIJJJJJIJJJJJJJJIHJJJIJJJJJJHHHHHFFFFFCCC	MC:Z:101M	MD:Z:11T8T0G21C36	RG:Z:RC3	XG:i:0	AM:i:29	NM:i:4	SM:i:29	XM:i:4	XO:i:0	MQ:i:29	XT:A:M";
+is($observedOutput,$expectedOutput, 'gatk::gatkIndelRealigner - output content 2');
+
+
+
+#####Checking the correct structure for the output file using md5sum
+
+exit;
+__END__
+
 ########################################
 #initialisation and setting configs
 ########################################
-my $testingDir="../DATA-TEST/gatkTestDir";
-my $creatingDirCom="rm -Rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
-system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingDirCom\n$!\n");
 
-my $OriginalFastaRef="../DATA/expectedData/Reference.fasta";
-my $fastaRef="$testingDir/Reference.fasta";
-my $refCopyCom="cp $OriginalFastaRef $fastaRef";
-system($refCopyCom) and die ("ERROR: $0 : Cannot copy the Reference $OriginalFastaRef with the command $refCopyCom\n$!\n");     #Now we have a ref to be tested
-
-my $OriginalFastaRefFai="../DATA/expectedData/Reference.fasta.fai";
-my $fastaRefFai="$testingDir/Reference.fasta.fai";
-my $refCopyComFai="cp $OriginalFastaRefFai $fastaRefFai";
-system($refCopyComFai) and die ("ERROR: $0 : Cannot copy the Reference $OriginalFastaRefFai with the command $refCopyComFai\n$!\n");     #Now we have a ref to be tested
-
-my $OriginalFastaRefDict="../DATA/expectedData/Reference.dict";
-my $fastaRefDict="$testingDir/Reference.dict";
-my $refCopyComDict="cp $OriginalFastaRefDict $fastaRefDict";
-system($refCopyComDict) and die ("ERROR: $0 : Cannot copy the Reference $OriginalFastaRefDict with the command $refCopyComDict\n$!\n");     #Now we have a ref to be tested
-
-my $originalBamFile="../DATA/expectedData/RC3.SAMTOOLSVIEW.bam";
-my $bamFile="$testingDir/RC3.SAMTOOLSVIEW.bam";
-my $bamFileCopyCom="cp $originalBamFile $bamFile";
-system($bamFileCopyCom) and die("ERROR: $0 : Cannot copy the initial bam file $originalBamFile with the command $bamFileCopyCom\n$!\n");
 
 my $originalBamFileIndex="../DATA/expectedData/RC3.SAMTOOLSVIEW.bam.bai";
 my $bamFileIndex="$testingDir/RC3.SAMTOOLSVIEW.bam.bai";
@@ -107,36 +176,8 @@ toolbox::readFileConf("software.config.txt");
 
 
 
-################################################################################################
-#####Test for gatkRealignerTargetCreator
-my %optionsHachees = ("-T" => "RealignerTargetCreator","-nt" => "4");        # Hash containing informations
-my $optionHachees = \%optionsHachees;                           # Ref of the hash
-my $bamToRealigne=$bamFile;
-my $intervalsFile="../DATA-TEST/gatkTestDir/RC3.GATKREALIGNERTARGETCREATOR.intervals";
-is(gatk::gatkRealignerTargetCreator($fastaRef, $bamToRealigne, $intervalsFile, $optionHachees),1, 'Test for gatk::gatkRealignerTargetCreator');
-
-#####Checking the correct structure for the output file using md5sum
-my $expectedMD5sum="ad6d03974c93118e47e2149c7a5f916e";      # structure of the ref file
-my $observedMD5sum=`md5sum ../DATA-TEST/gatkTestDir/RC3.GATKREALIGNERTARGETCREATOR.intervals`;       # structure of the test file
-my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'Test for gatk::gatkRealignerTargetCreator structure of file');
 
 
-################################################################################################
-####Test for gatkIndelRealigner
-%optionsHachees = ("-T" => "IndelRealigner");        # Hash containing informations
-$optionHachees = \%optionsHachees;                           # Ref of the hash
-my $bamRealigned="$testingDir/RC3.GATKINDELREALIGNER.bam";
-
-is(gatk::gatkIndelRealigner($fastaRef, $bamToRealigne, $intervalsFile, $bamRealigned, $optionHachees),1, 'Test for gatk::gatkIndelRealigner');
-
-#####Checking the correct structure for the output file using md5sum
-$expectedMD5sum="3296b45af3890583e257447cb8d94f2d";     # structure of the ref file
-$observedMD5sum=`md5sum ../DATA-TEST/gatkTestDir/RC3.GATKINDELREALIGNER.bam`;     # structure of the test file
-@withoutName =split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];      #just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'Test fot gatk::gatkIndelRealigner structure of file');
 
 
 ################################################################################################
