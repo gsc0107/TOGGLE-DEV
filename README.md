@@ -75,7 +75,7 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 
 #### Bioinformatics tools included
 
-#####BWA (http://bio-bwa.sourceforge.net/)
+##### BWA (http://bio-bwa.sourceforge.net/)
 
 - bwaAln
 - bwaSampe
@@ -83,7 +83,7 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 - bwaIndex
 - bwaMem
 
-#####SamTools (http://samtools.sourceforge.net/)
+##### SamTools (http://samtools.sourceforge.net/)
 
 - samToolsFaidx
 - samToolsIndex
@@ -96,7 +96,7 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 - samToolsFlagstat
 - samToolsMpileUp
 
-#####PicardTools (http://broadinstitute.github.io/picard/)
+##### PicardTools (http://broadinstitute.github.io/picard/)
 
 - picardToolsMarkDuplicates
 - picardToolsCreateSequenceDictionary
@@ -107,7 +107,7 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 - picardToolsSamFormatConverter
 
 
-#####Gatk (https://www.broadinstitute.org/gatk/)
+##### GATK (https://www.broadinstitute.org/gatk/)
 
 - gatkBaseRecalibrator
 - gatkRealignerTargetCreator
@@ -120,25 +120,25 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 - gatkBaseRecalibrator
 - gatkPrintReads
 
-#####Fastqc (http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+##### Fastqc (http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 
 - fastqc
 
-#####FastxToolkit (http://hannonlab.cshl.edu/fastx_toolkit/)
+##### FastxToolkit (http://hannonlab.cshl.edu/fastx_toolkit/)
 
 - fastxTrimmer
 
-#####Tophat (https://ccb.jhu.edu/software/tophat/index.shtml)
+##### Tophat (https://ccb.jhu.edu/software/tophat/index.shtml)
 
 - bowtiebuild
 - bowtie2build
 - tophat2
 
-#####Snpeff (http://snpeff.sourceforge.net/)
+##### Snpeff (http://snpeff.sourceforge.net/)
 
 - snpeffAnnotation
 
-#####Cutadapt (https://pypi.python.org/pypi/cutadapt)
+##### Cutadapt (https://pypi.python.org/pypi/cutadapt)
 
 - cutadapt
 
