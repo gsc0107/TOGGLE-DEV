@@ -3,7 +3,13 @@ TOGGLE : Toolbox for generic NGS analyses
 
 ![TOGGLE Logo](toggleLogo.png)
 
-TOGGLE (TOolbox for Generic nGs anaLysEs) is a suite of 10 packages and more than 110 modules able to manage a large set of NGS softwares
+Dear Biologist, have you ever dream of using the whole power of those numerous NGS tools that your bioinformatician colleagues use through this awful list of command line ?
+
+Dear Bioinformatician, have you ever guess how to design really fastly a new NGS pipeline without having to retype again dozens of code lines to readapt your scripts or starting from scratch ?
+
+**So, be Happy ! TOGGLE is for you !!**
+
+TOGGLE (TOolbox for Generic nGs anaLysEs) is a suite of 19 packages and more than 110 modules able to manage a large set of NGS softwares
 and utilities to easily design pipelines able to handle hundreds of samples. Moreover, TOGGLE offers an easy way to manipulate the various
 options of the different softwares through the pipelines in using a single basic configuration file, that can be changed for each assay without
 having to change the code itself.
