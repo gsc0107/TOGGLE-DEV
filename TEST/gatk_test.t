@@ -155,51 +155,45 @@ is($observedOutput,$expectedOutput, 'gatk::gatkIndelRealigner - output content 2
 
 
 
-#####Checking the correct structure for the output file using md5sum
+##########################################
+#####Test for gatk Unified Genotyper
+##########################################
+
+undef($bamIn);
+push(@{$bamIn},$bamOut);
+my $vcfOut="RC3.GATKUNIFIEDGENOTYPER.vcf";
+
+# execution test
+is(gatk::gatkUnifiedGenotyper($fastaRef,$bamIn, $vcfOut),1,'gatkUnifiedGenotyper');
+
+
+# expected output test
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('gatk_TEST_log.e','gatk_TEST_log.o','individuSoft.txt','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals','RC3.GATKUNIFIEDGENOTYPER.vcf','RC3.GATKUNIFIEDGENOTYPER.vcf.idx');
+
+is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkUnifiedGenotyper - output list');
+
+# expected output content
+$observedOutput=`tail -n 1 $vcfOut`;
+chomp $observedOutput;
+$expectedOutput="2233572	145	.	A	G	54.74	.	AC=2;AF=1.00;AN=2;DP=2;Dels=0.00;FS=0.000;HaplotypeScore=0.0000;MLEAC=2;MLEAF=1.00;MQ=49.84;MQ0=0;QD=27.37;SOR=2.303	GT:AD:DP:GQ:PL	1/1:0,2:2:6:82,6,0";
+
+is($observedOutput,$expectedOutput,'gatk::gatkUnifiedGenotyper - output content');
 
 exit;
 __END__
 
-########################################
-#initialisation and setting configs
-########################################
 
+##########################################
+##### Test for gatkBaseRecalibrator
+##########################################
 
-my $originalBamFileIndex="../DATA/expectedData/RC3.SAMTOOLSVIEW.bam.bai";
-my $bamFileIndex="$testingDir/RC3.SAMTOOLSVIEW.bam.bai";
-my $bamFileCopyComIndex="cp $originalBamFileIndex $bamFileIndex";
-system($bamFileCopyComIndex) and die("ERROR: $0 : Cannot copy the initial bam file index $originalBamFileIndex with the command $bamFileCopyComIndex\n$!\n");
-
-toolbox::readFileConf("software.config.txt");
-
-
-
-
-
-
-
-
-
-################################################################################################
-#####Test for gatk Unified Genotyper
-#my %optionsHachees = ("-T" => "IndelRealigner");        # Hash containing informations
-#my $optionHachees = \%optionsHachees;                           # Ref of the hash
-#my $rawvcf="$testingDir/raw.vcf";
-#is(gatk::gatkUnifiedGenotyper($fastaRef, $bamFile, $rawvcf, $optionsHachees),1,'gatkUnifiedGenotyper::Running');
+$bamIn=$bamOut;
+my $tableReport="$testingDir/recal_data.table";
+#is(gatk::gatkBaseRecalibrator($fastaRef,$bamIn,$tableReport),1, 'gatk::gatkBaseRecalibrator');
 #
-####Test for correct file value of bwa sampe
-#my $grepResult=`grep -c "^LOC" ../DATA-TEST/gatkTestDir/raw.vcf`;
-#chomp $grepResult;
-#is($grepResult,76,'Test for the result of gatk::gatkUnifiedGenotyper');
 
-################################################################################################
-#####Test for gatkBaseRecalibrator
-#$optionsHachees=$configInfos->{'GATK gatkBaseRecalibrator'};
-#my $bamToRecalibrate="$testingDir/RC3_bamRealigned.bam";
-#my $tableReport="$testingDir/recal_data.table";
-#my $vcfSnpKnownFile="$testingDir/raw.vcf";
-#is(gatk::gatkBaseRecalibrator($fastaRef, $bamFile,  $vcfSnpKnownFile, $tableReport, $optionsHachees),1, 'gatk BaseRecalibrator::Running');
-#
 #####Checking the correct structure for the output file using md5sum
 #$expectedMD5sum="c625e8f8a10cebbc9eda06a22e762eda";     # structure of the ref file
 #$observedMD5sum=`md5sum ../DATA-TEST/gatkTestDir/recal_data.table`;     # structure of the test file
@@ -304,4 +298,20 @@ is($observedSNPLines,$expectedSNPLines,'Test for gatk::gatkVariantFiltration str
 #$observedMD5sum = $withoutName[0];      #just to have the md5sum result
 #is($observedMD5sum,$expectedMD5sum,'gatk readBackedPhasing output\'scontent');
 
+
 exit;
+__END__
+
+########################################
+#initialisation and setting configs
+########################################
+
+
+my $originalBamFileIndex="../DATA/expectedData/RC3.SAMTOOLSVIEW.bam.bai";
+my $bamFileIndex="$testingDir/RC3.SAMTOOLSVIEW.bam.bai";
+my $bamFileCopyComIndex="cp $originalBamFileIndex $bamFileIndex";
+system($bamFileCopyComIndex) and die("ERROR: $0 : Cannot copy the initial bam file index $originalBamFileIndex with the command $bamFileCopyComIndex\n$!\n");
+
+toolbox::readFileConf("software.config.txt");
+
+
