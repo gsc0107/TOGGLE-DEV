@@ -553,32 +553,41 @@ sub readFileConf
 # 	- a hash of hash (reference) with the software name as key, then the option as key and 
 #         the value as element
 #       - separator used to separate an option from its value (\t, =)
+#	- concatenator used to concatenate each option/value couples
 #
-# ex : my $optionLine=toolbox::extractOptions($configInfos->{"BWA aln"}," ");
+# ex : my $optionLine=toolbox::extractOptions($configInfos->{"BWA aln"}," "," ");
 #
 # Returns the list of options for a software given. 
 ################################################################################################
 sub extractOptions
 {
     ##Getting the two parameters, the options hash and the option-value separator
-    my($optionsHashees,$separateur)=@_;
+    my($optionsHashees,$separateur,$concatenator)=@_;
+    
+    # The concatenation of option is classically a space (eg -b 1 -c2), but sometimes we may need to put them one per line (eg
+    # export TOTO=$TOTO:/my/new/path
+    # export PATH=$PATH:/my/second/path)
+    $concatenator = " " unless $concatenator;
+    
+    #The separator between option and its value is generally a space but can also be an equal (as in INPUT=/my/file for picardTools) sign.
+    $separateur=" " unless $separateur;
     
     if ($optionsHashees)			# the option hash isn't empty/is defined => options are extracted
     {
 	my %options=%{$optionsHashees};
 	my $option=" ";
-	$separateur=" " unless $separateur; 	## if no separator is given, set it as a single space
+	 	## if no separator is given, set it as a single space
 	try
 	{                               
 	    foreach my $cle (keys %options)
 	    {
 		if ($options{$cle} eq 'NA') 	## The option has no value  => no print $options{$cle}
 		{
-		    $option=$option.$cle.$separateur." ";
+		    $option=$option.$cle.$separateur.$concatenator;
 		}
 		else				## The option has value  => print $options{$cle}
 		{
-		    $option=$option.$cle.$separateur.$options{$cle}." ";
+		    $option=$option.$cle.$separateur.$options{$cle}.$concatenator;
 		}
 	    }
 	    return $option;
@@ -1572,13 +1581,13 @@ C<toolbox::readFileConf('/data/projet/chloro/software.config');>
 =head3 toolbox::extractOptions()
 
 This function extracts the options/values for a software given (from a hash of hash) and return them as a string. One argument is required :
-a hash of hash (reference) with the software name as key, then the option as key and the value as element. A second optional parameter can be used,
-it corresponds to the type of separators  used to separate an option from its value (space by default)
+a hash of hash (reference) with the software name as key, then the option as key and the value as element. A second optional parameter can be used,as type of separators used to separate an option from its value (space by default)
+The third (optional) value is the way to concatenate the different options together (space by default)
 
 Returns a string
 
 Example : 
-C<my $optionLine=toolbox::extractOptions($configInfos->{"BWA aln"}," ");>
+C<my $optionLine=toolbox::extractOptions($configInfos->{"BWA aln"}," ", " ");>
 
 
 =head3 toolbox::extractName()
