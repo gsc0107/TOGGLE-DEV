@@ -101,6 +101,9 @@ sub correctName
 	
 	#FOR MPRUN
 	case ($name =~ m/mprun/i){$correctedName="mprun";} #Correction for mprun configuration
+
+	#FOR LSF
+	case ($name =~ m/lsf/i){$correctedName="lsf";} #Correction for lsf configuration
 	
         #FOR bwa.pm
         case ($name =~ m/bwa[\s|\.|\-| \/|\\|\|]*aln/i){$correctedName="bwaAln"; } #Correction for bwaAln
