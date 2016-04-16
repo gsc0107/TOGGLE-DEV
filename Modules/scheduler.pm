@@ -665,7 +665,7 @@ Individual\tJobID\tExitStatus
       }
       my @fields = split /\s+/, $macctOutput;
 
-      if ($$macctOutput=~ m/COMPLETED/) #No errors
+      if ($macctOutput=~ m/COMPLETED/) #No errors
       {
 	$outputLine = "$individual\t$jobHash{$individual}\tNormal";
       }
@@ -731,7 +731,7 @@ Individual\tJobID\tExitStatus
       }
       my @fields = split /\s+/, $bacctOutput;
 
-      if ($$bacctOutput=~ m/Total number of done jobs: 1 Total number of exited jobs: 0/) #No errors
+      if ($bacctOutput=~ m/Total number of done jobs: 1 Total number of exited jobs: 0/) #No errors
       {
 	$outputLine = "$individual\t$jobHash{$individual}\tNormal";
       }
