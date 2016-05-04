@@ -230,59 +230,54 @@ $observedOutput = `ls`;
 
 is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkPrintReads - output list');
 
-exit;
-__END__
 
 # expected output content
-$expectedOutput="6273";     # nb of line from the ref file
-$observedOutput=`wc -l $tableReport`;     # structure of the test file
-@withoutName =split (" ", $observedOutput);     # to separate the structure and the name of the test file
-$observedOutput = $withoutName[0];      #just to have the wc -l result
-is($observedOutput,$expectedOutput,'gatk::gatkBaseRecalibrator - output content');
+#For number of lines
+$observedOutput = `samtools view $bamOut | wc -l `;
+chomp $observedOutput;
+$expectedOutput = 1998;
+is($observedOutput,$expectedOutput,'gatk::gatkPrintReads - output content 1');
 
+#For correction of quality
+$observedOutput = `samtools view $bamOut |grep "H2:C381HACXX:5:1101:1433:2214"`;
+chomp $observedOutput;
+$expectedOutput = "H2:C381HACXX:5:1101:1433:2214	99	2187676	10	29	101M	=	199	269	AGCCCGAAGACCCGCAGTGCGAGGATTTCGAGGATCAAGCTCAAGATCTCGAGCAAAGCAAGTCACCTTTGATCATCTTGCACCTATAATTTAAATCTAAG	88888888888888888888888888888888888888888888888888888878887777878777777777887777777777777888878777777	X0:i:1	X1:i:0	MC:Z:6S80M15S	BD:Z:LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL	MD:Z:38T0G16G44	RG:Z:RC3	XG:i:0	BI:Z:LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL	AM:i:29	NM:i:3	SM:i:29	XM:i:3	XO:i:0	MQ:i:29	XT:A:U
+H2:C381HACXX:5:1101:1433:2214	147	2187676	199	29	6S80M15S	=	10	-269	ATCCTAAATTGCTGCAAATACCCTCCGTGAATTATTGAACACTTAAACCTCCTTTGTCGACCGTTGTGCTTCGATGCACGGGCCTTCGGACACGCGCATCA	78777777777787887888777777778787888877888777888777887777888887888888888888888888888888888888888888888	MC:Z:101M	BD:Z:LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL	MD:Z:11T8T0G21C36	RG:Z:RC3	XG:i:0	BI:Z:LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL	AM:i:29	NM:i:4	SM:i:29	XM:i:4	XO:i:0	MQ:i:29	XT:A:M";
+is($observedOutput,$expectedOutput, 'gatk::gatkPrintReads - output content 2');
 
 
 #################################################################################################
 ######Test for gatk Haplotype caller
+##########################################
+$bamIn="../../DATA/expectedData/RC3.PICARDTOOLSMARKDUPLICATES.bam";
+my $bamSingle="../../DATA/expectedData/RC3Single.PICARDTOOLSMARKDUPLICATES.bam";;
 
-my $originalBam="../DATA/expectedData/RC3.PICARDTOOLSMARKDUPLICATES.bam";
-my $bam="$testingDir/RC3.PICARDTOOLSMARKDUPLICATES.bam";
-my $bamCopyCom="cp $originalBam $bam";
-system($bamCopyCom) and die("ERROR: $0 : Cannot copy the initial bam file $originalBam with the command $bamCopyCom\n$!\n");
+# execution test
+my @bamsToCall=($bamIn,$bamSingle);
+my $vcfCalled="GATKHAPLOTYPECALLER.vcf";
+is(gatk::gatkHaplotypeCaller($fastaRef, $vcfCalled, \@bamsToCall) ,1,"gatk::gatkHaplotypeCaller");
 
-my $originalBamIndex="../DATA/expectedData/RC3.PICARDTOOLSMARKDUPLICATES.bam.bai";
-my $bamIndex="$testingDir/RC3.PICARDTOOLSMARKDUPLICATES.bam.bai";
-my $bamIndexCopyCom="cp $originalBamIndex $bamIndex";
-system($bamIndexCopyCom) and die("ERROR: $0 : Cannot copy the initial bam file $originalBamIndex with the command $bamIndexCopyCom\n$!\n");
+# expected output test
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('GATKHAPLOTYPECALLER.vcf','GATKHAPLOTYPECALLER.vcf.idx','gatk_TEST_log.e','gatk_TEST_log.o','individuSoft.txt','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKINDELREALIGNER.RECALIBRATED.bai','RC3.GATKINDELREALIGNER.RECALIBRATED.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals','RC3.GATKUNIFIEDGENOTYPER.vcf','RC3.GATKUNIFIEDGENOTYPER.vcf.idx','recal_data.table');
 
-my $originalBamSingle="../DATA/expectedData/RC3Single.PICARDTOOLSMARKDUPLICATES.bam";
-my $bamSingle="$testingDir/RC3Single.PICARDTOOLSMARKDUPLICATES.bam";
-my $bamSingleCopyCom="cp $originalBamSingle $bamSingle";
-system($bamSingleCopyCom) and die("ERROR: $0 : Cannot copy the initial bam file $originalBamSingle with the command $bamSingleCopyCom\n$!\n");
+is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkHaplotypeCaller - output list');
 
-my $originalBamSingleIndex="../DATA/expectedData/RC3Single.PICARDTOOLSMARKDUPLICATES.bam.bai";
-my $bamSingleIndex="$testingDir/RC3Single.PICARDTOOLSMARKDUPLICATES.bam.bai";
-my $bamSingleIndexCopyCom="cp $originalBamSingleIndex $bamSingleIndex";
-system($bamSingleIndexCopyCom) and die("ERROR: $0 : Cannot copy the initial bam file $originalBamSingleIndex with the command $bamSingleIndexCopyCom\n$!\n");
-
-%optionsHachees = ("-T" => "HaplotypeCaller");        # Hash containing informations
-$optionHachees = \%optionsHachees;                           # Ref of the hash
-my @bamsToCall=($bam,$bamSingle);
-my $vcfCalled="$testingDir/GATKHAPLOTYPECALLER.vcf";
-is(gatk::gatkHaplotypeCaller($fastaRef, $vcfCalled, \@bamsToCall, $optionHachees) ,1,"Test for gatk::gatkHaplotypeCaller");
-
-######Checking the correct structure for the output file using diff
-my $expectedSNPLines="2224477	996	.	TA	T	32.71	.	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;MQ0=0;QD=16.35;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:69,6,0
-2248321	377	.	C	G	62.74	.	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2248321	379	.	C	T	62.74	.	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2281178	4213	.	G	A	62.74	.	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;MQ0=0;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2281178	4214	.	A	G	62.74	.	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;MQ0=0;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2290182	1013	.	A	G	42.74	.	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=21.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:70,6,0
+# expected output structure test
+my $expectedSNPLines="2224477	996	.	TA	T	32.71	.	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=16.35;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:69,6,0
+2248321	377	.	C	G	62.74	.	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
+2248321	379	.	C	T	62.74	.	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
+2281178	4213	.	G	A	62.74	.	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
+2281178	4214	.	A	G	62.74	.	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
+2290182	1013	.	A	G	42.74	.	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=21.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:70,6,0
 ";     # structure of the ref file
 my $observedSNPLines=`grep -v "#" $vcfCalled`;      # structure of the test file
-is($observedSNPLines,$expectedSNPLines,'Test for gatk::gatkHaplotypeCaller structure of file');
+is($observedSNPLines,$expectedSNPLines,'gatk::gatkHaplotypeCaller - structure of file');
 
 
+exit;
+__END__
 #################################################################################################
 ######Test for gatkVariant filtrator
 %optionsHachees = ("-T" => "VariantFiltration");        # Hash containing informations
