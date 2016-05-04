@@ -144,11 +144,37 @@ open (F1, ">",$infosFile) or die ("$0 : open error of $infosFile .... $!\n");
 print F1 "GLOBAL\n";
 print F1 "ANALYSIS_$date\n";
 
-toolbox::exportLog("#########################################\nINFOS: TOGGLE analysis start \n#########################################\n",1);;
+toolbox::exportLog("#########################################\nINFOS: TOGGLE analysis starts \n#########################################\n",1);;
 toolbox::exportLog("INFOS: $0 : Command line : $cmd_line\n",1);
 toolbox::exportLog("INFOS: Your output folder is $outputDir\n",1);
 
-toolbox::exportLog("#########################################\nINFOS: Data checking \n#########################################\n",1);
+##########################################
+# Printing software configurations
+########################################
+
+toolbox::exportLog("#########################################\nINFOS: Software version/location \n#########################################\n",1);
+open (my $fhConfig, "<", "$toggle/Modules/localConfig.pm");
+while (my $line = <$fhConfig>)
+{
+  chomp $line;
+  chop $line; #Remove the last character, ie ";"
+  next unless $line =~ m/^our \$/;
+  my ($soft,$value) = split /=/, $line;
+  $soft =~ s/our| |\$//g;
+  if (defined $value)
+  {
+    $value =~ s/\"//g;
+    $value =~ s/\w+ |\$|-//g unless $soft =~ m/java|toggle/i;
+    $value =~ s/^ //; 
+  }
+  else
+  {
+    $value = "NOT DEFINED";
+  }
+  toolbox::exportLog("$soft : $value",1);
+}
+
+toolbox::exportLog("\n#########################################\nINFOS: Data checking \n#########################################\n",1);
 toolbox::checkFile($fileConf);                              # check if this file exists
 toolbox::existsDir($initialDir);                            # check if this directory exists
 toolbox::checkFile($refFastaFile);                          #Retriving the configuration
