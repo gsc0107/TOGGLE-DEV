@@ -181,25 +181,65 @@ $expectedOutput="2233572	145	.	A	G	54.74	.	AC=2;AF=1.00;AN=2;DP=2;Dels=0.00;FS=0
 
 is($observedOutput,$expectedOutput,'gatk::gatkUnifiedGenotyper - output content');
 
-exit;
-__END__
-
 
 ##########################################
 ##### Test for gatkBaseRecalibrator
 ##########################################
 
+# execution test
 $bamIn=$bamOut;
-my $tableReport="$testingDir/recal_data.table";
-#is(gatk::gatkBaseRecalibrator($fastaRef,$bamIn,$tableReport),1, 'gatk::gatkBaseRecalibrator');
-#
+my $controlVCF=$expectedData."/GATKVARIANTFILTRATION.vcf";
+my $tableReport="recal_data.table";
 
-#####Checking the correct structure for the output file using md5sum
-#$expectedMD5sum="c625e8f8a10cebbc9eda06a22e762eda";     # structure of the ref file
-#$observedMD5sum=`md5sum ../DATA-TEST/gatkTestDir/recal_data.table`;     # structure of the test file
-#@withoutName =split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-#$observedMD5sum = $withoutName[0];      #just to have the md5sum result
-#is($observedMD5sum,$expectedMD5sum,'gatkBaseRecalibrator output\'s content');
+my %optionsHachees = (
+			"-knownSites" => $controlVCF,
+			);        # Hash containing informations
+my $optionsHachees = \%optionsHachees;   
+is(gatk::gatkBaseRecalibrator($fastaRef,$bamIn,$tableReport, $optionsHachees),1, 'gatk::gatkBaseRecalibrator');
+
+# expected output test
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('gatk_TEST_log.e','gatk_TEST_log.o','individuSoft.txt','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals','RC3.GATKUNIFIEDGENOTYPER.vcf','RC3.GATKUNIFIEDGENOTYPER.vcf.idx','recal_data.table');
+
+is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkBaseRecalibrator - output list');
+
+# expected output content
+$expectedOutput="6273";     # nb of line from the ref file
+$observedOutput=`wc -l $tableReport`;     # structure of the test file
+@withoutName =split (" ", $observedOutput);     # to separate the structure and the name of the test file
+$observedOutput = $withoutName[0];      #just to have the wc -l result
+is($observedOutput,$expectedOutput,'gatk::gatkBaseRecalibrator - output content');
+
+
+##########################################
+##### Test for gatkPrintReads
+##########################################
+
+# execution test
+$bamOut=$bamIn;
+$bamOut =~ s/\.bam/\.RECALIBRATED\.bam/;
+
+is(gatk::gatkPrintReads($fastaRef,$bamIn,$bamOut,$tableReport),1, 'gatk::gatkPrintReads');
+
+
+# expected output test
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('gatk_TEST_log.e','gatk_TEST_log.o','individuSoft.txt','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKINDELREALIGNER.RECALIBRATED.bai','RC3.GATKINDELREALIGNER.RECALIBRATED.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals','RC3.GATKUNIFIEDGENOTYPER.vcf','RC3.GATKUNIFIEDGENOTYPER.vcf.idx','recal_data.table');
+
+is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkPrintReads - output list');
+
+exit;
+__END__
+
+# expected output content
+$expectedOutput="6273";     # nb of line from the ref file
+$observedOutput=`wc -l $tableReport`;     # structure of the test file
+@withoutName =split (" ", $observedOutput);     # to separate the structure and the name of the test file
+$observedOutput = $withoutName[0];      #just to have the wc -l result
+is($observedOutput,$expectedOutput,'gatk::gatkBaseRecalibrator - output content');
+
 
 
 #################################################################################################
@@ -301,17 +341,5 @@ is($observedSNPLines,$expectedSNPLines,'Test for gatk::gatkVariantFiltration str
 
 exit;
 __END__
-
-########################################
-#initialisation and setting configs
-########################################
-
-
-my $originalBamFileIndex="../DATA/expectedData/RC3.SAMTOOLSVIEW.bam.bai";
-my $bamFileIndex="$testingDir/RC3.SAMTOOLSVIEW.bam.bai";
-my $bamFileCopyComIndex="cp $originalBamFileIndex $bamFileIndex";
-system($bamFileCopyComIndex) and die("ERROR: $0 : Cannot copy the initial bam file index $originalBamFileIndex with the command $bamFileCopyComIndex\n$!\n");
-
-toolbox::readFileConf("software.config.txt");
 
 
