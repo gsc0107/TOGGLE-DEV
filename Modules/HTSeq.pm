@@ -58,7 +58,9 @@ sub htseqCount
         }
         if ($bamFileIn =~ m/.bam$/) # if the file type is bam, samtools view is used. HTseq-count does not count reads if bam is used.
         {
-            my $bamFileOut;
+            my $bamFileOut=$bamFileIn;
+            $bamFileOut =~ s/.bam/.sam/g;
+            
             #$command=samTools::samToolsView($bamFileIn,$bamFileOut, XX?); # pbm avec $optionsHachees
             $command="samtools view -h  $bamFileIn -o $bamFileOut"; ## Command initialization to samtools view
             if (toolbox::run($command)==1)
