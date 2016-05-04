@@ -277,7 +277,7 @@ is($observedSNPLines,$expectedSNPLines,'gatk::gatkHaplotypeCaller - structure of
 
 
 
-#################################################################################################
+##########################################
 ######Test for gatkVariant filtrator
 ##########################################
 
@@ -303,29 +303,37 @@ $expectedSNPLines="2224477	996	.	TA	T	32.71	PASS	AC=2;AF=1.00;AN=2;DP=2;FS=0.000
 $observedSNPLines=`grep -v "#" $variantFiltered`;      # structure of the test file
 is($observedSNPLines,$expectedSNPLines,'gatk::gatkVariantFiltration - structure of file');
 
-exit;
-__END__
 
 #################################################################################################
 ######Test for gatk Select Variant
-# my ($refFastaFileIn, $vcfSnpKnownFile, $vcfVariantsSelected, $optionsHachees);
-%optionsHachees = ("-T" => "SelectVariants");        # Hash containing informations
-$optionHachees = \%optionsHachees;                           # Ref of the hash
-my $vcfIn="../DATA-TEST/gatkTestDir/GATKVARIANTFILTRATION.vcf";
-my $vcfVariantsSelected="$testingDir/GATKSELECTVARIANTS.vcf";
-is(gatk::gatkSelectVariants($fastaRef, $vcfIn, $vcfVariantsSelected, $optionHachees),1, 'Test for gatk::gatkSelectVariants');
-##
-######Checking the correct structure for the output file using md5sum
-$expectedSNPLines="2224477	996	.	TA	T	32.71	PASS	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;MQ0=0;QD=16.35;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:69,6,0
-2248321	377	.	C	G	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2248321	379	.	C	T	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2281178	4213	.	G	A	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;MQ0=0;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2281178	4214	.	A	G	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;MQ0=0;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
-2290182	1013	.	A	G	42.74	PASS	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=21.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:70,6,0
+#################################################################################################
+
+
+#execution Test
+my $vcfVariantsSelected="GATKSELECTVARIANT.vcf";
+is(gatk::gatkSelectVariants($fastaRef, $variantFiltered, $vcfVariantsSelected),1, 'gatk::gatkSelectVariants');
+
+# expected output test
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('GATKHAPLOTYPECALLER.vcf','GATKHAPLOTYPECALLER.vcf.idx','GATKSELECTVARIANT.vcf','GATKSELECTVARIANT.vcf.idx','gatk_TEST_log.e','gatk_TEST_log.o','GATKVARIANTFILTRATION.vcf','GATKVARIANTFILTRATION.vcf.idx','individuSoft.txt','RC3.GATKINDELREALIGNER.bai','RC3.GATKINDELREALIGNER.bam','RC3.GATKINDELREALIGNER.RECALIBRATED.bai','RC3.GATKINDELREALIGNER.RECALIBRATED.bam','RC3.GATKREALIGNERTARGETCREATOR.intervals','RC3.GATKUNIFIEDGENOTYPER.vcf','RC3.GATKUNIFIEDGENOTYPER.vcf.idx','recal_data.table');
+
+is_deeply(\@observedOutput,\@expectedOutput,'gatk::gatkSelectVariants - output list');
+
+# expected output structure test
+$expectedSNPLines="2224477	996	.	TA	T	32.71	PASS	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=16.35;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:69,6,0
+2248321	377	.	C	G	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
+2248321	379	.	C	T	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
+2281178	4213	.	G	A	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
+2281178	4214	.	A	G	62.74	PASS	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=31.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0
+2290182	1013	.	A	G	42.74	PASS	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=21.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:70,6,0
 ";     # structure of the ref file
 $observedSNPLines=`grep -v "#" $vcfVariantsSelected`;      # structure of the test file
-is($observedSNPLines,$expectedSNPLines,'Test for gatk::gatkVariantFiltration structure of file');
+is($observedSNPLines,$expectedSNPLines,'gatk::gatkSelectVariants - structure of file');
 
+
+exit;
+__END__
 
 #################################################################################################
 #######Test for gatk Read Backed Phasing
