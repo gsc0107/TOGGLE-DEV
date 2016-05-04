@@ -36,8 +36,33 @@ use warnings;
 #Will test if tophat works correctly
 use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
-use lib qw(../Modules/);
 use Data::Dumper;
+use lib qw(../Modules/);
+
+########################################
+#Test of the use of gatk modules
+########################################
+use_ok('toolbox') or exit;
+use_ok('tophat') or exit;
+
+can_ok( 'tophat','bowtieBuild');
+can_ok( 'tophat','bowtie2Build');
+can_ok( 'tophat','tophat2');
+
+use toolbox;
+use tophat;
+
+my $expectedData="../../DATA/expectedData/";
+
+#########################################
+#Remove files and directory created by previous test
+#########################################
+my $testingDir="../DATA-TEST/tophatTestDir";
+my $creatingDirCom="rm -rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
+system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingDirCom\n$!\n");
+
+chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
+
 
 #######################################
 #Creating the IndividuSoft.txt file
@@ -52,89 +77,84 @@ system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt
 my $cleaningCommand="rm -rf tophat_TEST_log.*";
 system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
 
-########################################
-#initialisation and setting configs
-########################################
-my $testingDir="../DATA-TEST/tophatTestDir";
-my $creatingDirCom="rm -rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
-system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingDirCom\n$!\n");
 
-my $OriginalFastaRef="../DATA/expectedData/referenceRNASeq.fa";
-my $fastaRef="$testingDir/referenceRNASeq.fa";
-my $refCopyCom="cp $OriginalFastaRef $fastaRef";
-system($refCopyCom) and die ("ERROR: $0 : Cannot copy the Reference $OriginalFastaRef with the command $refCopyCom\n$!\n");     #Now we have a ref to be tested
+##########################################
+### Test for tophat::bowtieBuild
+##########################################
 
-my $OriginalGffRef="../DATA/expectedData/referenceRNASeq.gff3";
-my $gffRef="$testingDir/referenceRNASeq.gff3";
-$refCopyCom="cp $OriginalGffRef $gffRef";
-system($refCopyCom) and die ("ERROR: $0 : Cannot copy the gff Reference $OriginalGffRef with the command $refCopyCom\n$!\n");     #Now we have a ref to be tested
+# input file
+my $fastaRef=$expectedData."/referenceRNASeq.fa";
+print "rm $fastaRef.*ebwt";
 
-my $originalFastqFile1="../DATA/expectedData/RNASeq_1.fastq";
-my $originalFastqFile2="../DATA/expectedData/RNASeq_2.fastq";
-my $fastqFile1="$testingDir/RNASeq_1.fastq";
-my $fastqFile2="$testingDir/RNASeq_2.fastq";
-my $seqCopyCom1="cp $originalFastqFile1 $fastqFile1";
-my $seqCopyCom2="cp $originalFastqFile2 $fastqFile2";
-system($seqCopyCom1) and die ("ERROR: $0 : Cannot copy the Fastq file $fastqFile1 for test with the command $seqCopyCom1 \n$!\n");    #The sequences are copied for testing
-system($seqCopyCom2) and die ("ERROR: $0 : Cannot copy the Fastq file $fastqFile2 for test with the command $seqCopyCom2 \n$!\n");    #The sequences are copied for testing
+my $gffRef=$expectedData."/referenceRNASeq.gff3";
 
-########################################
-#use of module ok
-########################################
-use_ok('toolbox') or exit;
-use_ok('tophat') or exit;
-can_ok( 'tophat','bowtieBuild');
-can_ok( 'tophat','bowtie2Build');
-can_ok( 'tophat','tophat2');
+my $fastqFile1=$expectedData."/RNASeq_1.fastq";
+my $fastqFile2=$expectedData."/RNASeq_2.fastq";
 
-use toolbox;
-use tophat;
+# options
+#my %optionsHachees = (
+#                        "-O" => 10,
+#			"-m" => 35,
+#                        "-q" => "20",
+#			"--overlap" => 7,
+#			"-b" => "GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG -b GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG",	
+#                        );        # Hash containing informations
+#my $optionsHachees = \%optionsHachees;
 
-################################################################################################
-###tophat::bowtieBuild
-################################################################################################
-my %optionsHachees = ();        # Hash containing informations
-my $optionHachees = \%optionsHachees;                           # Ref of the hash
-my $expectedIndexPrefix=$testingDir."/referenceRNASeq.fa";
-is(tophat::bowtieBuild($fastaRef,$optionHachees),$expectedIndexPrefix, 'OK for bowtieBuild RUNNING');
+# execution test
+is(tophat::bowtieBuild($fastaRef),$fastaRef,'tophat::bowtieBuild');
 
-###Checking the correct structure for the output file using md5sum
+# expected output test
+my $observedOutput = `ls`;
+my @observedOutput = split /\n/,$observedOutput;
+my @expectedOutput = ('individuSoft.txt', 'tophat_TEST_log.e','tophat_TEST_log.o');
+
+is_deeply(\@observedOutput,\@expectedOutput,'tophat::bowtieBuild - output list');
+
+
+
+# expected output content
 my $expectedMD5sum="167cd0622bda91392673aaf207255d2b";
-my $observedMD5sum=`md5sum $expectedIndexPrefix.1.ebwt`;# structure of the test file
+my $observedMD5sum=`md5sum $fastaRef.1.ebwt`;# structure of the test file
 my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'Ok for the content of the bowtie build 1.ebwt structure');
 
 $expectedMD5sum="dd30c97b610f5dc53cf6f02123fcf807";
-$observedMD5sum=`md5sum $expectedIndexPrefix.2.ebwt`;# structure of the test file
+$observedMD5sum=`md5sum $fastaRef.2.ebwt`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'Ok for the content of the bowtie build 2.ebwt structure');
 
 $expectedMD5sum="8aa5c56a0ba0b0ab7e9e7f3fb7ee4a76";
-$observedMD5sum=`md5sum $expectedIndexPrefix.3.ebwt`;# structure of the test file
+$observedMD5sum=`md5sum $fastaRef.3.ebwt`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'Ok for the content of the bowtie build 3.ebwt structure');
 
 $expectedMD5sum="a4ebbf39ff457e410253b571ee79088d";
-$observedMD5sum=`md5sum $expectedIndexPrefix.4.ebwt`;# structure of the test file
+$observedMD5sum=`md5sum $fastaRef.4.ebwt`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'Ok for the content of the bowtie build 4.ebwt structure');
 
 $expectedMD5sum="4bd4f23dc8b98a5dc4b56d7f4d89a9b5";
-$observedMD5sum=`md5sum $expectedIndexPrefix.rev.1.ebwt`;# structure of the test file
+$observedMD5sum=`md5sum $fastaRef.rev.1.ebwt`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'Ok for the content of the bowtie build rev.1.ebwt structure');
 
 $expectedMD5sum="619322d189d42f4eaede8aaaedf9890e";
-$observedMD5sum=`md5sum $expectedIndexPrefix.rev.2.ebwt`;# structure of the test file
+$observedMD5sum=`md5sum $fastaRef.rev.2.ebwt`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'Ok for the content of the bowtie build rev.2.ebwt structure');
 
+exit;
+my $expectedIndexPrefix;
+my %optionsHachees;
+my $optionHachees;
+###Checking the correct structure for the output file using md5sum
 
 
 ################################################################################################
