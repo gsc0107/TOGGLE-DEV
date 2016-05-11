@@ -49,6 +49,13 @@ can_ok('onTheFly','indexCreator');
 
 use onTheFly;
 
+#########################################
+#Remove the files and directory created by the previous test
+#########################################
+my $testingDir="../DATA-TEST/onTheFlyTestDir";
+my $rmDirCommand="rm -Rf $testingDir; mkdir $testingDir"; 
+system ("$rmDirCommand") and die ("ERROR: $0 : Cannot remove the previous test directory with the command $rmDirCommand \n$!\n");
+chdir $testingDir or die ("ERROR: $0 : Cannot create $testingDir\n$!\n");
 
 #######################################
 #Creating the IndividuSoft.txt file
@@ -64,26 +71,11 @@ my $cleaningCommand="rm -Rf onTheFly_TEST_log.*";
 system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
 
 
-
-#########################################
-#Remove the files and directory created by the previous test
-#########################################
-my $testingDir="../DATA-TEST/onTheFlyTestDir";
-$cleaningCommand="rm -Rf ../DATA-TEST/$testingDir"; 
-system ("rm -Rf $testingDir") and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCommand \n$!\n");
-
-
-########################################
-#Creation of test directory
-########################################
-my $makeDirCom = "mkdir $testingDir";
-system ($makeDirCom) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCom\n$!\n");
-
 ########################################
 #Creation of test files
 ########################################
-my $originalFastaRef="../DATA/expectedData/Reference.fasta";
-my $fastaRef="$testingDir/Reference.fasta";
+my $originalFastaRef="../../DATA/expectedData/Reference.fasta";
+my $fastaRef="Reference.fasta";
 my $refCopyCom="cp $originalFastaRef $fastaRef";
 system($refCopyCom) and die ("ERROR: $0 : Cannot copy the Reference for test with the command $refCopyCom \n$!\n");
   #Now we have a ref to be tested
