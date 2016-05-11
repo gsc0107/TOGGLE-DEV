@@ -47,13 +47,14 @@ use_ok('samTools') or exit;
 
 can_ok( 'samTools','samToolsFaidx');
 can_ok( 'samTools','samToolsIndex');
-#can_ok( 'samTools','samToolsSort');
-#can_ok( 'samTools','mergeHeader');
-#can_ok( 'samTools','samToolsMerge');
+can_ok( 'samTools','samToolsSort');
+can_ok( 'samTools','mergeHeader');
+can_ok( 'samTools','samToolsMerge');
 can_ok( 'samTools','samToolsView');
-#can_ok( 'samTools','samToolsIdxstats');
-#can_ok( 'samTools','samToolsDepth');
+can_ok( 'samTools','samToolsIdxstats');
+can_ok( 'samTools','samToolsDepth');
 can_ok( 'samTools','samToolsFlagstat');
+can_ok( 'samTools','samToolsMpileUp');
 
 use toolbox;
 use samTools;
@@ -92,44 +93,66 @@ system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files 
 ########################################
 #initialisation and setting configs
 ########################################
-my $fastaRef="Reference.fasta";
-my $originalFastaRef=$expectedData."/".$fastaRef;
-my $lnCmd="ln -s $originalFastaRef .";
-system($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalFastaRef in the test directory with the command $lnCmd\n$!\n");     #Now we have a ref to be tested
 
-my $bamFile="RC3.PICARDTOOLSSORT.bam";
-my $originalBamFile=$expectedData."/".$bamFile;
-$lnCmd="ln -s $originalBamFile .";
-system($lnCmd) and die("ERROR: $0 :Cannot copy the file $originalBamFile in the test directory with the command $lnCmd\n$!\n");
+system ("cp $expectedData/Reference.fasta Reference.fasta") and die ("Cannot copy reference! $!\n"); # need to have the reference in "hard"
+my $fastaRef="Reference.fasta";
+
+
 
 
 
 ################################################################################################
 ###Samtools faidx
 ################################################################################################
-is(samTools::samToolsFaidx($fastaRef),1,'samTools::samToolsFaidx... running');
 
-###Checking the correct structure for the output file using md5sum
+# execution test
+is(samTools::samToolsFaidx($fastaRef),1,'samTools::samToolsFaidx');
+
+# expected output test
+my $observedOutput = `ls`;
+my @observedOutput = split /\n/,$observedOutput;
+my @expectedOutput = ('individuSoft.txt','Reference.fasta','Reference.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+#
+is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsFaidx - output list');
+
+# expected content test
+
 my $expectedMD5sum="4b9a4431e72c9db7e5c1f2153eba9fe7";
 my $observedMD5sum=`md5sum $fastaRef.fai`;# structure of the test file
 my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'samTools::samToolsFaidx... Ok for the content of the samtools faidx output structure');
+is($observedMD5sum,$expectedMD5sum,'samTools::samToolsFaidx - output structure');
+
 
 
 ################################################################################################
 ##Samtools index
 ################################################################################################
-is(samTools::samToolsIndex($bamFile),1,'samTools::samToolsIndex... running');
 
-###Checking the correct structure for the output file using md5sum
-$expectedMD5sum = "29bed7c8c70c24cd84a439d3fc473474";
+#Input files
+system ("cp $expectedData/RC3.PICARDTOOLSSORT.bam .") and die ("Cannot copy bam file ! $!\n");
+my $bamFile="RC3.PICARDTOOLSSORT.bam";
+
+#execution test
+is(samTools::samToolsIndex($bamFile),1,'samTools::samToolsIndex');
+
+# expected output test
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('individuSoft.txt','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSSORT.bam.bai','Reference.fasta','Reference.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+
+is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsIndex - output list');
+
+# expected content test$expectedMD5sum = "29bed7c8c70c24cd84a439d3fc473474";
+$expectedMD5sum = "891640725352614f9981d41726eed04f";
 $observedMD5sum=`md5sum $bamFile.bai`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'samTools::samToolsIndex... Ok for the content of the samtools index output structure');
+is($observedMD5sum,$expectedMD5sum,'samTools::samToolsIndex - output structure');
 
+exit;
 
+__END__
 ################################################################################################
 ##Samtools view
 ################################################################################################
