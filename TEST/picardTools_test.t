@@ -48,11 +48,13 @@ use_ok('picardTools') or exit;
 can_ok( 'picardTools','picardToolsMarkDuplicates');
 can_ok( 'picardTools','picardToolsCreateSequenceDictionary');
 can_ok( 'picardTools','picardToolsSortSam');
+can_ok( 'picardTools','picardToolsAddOrReplaceGroup');
+can_ok( 'picardTools','picardToolsCleanSam');
+can_ok( 'picardTools','picardToolsSamFormatConverter');
+can_ok( 'picardTools','picardToolsValidateSamFile');
 
 use toolbox;
 use picardTools;
-
-my $configInfos = toolbox::readFileConf("software.config.txt");
 
 #########################################
 #Remove files and directory created by previous test
@@ -86,126 +88,97 @@ system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files 
 #picardToolsCreateSequenceDictionary test
 ##########################################
 
+#Input file
 my $refFile = "Reference.fasta";  
 my $originalRefFile = $expectedData."/".$refFile;    
+my $cpCmd = "cp $originalRefFile ."; # command to copy the original Ref fasta file into the test directory
+system ($cpCmd) and die ("ERROR: $0 : Cannot copy the file $originalRefFile in the test directory with the command $cpCmd\n$!\n"); 
 
-my $lnCmd = "ln -s $originalRefFile ."; # command to copy the original Ref fasta file into the test directory
-system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalRefFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
+#Output file
+my $refFileDict = "Reference.dict";
 
-my $refFileDict = "Reference.dict";      # output of this module
+#execution test
+is(picardTools::picardToolsCreateSequenceDictionary($refFile,$refFileDict),1,'picardTools::picardToolsCreateSequenceDictionary');
 
-### TEST OF FUNCTION
-is(picardTools::picardToolsCreateSequenceDictionary($refFile,$refFileDict),1,'picardTools::picardToolsCreateSequenceDictionary... Running');     # test if picardTools::picardToolsCreateSequenceDictionary works
+# expected output test
+my $observedOutput = `ls`;
+my @observedOutput = split /\n/,$observedOutput;
+my @expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','Reference.dict','Reference.fasta');
 
-### TEST OF STRUCTURE
-my $nbOfLineExpected= "952";
-my $nbOfLineObserved= `wc -l $refFileDict`;
-my @nameless=split /\s/, $nbOfLineObserved;
+is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsCreateSequenceDictionary - output list');
 
-is_deeply($nameless[0],$nbOfLineExpected,'picardTools::picardToolsCreateSequenceDictionary... Test for the lines number of the output file');
+# expected content test
+my $expectedLastLine="\@SQ	SN:2299897	LN:19555	M5:872df605abe21dcfe7cfcc7f4d491ea1	";  
+my $observedLastLine=`tail -n 1 $refFileDict`; 
+my @withoutName = split ("UR:", $observedLastLine); 
+$observedLastLine = $withoutName[0];       # just to have the md5sum result
+is($observedLastLine,$expectedLastLine,'picardTools::picardToolsCreateSequenceDictionary - output structure');
 
-my $firstM5Expected= "bedc1338f03b37384785c231069eae0e";
-my $firstM5Observed= `head -n2 $refFileDict`;
-chomp $firstM5Observed;
-my @m5Observed=split /M5:/, $firstM5Observed;
-
-is_deeply($m5Observed[1],$firstM5Expected,'picardTools::picardToolsCreateSequenceDictionary... Test for the MD5 value in the first line of the output file');
-
-my $lastM5Expected= "872df605abe21dcfe7cfcc7f4d491ea1";
-my $lastM5Observed= `tail -n 1 $refFileDict`;
-chomp $lastM5Observed;
-@m5Observed=split /M5:/, $lastM5Observed;
-
-is_deeply($m5Observed[1],$lastM5Expected,'picardTools::picardToolsCreateSequenceDictionary... Test for the MD5 value in the last line of the output file');
 
 
 ##########################################
 #picardToolsSortSam test
 ##########################################
-###### SINGLE ######
+#input data
 ## Input files test for single analysis
-my $samFile = "RC3.BWASAMSE.sam";              # SAM file of test
-my $originalSamFile = $expectedData."/".$samFile;        # original SAM file
-$lnCmd = "ln -s $originalSamFile .";                  # command to copy the original Ref fasta file into the test directory
-system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalSamFile in the test directory with the command $lnCmd\n$!\n");
+my $samFile = $expectedData."RC3.BWASAMPE.sam";
 
-my $bamFileOut = "RC3Single.PICARDTOOLSSORT.bam";
+#output data
+my $bamFileOut = "RC3.PICARDTOOLSSORT.bam";
 
 my %optionsRef = ("SORT_ORDER" => "coordinate","VALIDATION_STRINGENCY" => "SILENT");   
-my $optionRef = \%optionsRef;                           # Ref of the hash
+my $optionsHachees = \%optionsRef;
 
-#### TEST OF FUNCTION
-is(picardTools::picardToolsSortSam($samFile,$bamFileOut,$optionRef),1,'picardTools::picardToolsSortSam... Running single');  
+#execution test
+is(picardTools::picardToolsSortSam($samFile,$bamFileOut,$optionsHachees),1,'picardTools::picardToolsSortSam');  
 
-#### TEST OF STRUCTURE
-my $md5sumExpected = "22e0135ae3488cf16fdb095283ac91c4";
-my $md5sumObserved = `md5sum $bamFileOut`;
-@nameless = split (" ", $md5sumObserved);           # to separate the structure and the name of file
-$md5sumObserved = $nameless[0];                        # just to have the md5sum result
+# expected output test
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSSORT.bam','Reference.dict','Reference.fasta');
 
-is_deeply ($md5sumObserved,$md5sumExpected, 'picardTools::picardToolsSortSam... Test for the structure of the output file for single');    # test if the structure of the output file is ok
+is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsSortSam - output list');
 
-
-
-####### PAIR ######
-#### Input files test for pair analysis
-$samFile = "RC3.BWASAMPE.sam";            # SAM file of test
-$originalSamFile = $expectedData."/".$samFile;        # original SAM file
-$lnCmd = "ln -s $originalSamFile .";                            # command to copy the original Ref fasta file into the test directory
-system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalSamFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
-
-$bamFileOut = "RC3.PICARDTOOLSSORT.bam";
-
-%optionsRef = ("SORT_ORDER" => "coordinate","VALIDATION_STRINGENCY" => "SILENT");        # Hash containing informations
-$optionRef = \%optionsRef;                           # Ref of the hash
-
-
-#### TEST OF FUNCTION
-is(picardTools::picardToolsSortSam($samFile,$bamFileOut,$optionRef),1,'picardTools::picardToolsSortSam... Running pair');  # test if picardTools::picardToolsSortSam works
-
-#### TEST OF STRUCTURE
-$md5sumExpected = "7e5a7dc36c0f0b599cc158c599c9913d";
-$md5sumObserved = `md5sum $bamFileOut`;
-@nameless = split (" ", $md5sumObserved);           # to separate the structure and the name of file
-$md5sumObserved = $nameless[0];                        # just to have the md5sum result
-
-is_deeply ($md5sumObserved,$md5sumExpected, 'picardTools::picardToolsSortSam... Test for the structure of the output file for pair');    # test if the structure of the output file is ok
-
+# expected content test
+my $expectedMD5sum="df7c7657d50f6dbf93a5ba5b6900b981";      # structure of the ref file
+my $observedMD5sum=`md5sum $bamFileOut`;       # structure of the test file
+@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
+$observedMD5sum = $withoutName[0];       # just to have the md5sum result
+is($observedMD5sum,$expectedMD5sum,'picardTools::picardToolsSortSam - output structure');
 
 
 
 ###########################################
 ##picardToolsMarkDuplicates test
 ###########################################
-my $bamFile = "RC3.GATKINDELREALIGNER.bam";                         # BAM file of test
-my $originalBamFile = $expectedData."/".$bamFile;        # original BAM file
+#input file
+my $bamFile = $expectedData."RC3.GATKINDELREALIGNER.bam"; 
 
-$lnCmd = "ln -s $originalBamFile .";                            # command to copy the original Ref fasta file into the test directory
-system ($lnCmd) and die ("ERROR: $0 : Cannot copy the file $originalBamFile in the test directory with the command $lnCmd\n$!\n");    # RUN the copy command
-
+#output files
 $bamFileOut = "RC3.PICARDTOOLSMARKDUPLICATES.bam";
 my $duplicatesFileOut = "RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates";
 
 %optionsRef = ("VALIDATION_STRINGENCY" => "SILENT");        # Hash containing informations
-$optionRef = \%optionsRef;                           # Ref of the hash
+$optionsHachees = \%optionsRef;                           # Ref of the hash
 
+#execution test
+is(picardTools::picardToolsMarkDuplicates($bamFile, $bamFileOut, $duplicatesFileOut, $optionsHachees),1,'picardTools::picardToolsMarkDuplicates');
+# expected output test
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSORT.bam','Reference.dict','Reference.fasta');
 
-#### TEST OF FUNCTION
-is(picardTools::picardToolsMarkDuplicates($bamFile, $bamFileOut, $duplicatesFileOut, $optionRef),1,'picardTools::picardToolsMarkDuplicates... Running');  # test if picardTools::picardToolsMarkDuplicates works
+is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsMarkDuplicates - output list');
 
-#### TEST OF STRUCTURE
-my $expectedBam = "63aa7627a3658ad513351fa73f5d8f93";
-my $observedBam = `md5sum $bamFileOut`;
-@nameless = split (" ", $observedBam);           # to separate the structure and the name of file
-$observedBam = $nameless[0];                        # just to have the md5sum result
-
-is_deeply ($observedBam, $expectedBam, 'picardTools::picardToolsMarkDuplicates... Test for BAM file');      # test if the structure of BAM file is ok
-
-my $observedDup = `less $duplicatesFileOut`;
-like($observedDup, qr/## METRICS CLASS/, 'picardTools::picardToolsMarkDuplicates... Test for duplicates file');     # test if the structure of duplicates file is ok
-
+# expected content test
+$expectedMD5sum="23180154325eaf0bedb97488846a3592";      # structure of the ref file
+$observedMD5sum=`md5sum $bamFileOut`;       # structure of the test file
+@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
+$observedMD5sum = $withoutName[0];       # just to have the md5sum result
+is($observedMD5sum,$expectedMD5sum,'picardTools::picardToolsMarkDuplicates - output structure');
 
 exit;
+__END__
 
 # AF
 #PicardToolsValidateSamFile
