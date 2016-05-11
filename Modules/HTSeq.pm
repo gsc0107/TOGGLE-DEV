@@ -37,6 +37,8 @@ use localConfig;
 use toolbox;
 use Data::Dumper;
 
+use lib qw(../Modules/);
+use pairing;
 
 
 sub htseqCount
