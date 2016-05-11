@@ -51,7 +51,10 @@ sub picardToolsMarkDuplicates
             $options=toolbox::extractOptions($optionsHachees,"=");      # recovery of options if they are provided
         }
         my $comPicardToolsMarkDuplicates = "$picard/picard.jar MarkDuplicates $options INPUT=$bamToAnalyze OUTPUT=$bamAnalyzed METRICS_FILE=$bamDuplicates ";      #command line 
-        toolbox::run($comPicardToolsMarkDuplicates);        # command line execution                                                                                                                                                                                                                    
+        if (toolbox::run($comPicardToolsMarkDuplicates)==1)
+	{
+	    return 1;
+	}                                                                                                                                                                                                                
     }
     else        # if something wrong (size, format) in the file to examine, don't run the module ...                                                                                                                                                                                                                                                                 # if previous files doesn't exists or are empty or if picardToolsMarkDuplicates failed
     {
@@ -136,7 +139,6 @@ sub picardToolsValidateSamFile
         my $command="$picard/picard.jar ValidateSamFile $options INPUT=$bamOrSamFileIn OUTPUT=$infoFileOut";       #creation of the command line
         if(toolbox::run($command)==1)       #Execute command
         {
-            toolbox::exportLog("INFOS: picardTools::picardToolsValidateSamFile : Correctly run\n",1);
             return 1;
         }
     }
@@ -164,7 +166,6 @@ sub picardToolsCleanSam
         my $command="$picard/picard.jar CleanSam $options INPUT=$samFileIn OUTPUT=$samFileOut";       #creation of the command line
         if(toolbox::run($command)==1)       #Execute command
         {
-            toolbox::exportLog("INFOS: picardTools::picardToolsCleanSam : Correctly run\n",1);
             return 1;
         }
     }
@@ -192,7 +193,6 @@ sub picardToolsSamFormatConverter
         my $command="$picard/picard.jar SamFormatConverter $options INPUT=$samFileIn OUTPUT=$bamFileOut";       #creation of the command line
         if(toolbox::run($command)==1)       #Execute command
         {
-            toolbox::exportLog("INFOS: picardTools::picardToolsSamFormatConverter : Correctly run\n",1);
             return 1;
         }
     }
@@ -220,7 +220,6 @@ sub picardToolsAddOrReplaceGroup
         my $command="$picard/picard.jar AddOrReplaceReadGroups $options INPUT=$samFileIn OUTPUT=$bamFileOut";       #creation of the command line
         if(toolbox::run($command)==1)       #Execute command
         {
-            toolbox::exportLog("INFOS: picardTools::picardToolsAddOrReplaceGroup : Correctly run\n",1);
             return 1;
         }
     }
