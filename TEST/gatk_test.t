@@ -82,15 +82,6 @@ system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt
 my $cleaningCommand="rm -Rf gatk_TEST_log.*";
 system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
 
-
-##########################################
-##### gatk::gatkPrintReads
-##########################################
-
-##########################################
-##### gatk::gatkBaseRecalibrator
-##########################################
-
 ##########################################
 ##### gatk::gatkRealignerTargetCreator
 ##########################################
