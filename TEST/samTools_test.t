@@ -143,70 +143,102 @@ $observedOutput = `ls`;
 
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsIndex - output list');
 
-# expected content test$expectedMD5sum = "29bed7c8c70c24cd84a439d3fc473474";
+# expected output structure
 $expectedMD5sum = "891640725352614f9981d41726eed04f";
 $observedMD5sum=`md5sum $bamFile.bai`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'samTools::samToolsIndex - output structure');
 
-exit;
-
-__END__
 ################################################################################################
 ##Samtools view
 ################################################################################################
+
+#Output file
 my $bamFileOut="RC3.SAMTOOLSVIEW.bam";
-
 my %optionsRef = ("-h" => '', "-b" => '', "-F" => "0*02");
-my $optionRef = \%optionsRef; 
-is(samTools::samToolsView($bamFile, $bamFileOut, $optionRef),1,'samTools::samToolsView... Ok for samToolsView running');
+my $optionsHachees = \%optionsRef; 
 
+#execution test
+is(samTools::samToolsView($bamFile, $bamFileOut, $optionsHachees),1,'samTools::samToolsView');
 
-###Checking the correct structure for the output file using md5sum
+# expected output test
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('individuSoft.txt','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSSORT.bam.bai','RC3.SAMTOOLSVIEW.bam','Reference.fasta','Reference.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+
+is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsView - output list');
+
+# expected output structure
 $expectedMD5sum = "c5db29f185507f5433f0c08163a2dc57";
 $observedMD5sum=`md5sum $bamFileOut`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'samTools::samToolsView...Ok for the content of the samtools view output structure');
+is($observedMD5sum,$expectedMD5sum,'samTools::samToolsView - output structure');
 
 
 ################################################################################################
 ##Samtools sort
 ################################################################################################
-#is(samTools::samToolsSort($bamFile),1,'Ok for samToolsSort running');
-#
-####Checking the correct structure for the output file using md5sum
-#$expectedMD5sum = "118c12f23985225eee198927007c2e73";
-#$observedMD5sum=`md5sum ../DATA-TEST/samtoolsTestDir/RC3.PICARDTOOLSSORT.bam`;# structure of the test file
-#@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-#$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-#is($observedMD5sum,$expectedMD5sum,'Ok for the content of the samtools sort output structure');
 
+#Output file
+$bamFileOut = "RC3.SAMTOOOLSSORT";
+
+#execution test
+is(samTools::samToolsSort($bamFile, $bamFileOut),1,'samTools::samToolsSort');
+
+# expected output test
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('individuSoft.txt','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSSORT.bam.bai','RC3.SAMTOOLSVIEW.bam','RC3.SAMTOOOLSSORT.bam','Reference.fasta','Reference.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+
+is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsSort - output list');
+
+# expected output structure
+$expectedMD5sum = "c5db29f185507f5433f0c08163a2dc57";
+$observedMD5sum=`md5sum RC3.SAMTOOOLSSORT.bam`;# structure of the test file
+@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
+$observedMD5sum = $withoutName[0];       # just to have the md5sum result
+is($observedMD5sum,$expectedMD5sum,'samTools::samToolsSort - output structure');
 
 
 ################################################################################################
 ###Samtools merge
 ################################################################################################
-#my @bamFiles=('../DATA/expectedData/RC3.SAMTOOLSVIEW.bam','../DATA/expectedData/RC3.PICARDTOOLSSORT.bam');
-#my $headerExtractCommand="samtools view -H ../DATA/expectedData/RC3.SAMTOOLSVIEW.bam > ../DATA-TEST/samtoolsTestDir/headerFile.sam";  #Extracting header for the following test
-#TODO: {
-#        system($headerExtractCommand) and die ("\nCannot launch the header extract command: $!\n Aborting tests\n");
-#        $optionsHachees=$configInfos->{'samtools merge'};
-#        is(samTools::samToolsMerge(\@bamFiles,"$testingDir/out.bam",'../DATA-TEST/samtoolsTestDir/headerFile.sam',$optionsHachees),1,'Ok for samToolsMerge running');
-#        
-#    }  
-###Verifying if the output files are existing for sort
-#my $expectedOutputMerge="$testingDir/out.bam";
-#is(toolbox::existsFile($expectedOutputMerge),1,'Ok for samToolsMerge produced files');
-####Checking the correct structure for the output file using md5sum
-#$expectedMD5sum = "d326235da0035dbe76e8214cadb46f8f";
-#$observedMD5sum=`md5sum ../DATA-TEST/samtoolsTestDir/out.bam`;# structure of the test file
-#@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-#$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-#is($observedMD5sum,$expectedMD5sum,'Ok for the content of the samtools merge output structure');
-#
-#
+
+#Input files
+my @bamFiles=('../../DATA/expectedData/RC3.SAMTOOLSVIEW.bam','../../DATA/expectedData/RC3.PICARDTOOLSSORT.bam');
+my $headerExtractCommand="samtools view -H ../../DATA/expectedData/RC3.SAMTOOLSVIEW.bam > headerFile.sam";  #Extracting header for the following test
+system($headerExtractCommand) and die ("\nCannot launch the header extract command: $!\n Aborting tests\n");
+%optionsRef = ("-h" => '', "-b" => '', "-F" => "0*02");
+$optionsHachees = \%optionsRef;
+
+#Outputfile
+$bamFileOut = "MergeBam.bam";
+
+#execution test
+is(samTools::samToolsMerge(\@bamFiles,$bamFileOut,'headerFile.sam'),1,'samTools::samToolsMerge');
+
+# expected output test
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('headerFile.sam','individuSoft.txt','MergeBam.bam','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSSORT.bam.bai','RC3.SAMTOOLSVIEW.bam','RC3.SAMTOOOLSSORT.bam','Reference.fasta','Reference.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+
+is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsMerge - output list');
+
+###Checking the correct structure for the output file using md5sum
+$expectedMD5sum = "f1a4da94237ced60649daa729f0f60f1";
+$observedMD5sum=`md5sum $bamFileOut`;# structure of the test file
+@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
+$observedMD5sum = $withoutName[0];       # just to have the md5sum result
+is($observedMD5sum,$expectedMD5sum,'samTools::samToolsMerge - output structure');
+
+
+
+exit;
+
+__END__
+
 #################################################################################################
 ###mergeHeader
 #################################################################################################
