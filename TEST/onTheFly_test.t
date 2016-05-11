@@ -46,6 +46,7 @@ use_ok('onTheFly');
 can_ok('onTheFly','checkOrder');
 can_ok('onTheFly','generateScript');
 can_ok('onTheFly','indexCreator');
+can_ok('onTheFly','generateGraphviz');
 
 use onTheFly;
 
@@ -265,3 +266,27 @@ is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::indexCreator forcing crea
 $observedOutput = `stat -c %y Reference.fasta.pac`;
 chomp $observedOutput;
 isnt($observedOutput,$initialModifDate,'onTheFly::indexCreator forcing creation - output structure');
+
+
+########################################
+#generateGraphviz test
+#######################################
+
+
+#execution test
+is (onTheFly::generateGraphviz($hashConf,$toggle."/DATA-TEST/onTheFlyTestDir"),'1','onTheFly::generateGraphviz');
+
+# expected output test
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','Reference.dict','Reference.fasta','Reference.fasta.amb','Reference.fasta.ann','Reference.fasta.bwt','Reference.fasta.fai','Reference.fasta.pac','Reference.fasta.sa','toggleBzzz.pl','togglePipeline.dot');
+#
+is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::generateGraphviz - output list');
+
+# expected content test
+
+$expectedMD5sum="9";
+$observedMD5sum=`wc -l togglePipeline.dot`;# structure of the test file
+@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
+$observedMD5sum = $withoutName[0];       # just to have the md5sum result
+is($observedMD5sum,$expectedMD5sum,'onTheFly::generateGraphviz - output structure');
