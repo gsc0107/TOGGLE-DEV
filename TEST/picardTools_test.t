@@ -204,6 +204,32 @@ $observedMD5sum=`md5sum $bamFileOut`;       # structure of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'picardTools::picardToolsCleanSam - output structure');
 
+###########################################
+# picardToolsSamFormatConverter test
+###########################################
+#output files
+my $samFileOut = "RC3.PICARDTOOLSSAMFORMATCONVERTER.sam";
+
+%optionsRef = ("VALIDATION_STRINGENCY" => "SILENT");        # Hash containing informations
+$optionsHachees = \%optionsRef;                           # Ref of the hash
+
+#execution test
+is(picardTools::picardToolsSamFormatConverter($bamFile, $samFileOut,$optionsHachees),1,'picardTools::picardToolsSamFormatConverter');
+
+# expected output test
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSAMFORMATCONVERTER.sam','RC3.PICARDTOOLSSORT.bam',,'Reference.dict','Reference.fasta');
+
+is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsSamFormatConverter - output list');
+
+# expected content test
+$expectedMD5sum="539400bf26e82d5040459f581d912156";      # structure of the ref file
+$observedMD5sum=`md5sum $samFileOut`;       # structure of the test file
+@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
+$observedMD5sum = $withoutName[0];       # just to have the md5sum result
+is($observedMD5sum,$expectedMD5sum,'picardTools::picardToolsSamFormatConverter - output structure');
+
 
 ###########################################
 # picardToolsValidateSamFile test
