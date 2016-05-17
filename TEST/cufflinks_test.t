@@ -31,23 +31,25 @@
 ###################################################################################################################################
 
 use strict;
+use warnings;
 
 #Will test if bwa works correctly
-use warnings;
-use lib qw(../Modules/);
 use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
 use Test::Deep;
 use Data::Dumper;
-
+use lib qw(../Modules/);
 
 use_ok('toolbox') or exit;
 use_ok('cufflinks') or exit;
 can_ok( 'cufflinks','cufflinks');
 can_ok( 'cufflinks','cuffmerge');
 can_ok( 'cufflinks','cuffdiff');
+
 use toolbox;
 use cufflinks;
-toolbox::readFileConf("software.config.txt");
+
+exit;
+__END__
 #
 #
 #
