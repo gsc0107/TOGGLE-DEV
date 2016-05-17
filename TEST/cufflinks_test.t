@@ -48,7 +48,33 @@ can_ok( 'cufflinks','cuffdiff');
 use toolbox;
 use cufflinks;
 
+my $expectedData="../../DATA/expectedData/";
+
+#########################################
+#Remove files and directory created by previous test
+#########################################
+my $testingDir="../DATA-TEST/cufflinksDir";
+my $creatingDirCom="rm -rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
+system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingDirCom\n$!\n");
+
+chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
+
+
+#######################################
+#Creating the IndividuSoft.txt file
+#######################################
+my $creatingCommand="echo \"tcufflinks\nTEST\" > individuSoft.txt";
+system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
+
+
+#######################################
+#Cleaning the logs for the test
+#######################################
+my $cleaningCommand="rm -rf tophat_TEST_log.*";
+system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
+
 exit;
+
 __END__
 #
 #
