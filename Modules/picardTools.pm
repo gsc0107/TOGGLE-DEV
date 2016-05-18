@@ -50,7 +50,7 @@ sub picardToolsMarkDuplicates
 	{
             $options=toolbox::extractOptions($optionsHachees,"=");      # recovery of options if they are provided
         }
-        my $comPicardToolsMarkDuplicates = "$picard/picard.jar MarkDuplicates $options INPUT=$bamToAnalyze OUTPUT=$bamAnalyzed METRICS_FILE=$bamDuplicates ";      #command line 
+        my $comPicardToolsMarkDuplicates = "$picard MarkDuplicates $options INPUT=$bamToAnalyze OUTPUT=$bamAnalyzed METRICS_FILE=$bamDuplicates ";      #command line 
         if (toolbox::run($comPicardToolsMarkDuplicates)==1)
 	{
 	    return 1;
@@ -77,7 +77,7 @@ sub picardToolsCreateSequenceDictionary
 	    {
 	        $options=toolbox::extractOptions($optionsHachees);      # recovery of options if they are provided
 	    }
-	    my $command="$picard/picard.jar CreateSequenceDictionary $options REFERENCE=$refFastaFile OUTPUT=$dictFileOut";        #creation of the command line
+	    my $command="$picard CreateSequenceDictionary $options REFERENCE=$refFastaFile OUTPUT=$dictFileOut";        #creation of the command line
 	    if(toolbox::run($command)==1)       #Execution of the command line
 	    {
 	        return 1;
@@ -109,7 +109,7 @@ sub picardToolsSortSam
         {
             $options=toolbox::extractOptions($optionsHachees,"=");      # recovery of options if they are provided
         }
-        my $command="$picard/picard.jar SortSam $options INPUT=$bamOrSamFileIn OUTPUT=$bamOrSamFileOut";       #creation of the command line
+        my $command="$picard SortSam $options INPUT=$bamOrSamFileIn OUTPUT=$bamOrSamFileOut";       #creation of the command line
         if(toolbox::run($command)==1)       #Execute command
         {
             return 1;
@@ -136,7 +136,7 @@ sub picardToolsValidateSamFile
         {
             $options=toolbox::extractOptions($optionsHachees,"=");      # recovery of options if they are provided
         }
-        my $command="$picard/picard.jar ValidateSamFile $options INPUT=$bamOrSamFileIn OUTPUT=$infoFileOut";       #creation of the command line
+        my $command="$picard ValidateSamFile $options INPUT=$bamOrSamFileIn OUTPUT=$infoFileOut";       #creation of the command line
         if(toolbox::run($command)==1)       #Execute command
         {
             return 1;
@@ -163,7 +163,7 @@ sub picardToolsCleanSam
         {
             $options=toolbox::extractOptions($optionsHachees,"=");      # recovery of options if they are provided
         }
-        my $command="$picard/picard.jar CleanSam $options INPUT=$samFileIn OUTPUT=$samFileOut";       #creation of the command line
+        my $command="$picard CleanSam $options INPUT=$samFileIn OUTPUT=$samFileOut";       #creation of the command line
         if(toolbox::run($command)==1)       #Execute command
         {
             return 1;
@@ -190,7 +190,7 @@ sub picardToolsSamFormatConverter
         {
             $options=toolbox::extractOptions($optionsHachees,"=");      # recovery of options if they are provided
         }
-        my $command="$picard/picard.jar SamFormatConverter $options INPUT=$samFileIn OUTPUT=$bamFileOut";       #creation of the command line
+        my $command="$picard SamFormatConverter $options INPUT=$samFileIn OUTPUT=$bamFileOut";       #creation of the command line
         if(toolbox::run($command)==1)       #Execute command
         {
             return 1;
@@ -217,7 +217,7 @@ sub picardToolsAddOrReplaceGroup
         {
             $options=toolbox::extractOptions($optionsHachees,"=");      # recovery of options if they are provided
         }
-        my $command="$picard/picard.jar AddOrReplaceReadGroups $options INPUT=$samFileIn OUTPUT=$bamFileOut";       #creation of the command line
+        my $command="$picard AddOrReplaceReadGroups $options INPUT=$samFileIn OUTPUT=$bamFileOut";       #creation of the command line
         if(toolbox::run($command)==1)       #Execute command
         {
             return 1;

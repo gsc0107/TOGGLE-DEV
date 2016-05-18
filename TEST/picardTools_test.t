@@ -108,9 +108,9 @@ my @expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_T
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsCreateSequenceDictionary - output list');
 
 # expected content test
-my $expectedLastLine="\@SQ	SN:2299897	LN:19555	M5:872df605abe21dcfe7cfcc7f4d491ea1	";  
+my $expectedLastLine="\@SQ	SN:2299897	";  
 my $observedLastLine=`tail -n 1 $refFileDict`; 
-my @withoutName = split ("UR:", $observedLastLine); 
+my @withoutName = split ("LN:", $observedLastLine); 
 $observedLastLine = $withoutName[0];       # just to have the md5sum result
 is($observedLastLine,$expectedLastLine,'picardTools::picardToolsCreateSequenceDictionary - output structure');
 
@@ -140,12 +140,17 @@ $observedOutput = `ls`;
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsSortSam - output list');
 
 # expected content test
-my $expectedMD5sum="df7c7657d50f6dbf93a5ba5b6900b981";      # structure of the ref file
-my $observedMD5sum=`md5sum $bamFileOut`;       # structure of the test file
-@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'picardTools::picardToolsSortSam - output structure');
+#my $expectedMD5sum="df7c7657d50f6dbf93a5ba5b6900b981";      # structure of the ref file
+#my $observedMD5sum=`md5sum $bamFileOut`;       # structure of the test file
+#@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
+#$observedMD5sum = $withoutName[0];       # just to have the md5sum result
+#is($observedMD5sum,$expectedMD5sum,'picardTools::picardToolsSortSam - output structure');
 
+#test end of file because change in version 130
+my $expectedEndLine="H2:C381HACXX:5:1101:9881:2219	141	*	0	0	*	*	0	0	CTCTTAGATCTTCTTTCTCCAATCTTGGATTAGGGAAGAAGGAGATATTCGCGACTCCTGGTGGTTTCATTATGGGGCAGCTCATGATCTTCATATCGATC	=;?DDAFBF>?<,<EF\@CIH:EHG4,<3+<293AF;:;?DBE8B\@9B<BF;\@D';@\@CDA).71'56??6(.6632;3>;8:(:@@(5:3(>\@:>BC?<?<	RG:Z:RC3
+";
+my $observedEndLine=`samtools view RC3.PICARDTOOLSSORT.bam | tail -1`  or die ("ERROR: $0 : Cannot execute: samtools view RC3.PICARDTOOLSSORT.bam | tail -1  \n$!\n");
+is($observedEndLine,$expectedEndLine,'picardTools::picardToolsSortSam - output endFile');
 
 
 ###########################################
@@ -171,8 +176,8 @@ $observedOutput = `ls`;
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsMarkDuplicates - output list');
 
 # expected content test
-$expectedMD5sum="23180154325eaf0bedb97488846a3592";      # structure of the ref file
-$observedMD5sum=`md5sum $bamFileOut`;       # structure of the test file
+my $expectedMD5sum="23180154325eaf0bedb97488846a3592";      # structure of the ref file
+my $observedMD5sum=`md5sum $bamFileOut`;       # structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'picardTools::picardToolsMarkDuplicates - output structure');
