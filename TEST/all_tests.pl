@@ -85,25 +85,6 @@ sub sedFunction
 #####################
 ## PATH for datas test
 #####################
-#dna fastq
-my $dataFastqpairedOneIndividuArcad = "../DATA/testData/fastq/pairedOneIndividuArcad";
-my $dataFastqpairedTwoIndividusGzippedIrigin = "../DATA/testData/fastq/pairedTwoIndividusGzippedIrigin";
-my $dataFastqpairedTwoIndividusIrigin = "../DATA/testData/fastq/pairedTwoIndividusIrigin";
-my $dataFastqsingleOneIndividuIrigin = "../DATA/testData/fastq/singleOneIndividuIrigin";
-my $dataFastqsingleTwoIndividuIrigin = "../DATA/testData/fastq/singleTwoIndividuIrigin";
-
-#rnaseq fastq
-my $dataRNAseqPairedOneIndividu = "../DATA/testData/rnaseq/pairedOneIndividu";
-my $dataRNAseqSingleOneIndividu = "../DATA/testData/rnaseq/singleOneIndividu";
-
-#samBam
-my $dataSamBamOneBam = "../DATA/testData/samBam/oneBam";
-my $dataSamBamOneSam = "../DATA/testData/samBam/oneSam";
-my $dataSamBamTwoBamsIrigin = "../DATA/testData/samBam/twoBamsIrigin";
-
-#vcf
-my $dataVcfSingleVCF = "../DATA/testData/vcf/singleVCF";
-my $dataVcfVcfForRecalibration = "../DATA/testData/vcf/vcfForRecalibration";
 
 # references files
 my $dataRefIrigin = "../DATA/Bank/referenceIrigin.fasta";
@@ -113,12 +94,19 @@ my $dataRefRnaseqGFF = "../DATA/Bank/referenceRnaseq.gff3";
 
 
 
+
+
+
 #####################
-## SNPdiscoveryPaired for no SGE mode pairedOneIndividuArcad
+## FASTQ TESTS
+#####################
+## TOGGLE fastq pairedOneIndividuArcad
 #####################
 
+my $dataFastqpairedOneIndividuArcad = "../DATA/testData/fastq/pairedOneIndividuArcad";
+
 print "\n\n#################################################\n";
-print "#### TEST SNPdiscoveryPaired / non SGE mode\n";
+print "#### TEST SNPdiscoveryPaired paired ARCAD / non SGE mode\n";
 print "#################################################\n";
 
 # Copy file config SNPdiscoveryPaired for no SGE mode
@@ -151,8 +139,6 @@ my @expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis
 # expected output test
 is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedOneIndividu list ');
 
-
-
 # expected output content
 $observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
 chomp $observedOutput;
@@ -162,28 +148,118 @@ is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividu content
 
 
 #####################
-## SNPdiscoveryPaired pairedOneIndividuArcad
+## FASTQ TESTS
 #####################
+## TOGGLE fastq pairedTwoIndividusGzippedIrigin
+#####################
+
+my $dataFastqpairedTwoIndividusGzippedIrigin = "../DATA/testData/fastq/pairedTwoIndividusGzippedIrigin";
 
 print "\n\n#################################################\n";
 print "#### TEST SNPdiscoveryPaired / compressed fastq\n";
 print "#################################################\n";
 
+#run with new fileconf SNPdiscoveryPaired for no SGE mode to pairedOneIndividuArcad
+$testingDir="../DATA-TEST/pairedTwoIndividusGzippedIrigin";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+
+$runCmd = "toggleGenerator.pl -c ".$fileSNPPairedNoSGE." -d ".$dataFastqpairedTwoIndividusGzippedIrigin." -r ".$dataRefArcad." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedTwoIndividusGzippedIrigin";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedOneIndividu list ');
+
+# expected output content
+$observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
+chomp $observedOutput;
+my $expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin1	irigin3";
+is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividu content ');
+
+
+
+#####################
+## FASTQ TESTS
+#####################
+## TOGGLE fastq pairedTwoIndividusIrigin 
+#####################
+
+my $dataFastqpairedTwoIndividusIrigin = "../DATA/testData/fastq/pairedTwoIndividusIrigin";
+
+print "\n\n#################################################\n";
+print "#### TEST SNPdiscoveryPaired / paired IRIGIN\n";
+print "#################################################\n";
+
+#run with new fileconf SNPdiscoveryPaired for no SGE mode to pairedOneIndividuArcad
+$testingDir="../DATA-TEST/pairedTwoIndividusIrigin";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+
+$runCmd = "toggleGenerator.pl -c ".$fileSNPPairedNoSGE." -d ".$dataFastqpairedTwoIndividusGzippedIrigin." -r ".$dataRefArcad." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedTwoIndividusIrigin";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedOneIndividu list ');
+
+# expected output content
+$observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
+chomp $observedOutput;
+my $expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin1	irigin3";
+is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividu content ');
+
+
+
 exit;
 
 
-#is($observedOutput,$expectedOutput,'gatk::gatkUnifiedGenotyper - output content');
-#
-#my $fileSNPSingleIni="../SNPdiscoverySingle.config.txt";          # Path of the SNPdiscoverySingle.config.txt
-#my $fileSNPSingle="SNPdiscoverySingleTest.config.txt";
-#
-#
-#my $fileRNASeqIni="../RNASeq.config.txt";          # Path of the RNASeq.config.txt
-#my $fileRNASeq="RNASeqTest.config.txt";
-#
-#
+
+#   - TOGGLE fastq pairedTwoIndividusIrigin en QSUB
+#   - TOGGLE fastq singleOneIndividuIrigin
+#   - TOGGLE fastq singleTwoIndividuIrigin
+
+# *** RNASeq ***
+#   - TOGGLE RNASeq pairedOneIndividu
+#   - TOGGLE RNASeq singleOneIndividu
+# *** samBam ***
+#   - TOGGLE samBam oneBam
+#   - TOGGLE samBam oneSam
+#   - TOGGLE samBam twoBamsIrigin
+# *** VCF ***
+#   - TOGGLE VCF singleVCF
+#   - TOGGLE VCF vcfForRecalibration
+
+#dna fastq
 
 
-# *** FASTQ ***
-#   - TOGGLE fastq pairedOneIndividuArcad
 
+my $dataFastqsingleOneIndividuIrigin = "../DATA/testData/fastq/singleOneIndividuIrigin";
+my $dataFastqsingleTwoIndividuIrigin = "../DATA/testData/fastq/singleTwoIndividuIrigin";
+
+#rnaseq fastq
+my $dataRNAseqPairedOneIndividu = "../DATA/testData/rnaseq/pairedOneIndividu";
+my $dataRNAseqSingleOneIndividu = "../DATA/testData/rnaseq/singleOneIndividu";
+
+#samBam
+my $dataSamBamOneBam = "../DATA/testData/samBam/oneBam";
+my $dataSamBamOneSam = "../DATA/testData/samBam/oneSam";
+my $dataSamBamTwoBamsIrigin = "../DATA/testData/samBam/twoBamsIrigin";
+
+#vcf
+my $dataVcfSingleVCF = "../DATA/testData/vcf/singleVCF";
+my $dataVcfVcfForRecalibration = "../DATA/testData/vcf/vcfForRecalibration";
