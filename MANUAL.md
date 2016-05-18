@@ -93,6 +93,11 @@ $BWA ALN
 
 The software name is not case sensitive and the subprogram can be "glued" to the name (bwaALN is recognized, as well as bwa aln).
 
+If your option has an equal symbol within, such as **-l hostname=MyNode**, you have to write the option as follows:
+
+````
+-l=hostname==MyNode
+````
 
 # <a name="creatingPipeline"></a>Creating a pipeline
 

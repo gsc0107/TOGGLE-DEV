@@ -588,6 +588,9 @@ sub extractOptions
 		else				## The option has value  => print $options{$cle}
 		{
 		    $option=$option.$cle.$separateur.$options{$cle}.$concatenator;
+		    
+		    #if option is of type -l mem_free=10G
+		    $option=~ s/ =/=/g;
 		}
 	    }
 	    return $option;
