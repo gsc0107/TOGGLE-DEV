@@ -116,12 +116,17 @@ my $dataRefRnaseqGFF = "../DATA/Bank/referenceRnaseq.gff3";
 #####################
 ## SNPdiscoveryPaired for no SGE mode pairedOneIndividuArcad
 #####################
+
+print "\n\n#################################################\n";
+print "#### TEST SNPdiscoveryPaired / non SGE mode\n";
+print "#################################################\n";
+
 # Copy file config SNPdiscoveryPaired for no SGE mode
 my $fileSNPPairedIni="../SNPdiscoveryPaired.config.txt";          # Path of the SNPdiscoveryPaired.config.txt
 my $fileSNPPairedNoSGE="SNPdiscoveryPairedTest.config.txt";
 
 my $cmd="cp $fileSNPPairedIni $fileSNPPairedNoSGE";
-print "#### Copy conf file SNPdiscoveryPaired : $cmd\n";
+print "\n### COPY conf file SNPdiscoveryPaired : $cmd\n";
 system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TEST
 
 # Change the TOGGLE addaptator configuration file
@@ -132,23 +137,40 @@ my $testingDir="../DATA-TEST/pairedOneIndividuArcad";
 my $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-my $runcmd = "toggleGenerator.pl -c ".$fileSNPPairedNoSGE." -d ".$dataFastqpairedOneIndividuArcad." -r ".$dataRefArcad." -o ".$testingDir;
-system("$runcmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuArcad";
+
+my $runCmd = "toggleGenerator.pl -c ".$fileSNPPairedNoSGE." -d ".$dataFastqpairedOneIndividuArcad." -r ".$dataRefArcad." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuArcad";
 
 # check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
 my $observedOutput = `ls $testingDir/finalResults`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('arcad1.GATKSELECTVARIANT.vcf','arcad1.GATKSELECTVARIANT.vcf.idx');
+my @expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
 
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedOneIndividu');
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedOneIndividu list ');
 
-exit;
 
 
 # expected output content
-#$observedOutput=`tail -n 1 $vcfOut`;
-#chomp $observedOutput;
-#$expectedOutput="2233572	145	.	A	G	54.74	.	AC=2;AF=1.00;AN=2;DP=2;Dels=0.00;FS=0.000;HaplotypeScore=0.0000;MLEAC=2;MLEAF=1.00;MQ=49.84;MQ0=0;QD=27.37;SOR=2.303	GT:AD:DP:GQ:PL	1/1:0,2:2:6:82,6,0";
+$observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
+chomp $observedOutput;
+my $expectedOutput="LOC_Os12g32240.1	864	.	C	T	350.77	PASS	AC=2;AF=1.00;AN=2;DP=10;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;MQ0=0;QD=26.71;SOR=3.258	GT:AD:DP:GQ:PL	1/1:0,10:10:30:379,30,0";
+is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividu content ');
+
+
+
+#####################
+## SNPdiscoveryPaired pairedOneIndividuArcad
+#####################
+
+print "\n\n#################################################\n";
+print "#### TEST SNPdiscoveryPaired / compressed fastq\n";
+print "#################################################\n";
+
+exit;
+
 
 #is($observedOutput,$expectedOutput,'gatk::gatkUnifiedGenotyper - output content');
 #
