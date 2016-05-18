@@ -402,25 +402,25 @@ sub readDir
 #
 # The list of files (table) is returned. 
 ################################################################################################
-sub readDir2
-{
-    toolbox::exportLog("ERROR: toolbox::readDir2 : should get at one argument at least\n",0) if (@_ < 1 );
-    
-    my ($dir)= shift @_;
-    
-    # if the part of name is given in the second argument, search for files directory/part_of_name*
-    # else search for all files directory/*
-    my $path = defined ($_[0]) ? $dir.'/'.$_[0].'*' : $dir."/*";
-    
-    # ls command
-    my $file=`ls $path` or toolbox::exportLog("ERROR: toolbox::readDir : Can't open the directory $path\n$!\n",0);
-    chomp $file;
-    
-    # split the list into a table returned after
-    my @fileList = split /\n/, $file; 
-    return(\@fileList);
-
-}
+#sub readDir2
+#{
+#    toolbox::exportLog("ERROR: toolbox::readDir2 : should get at one argument at least\n",0) if (@_ < 1 );
+#    
+#    my ($dir)= shift @_;
+#    
+#    # if the part of name is given in the second argument, search for files directory/part_of_name*
+#    # else search for all files directory/*
+#    my $path = defined ($_[0]) ? $dir.'/'.$_[0].'*' : $dir."/*";
+#    
+#    # ls command
+#    my $file=`ls $path` or toolbox::exportLog("ERROR: toolbox::readDir : Can't open the directory $path\n$!\n",0);
+#    chomp $file;
+#    
+#    # split the list into a table returned after
+#    my @fileList = split /\n/, $file; 
+#    return(\@fileList);
+#
+#}
 #########################################
 # END sub toolbox::readDir2
 #########################################
@@ -1209,41 +1209,41 @@ sub checkVcfFormat
 #	- the name of the server that contains the initial data 
 # Returns the path of the directory created on the scratch space (local) and the node name that contains the data transfered
 ################################################################################################
-sub transferDirectoryFromMasterToNode
-{
-    my ($localDir,$master) = @_;
-								    ###########################################################################
-    $master = 'nas2' if (not defined $master or $master eq '');     #######SUPPOSE QUE LES DONNEES SONT TOUJOURS DANS NAS2 (donc pas /teams) - AJOUTER DANS fichier configuration?
-								    ###########################################################################
-    # get the SGE user name
-    my $SGE_User = `echo \$USER` or toolbox::exportLog("ERROR: toolbox::transferDirectoryFromMasterToNode : The SGE USER isn't defined\n",0);
-    chomp($SGE_User);
-    ##DEBUG exportLog("INFOS: toolbox::transferDirectoryFromMasterToNode : SGE USER $SGE_User\n",1);
-    
-    # get the SGE node on what the script is running
-    my $SGE_Node = `echo \$HOSTNAME` or toolbox::exportLog("ERROR: toolbox::transferDirectoryFromMasterToNode : The SGE node isn't defined\n",0);
-    chomp($SGE_Node);
-    ##DEBUG exportLog("INFOS: toolbox::transferDirectoryFromMasterToNode : SGE NODE $SGE_Node\n",1);
-    
-    # get the SGE job id
-    my $SGE_JobId = `echo \$JOB_ID` or toolbox::exportLog("ERROR: toolbox::transferDirectoryFromMasterToNode : The SGE id isn't defined\n",0);
-    chomp($SGE_JobId);
-    ##DEBUG exportLog("DEBUG INFOS: toolbox::transferDirectoryFromMasterToNode : SGE JOB ID $SGE_JobId\n",1);
-    
-    # Creating local tmp folder according this convention : /scratch/$user-$jobid-$sge_task_id
-    my $tmpDir = "/scratch/".$SGE_User."-".$SGE_JobId."/";
-    toolbox::makeDir($tmpDir) if (not existsDir($tmpDir,0));      # Creation of the tempory directory
-    ##DEBUG exportLog("DEBUG INFOS: toolbox::transferDirectoryFromMasterToNode : SGE JOB ID $SGE_JobId\n",1);
-
-    # Copy the data from the master server to the local scrtatch space
-    my $cmd="scp -r $SGE_User\@$master:$localDir $tmpDir";
-    toolbox::run($cmd);
-    
-    # Extract the name of the directory and return the complete local directory name and the node name
-    my ($file,$path)=toolbox::extractPath($localDir);
-    return($tmpDir.$file,$SGE_Node);
-
-}
+#sub transferDirectoryFromMasterToNode
+#{
+#    my ($localDir,$master) = @_;
+#								    ###########################################################################
+#    $master = 'nas2' if (not defined $master or $master eq '');     #######SUPPOSE QUE LES DONNEES SONT TOUJOURS DANS NAS2 (donc pas /teams) - AJOUTER DANS fichier configuration?
+#								    ###########################################################################
+#    # get the SGE user name
+#    my $SGE_User = `echo \$USER` or toolbox::exportLog("ERROR: toolbox::transferDirectoryFromMasterToNode : The SGE USER isn't defined\n",0);
+#    chomp($SGE_User);
+#    ##DEBUG exportLog("INFOS: toolbox::transferDirectoryFromMasterToNode : SGE USER $SGE_User\n",1);
+#    
+#    # get the SGE node on what the script is running
+#    my $SGE_Node = `echo \$HOSTNAME` or toolbox::exportLog("ERROR: toolbox::transferDirectoryFromMasterToNode : The SGE node isn't defined\n",0);
+#    chomp($SGE_Node);
+#    ##DEBUG exportLog("INFOS: toolbox::transferDirectoryFromMasterToNode : SGE NODE $SGE_Node\n",1);
+#    
+#    # get the SGE job id
+#    my $SGE_JobId = `echo \$JOB_ID` or toolbox::exportLog("ERROR: toolbox::transferDirectoryFromMasterToNode : The SGE id isn't defined\n",0);
+#    chomp($SGE_JobId);
+#    ##DEBUG exportLog("DEBUG INFOS: toolbox::transferDirectoryFromMasterToNode : SGE JOB ID $SGE_JobId\n",1);
+#    
+#    # Creating local tmp folder according this convention : /scratch/$user-$jobid-$sge_task_id
+#    my $tmpDir = "/scratch/".$SGE_User."-".$SGE_JobId."/";
+#    toolbox::makeDir($tmpDir) if (not existsDir($tmpDir,0));      # Creation of the tempory directory
+#    ##DEBUG exportLog("DEBUG INFOS: toolbox::transferDirectoryFromMasterToNode : SGE JOB ID $SGE_JobId\n",1);
+#
+#    # Copy the data from the master server to the local scrtatch space
+#    my $cmd="scp -r $SGE_User\@$master:$localDir $tmpDir";
+#    toolbox::run($cmd);
+#    
+#    # Extract the name of the directory and return the complete local directory name and the node name
+#    my ($file,$path)=toolbox::extractPath($localDir);
+#    return($tmpDir.$file,$SGE_Node);
+#
+#}
 ################################################################################################
 # END sub transferDirectoryFromMasterToNode
 ################################################################################################
@@ -1263,30 +1263,30 @@ sub transferDirectoryFromMasterToNode
 #         transferring from the local space to the master server. By default equal to 1 (Data removing)
 # No parameter returned 
 ################################################################################################
-sub transferDirectoryFromNodeToMaster
-{
-    
-    my ($localDir,$distantDir,$erase,$master) = @_;
-								###########################################################################
-    $master = 'nas2' if (not defined $master or $master eq ''); #######SUPPOSE QUE LES DONNEES SONT TOUJOURS DANS NAS2 (donc pas /teams) - AJOUTER DANS fichier configuration?
-								###########################################################################
-    
-    $erase=1 if (not defined $erase);					
-    
-     # get the SGE user name
-    my $SGE_User = `echo \$USER` or toolbox::exportLog("ERROR: toolbox::transferDirectoryFromMasterToNode : The SGE USER isn't defined\n",0);
-    chomp($SGE_User);
-    ##DEBUG exportLog("INFOS: toolbox::transferDirectoryFromMasterToNode : SGE USER $SGE_User $erase $master\n",1);
-    
-    # Data transferring from the local directory to the distant directory of the master
-    my $cmd="scp -r $localDir $SGE_User\@$master:$distantDir";
-    toolbox::run($cmd);
-    
-    # Removing of the local data directory if $erase equal to 1
-    $cmd="rm -rf $localDir";
-    toolbox::run($cmd) if ($erase);   
-    
-}
+#sub transferDirectoryFromNodeToMaster
+#{
+#    
+#    my ($localDir,$distantDir,$erase,$master) = @_;
+#								###########################################################################
+#    $master = 'nas2' if (not defined $master or $master eq ''); #######SUPPOSE QUE LES DONNEES SONT TOUJOURS DANS NAS2 (donc pas /teams) - AJOUTER DANS fichier configuration?
+#								###########################################################################
+#    
+#    $erase=1 if (not defined $erase);					
+#    
+#     # get the SGE user name
+#    my $SGE_User = `echo \$USER` or toolbox::exportLog("ERROR: toolbox::transferDirectoryFromMasterToNode : The SGE USER isn't defined\n",0);
+#    chomp($SGE_User);
+#    ##DEBUG exportLog("INFOS: toolbox::transferDirectoryFromMasterToNode : SGE USER $SGE_User $erase $master\n",1);
+#    
+#    # Data transferring from the local directory to the distant directory of the master
+#    my $cmd="scp -r $localDir $SGE_User\@$master:$distantDir";
+#    toolbox::run($cmd);
+#    
+#    # Removing of the local data directory if $erase equal to 1
+#    $cmd="rm -rf $localDir";
+#    toolbox::run($cmd) if ($erase);   
+#    
+#}
 ################################################################################################
 # END sub transferDirectoryFromNodeToMaster 
 ################################################################################################

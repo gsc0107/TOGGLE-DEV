@@ -311,28 +311,7 @@ is_deeply(\@observedOutput,\@expectedOutput,'bwa::mem Paired - Files created');
 $grepResult= `grep -c 'XT:A:U' $samFileOut`;
 chomp $grepResult;
 is($grepResult,0,'bwa::mem - Test for the result of bwa mem paired');
-exit;
-__END__
-
-
-########################################################################################################
-#####Test for bwa mem single
-########################################################################################################
-
-##Running test
-is (bwa::bwaMem($samseFileOut,$fastaRef,$fastqFile1,"","truc"),'1',"bwa::bwaMem... Test for bwa mem running single");
-
-###Verify if output are correct for mem single
-@expectedOutput=('./bwa_TEST_log.e','./bwa_TEST_log.o','./individuSoft.txt','./RC3_1.REPAIRING.fastq','./RC3_2.REPAIRING.fastq','./RC3.BWASAMPE.sam','./Reference.fasta','./Reference.fasta.amb','./Reference.fasta.ann','./Reference.fasta.bwt','./Reference.fasta.pac','./Reference.fasta.sa');
-my @outPut=toolbox::readDir(".");
-is_deeply(@outPut,\@expectedOutput,'bwa::bwaMem... Test for bwa mem single output files');
-
-##Output value test
-$grepResult= `grep -c 'LOC' RC3.BWASAMPE.sam`;
-chomp $grepResult;
-is($grepResult,717,'bwa::bwaMem... Test for the result of bwa mem single');
 
 exit;
 
-### ADD BWA MEM PAIRED TEST
 
