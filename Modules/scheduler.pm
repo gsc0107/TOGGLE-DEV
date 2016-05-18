@@ -164,7 +164,7 @@ sub schedulerRun{
     toolbox::run($bashScriptCreationCommand);
     ##DEBUG toolbox::exportLog("INFOS : $0 : Created the scheduler bash file",1);
     
-    #Adding slurm options
+    #Adding scheduler options
     my $launcherCommand = $schedulerCommands{$scheduler}{run}." ".$Options." ".$scriptName;
     $launcherCommand =~ s/ +/ /g; #Replace multiple spaces by a single one, to have a better view...
     ##DEBUG toolbox::exportLog($launcherCommand,2);
