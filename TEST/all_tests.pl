@@ -65,6 +65,7 @@ use Test::Deep;
 sub sedFunction
 {
     my $file=$_[0];
+    my $bool=defined($_[1])? $_[1] : 0;
     
     # Change the TOGGLE addaptator configuration file
     my $sed="sed -i -e 's|-b ADAPTATOR1REVERSE -B ADAPTATOR1REVERSE|-b GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG  -B GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG|' ". $file;
@@ -73,6 +74,24 @@ sub sedFunction
     $sed="sed -i -e 's|-b ADAPTATOR1FORWARD -B ADAPTATOR1FORWARD|-b GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG -B GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG|' ". $file;
     #print $sed."\n\n";
     system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+    
+    if ($bool)
+    {
+        my $sed="sed -i -e 's|#\$sge|\$sge|' ". $file;
+        print $sed;
+        system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+        $sed="sed -i -e 's|#-q YOURQUEUE.q|-q bioinfo.q|' ". $file;
+        print $sed;
+        system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+        $sed="sed -i -e 's|#-b Y|-b Y|' ". $file;
+        print $sed;
+        system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+        $sed="sed -i -e 's|#-V|-V|' ". $file;
+        print $sed;
+        system($sed) and die ("#### ERROR  SED COMMAND: $sed\n"); 
+    }
+    
+    
 }
 
 
@@ -127,7 +146,7 @@ system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test dire
 
 
 my $runCmd = "toggleGenerator.pl -c ".$fileSNPPairedNoSGE." -d ".$dataFastqpairedOneIndividuArcad." -r ".$dataRefArcad." -o ".$testingDir;
-print "\n### Toggle running : $runCmd\n";
+print "\n### $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuArcad";
 
 # check final results
@@ -176,13 +195,13 @@ $observedOutput = `ls $testingDir/finalResults`;
 @expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
 
 # expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedOneIndividu list ');
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedTwoIndividusGzippedIrigin list ');
 
 # expected output content
 $observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
 chomp $observedOutput;
-my $expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin1	irigin3";
-is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividu content ');
+$expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin1	irigin3";
+is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividusGzippedIrigin content ');
 
 
 
@@ -198,15 +217,63 @@ print "\n\n#################################################\n";
 print "#### TEST SNPdiscoveryPaired / paired IRIGIN\n";
 print "#################################################\n";
 
-#run with new fileconf SNPdiscoveryPaired for no SGE mode to pairedOneIndividuArcad
+#run with new fileconf SNPdiscoveryPaired for no SGE mode to pairedTwoIndividusIrigin 
 $testingDir="../DATA-TEST/pairedTwoIndividusIrigin";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
 
-$runCmd = "toggleGenerator.pl -c ".$fileSNPPairedNoSGE." -d ".$dataFastqpairedTwoIndividusGzippedIrigin." -r ".$dataRefArcad." -o ".$testingDir;
+$runCmd = "toggleGenerator.pl -c ".$fileSNPPairedNoSGE." -d ".$dataFastqpairedTwoIndividusIrigin." -r ".$dataRefArcad." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedTwoIndividusIrigin";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedTwoIndividusIrigin  list ');
+
+# expected output content
+$observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
+chomp $observedOutput;
+$expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin1	irigin3";
+is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividusIrigin  content ');
+
+
+#####################
+## FASTQ TESTS
+#####################
+## TOGGLE fastq pairedTwoIndividusIrigin en QSUB
+#####################
+
+$dataFastqpairedTwoIndividusIrigin = "../DATA/testData/fastq/pairedTwoIndividusIrigin";
+
+print "\n\n#################################################\n";
+print "#### TEST SNPdiscoveryPaired / paired IRIGIN / qsub mode\n";
+print "#################################################\n";
+
+# Copy file config SNPdiscoveryPaired for no SGE mode
+$fileSNPPairedIni="../SNPdiscoveryPaired.config.txt";          # Path of the SNPdiscoveryPaired.config.txt
+my $fileSNPPairedSGE="SNPdiscoveryPairedTestSGE.config.txt";
+
+$cmd="cp $fileSNPPairedIni $fileSNPPairedSGE";
+print "\n### COPY conf file SNPdiscoveryPaired : $cmd\n";
+system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TEST
+
+# Change the TOGGLE addaptator configuration file
+sedFunction($fileSNPPairedSGE,1);
+
+$testingDir="../DATA-TEST/pairedTwoIndividusIrigin";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+
+$runCmd = "toggleGenerator.pl -c ".$fileSNPPairedSGE." -d ".$dataFastqpairedTwoIndividusIrigin." -r ".$dataRefArcad." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedTwoIndividusIrigin SGE mode";
 
 # check final results
 print "\n### TEST Ouput list & content : $runCmd\n";
@@ -220,16 +287,15 @@ is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedOneIndividu
 # expected output content
 $observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
 chomp $observedOutput;
-my $expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin1	irigin3";
+$expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin1	irigin3";
 is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividu content ');
-
 
 
 exit;
 
 
 
-#   - TOGGLE fastq pairedTwoIndividusIrigin en QSUB
+#   - 
 #   - TOGGLE fastq singleOneIndividuIrigin
 #   - TOGGLE fastq singleTwoIndividuIrigin
 
