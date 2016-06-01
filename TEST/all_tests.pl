@@ -67,14 +67,24 @@ sub sedFunction
     my $file=$_[0];
     my $bool=defined($_[1])? $_[1] : 0;
     
-    # Change the TOGGLE addaptator configuration file
+    # Change the TOGGLE addaptator configuration file for paired data
     my $sed="sed -i -e 's|-b ADAPTATOR1REVERSE -B ADAPTATOR1REVERSE|-b GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG  -B GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG|' ". $file;
     #print $sed."\n\n";
     system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
     $sed="sed -i -e 's|-b ADAPTATOR1FORWARD -B ADAPTATOR1FORWARD|-b GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG -B GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG|' ". $file;
     #print $sed."\n\n";
     system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+   
     
+    $sed="sed -i -e 's|-b ADAPTATOR1REVERSE|-b GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG|' ". $file;
+    #print $sed."\n\n";
+    system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+    $sed="sed -i -e 's|-b ADAPTATOR1FORWARD|-b GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG|' ". $file;
+    #print $sed."\n\n";
+    system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+    
+    
+    # Add SGE part
     if ($bool)
     {
         my $sed="sed -i -e 's|#\$sge|\$sge|' ". $file;
@@ -175,7 +185,7 @@ $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
 
-$runCmd = "toggleGenerator.pl -c ".$fileSNPPairedNoSGE." -d ".$dataFastqpairedTwoIndividusGzippedIrigin." -r ".$dataRefArcad." -o ".$testingDir;
+$runCmd = "toggleGenerator.pl -c ".$fileSNPPairedNoSGE." -d ".$dataFastqpairedTwoIndividusGzippedIrigin." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedTwoIndividusGzippedIrigin";
 
@@ -191,7 +201,7 @@ is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedTwoIndividu
 # expected output content
 $observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
 chomp $observedOutput;
-$expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin1	irigin3";
+$expectedOutput="2290182	1013	.	A	G	44.17	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=22.09;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:70,6,0";
 is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividusGzippedIrigin content ');
 
 
@@ -214,7 +224,7 @@ $testingDir="../DATA-TEST/pairedTwoIndividusIrigin-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-$runCmd = "toggleGenerator.pl -c ".$fileSNPPairedNoSGE." -d ".$dataFastqpairedTwoIndividusIrigin." -r ".$dataRefArcad." -o ".$testingDir;
+$runCmd = "toggleGenerator.pl -c ".$fileSNPPairedNoSGE." -d ".$dataFastqpairedTwoIndividusIrigin." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedTwoIndividusIrigin";
 
@@ -230,7 +240,7 @@ is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedTwoIndividu
 # expected output content
 $observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
 chomp $observedOutput;
-$expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin1	irigin3";
+$expectedOutput="2290182	1013	.	A	G	44.17	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=22.09;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:70,6,0";
 is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividusIrigin  content ');
 
 
@@ -262,9 +272,67 @@ $testingDir="../DATA-TEST/pairedTwoIndividusIrigin-SGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-$runCmd = "toggleGenerator.pl -c ".$fileSNPPairedSGE." -d ".$dataFastqpairedTwoIndividusIrigin." -r ".$dataRefArcad." -o ".$testingDir;
+$runCmd = "toggleGenerator.pl -c ".$fileSNPPairedSGE." -d ".$dataFastqpairedTwoIndividusIrigin." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedTwoIndividusIrigin SGE mode";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedOneIndividu list ');
+
+# expected output content
+$observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
+chomp $observedOutput;
+$expectedOutput="2290182	1013	.	A	G	44.17	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=22.09;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:70,6,0";
+is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividu content ');
+
+# expected output content (qsub word)
+$observedOutput=`grep "qsub" $testingDir/GLOBAL_ANALYSIS_*.o -c`;
+print 'grep "qsub" $testingDir/GLOBAL_ANALYSIS_*.o -c';
+chomp $observedOutput;
+$expectedOutput=6;
+is($observedOutput,$expectedOutput, 'toggleGenerator - found qsub command');
+
+
+
+
+#####################
+## FASTQ TESTS
+#####################
+## TOGGLE fastq singleOneIndividuIrigin
+#####################
+
+my $dataFastqsingleOneIndividuIrigin = "../DATA/testData/fastq/singleOneIndividuIrigin";
+
+print "\n\n#################################################\n";
+print "#### TEST SNPdiscoverySingle Irigin (one individu) / no SGE mode\n";
+print "#################################################\n";
+
+# Copy file config
+my $fileSNPSingleIni="../SNPdiscoverySingle.config.txt";         
+my $fileSNPSingleNoSGE="SNPdiscoverySingleNoSGE.config.txt";
+
+$cmd="cp $fileSNPSingleIni $fileSNPSingleNoSGE";
+system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TEST
+
+# Change the TOGGLE addaptator configuration file
+sedFunction($fileSNPSingleNoSGE,1);
+
+# Remove files and directory created by previous test 
+$testingDir="../DATA-TEST/singleOneIndividuIrigin-noSGE";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+$runCmd = "toggleGenerator.pl -c ".$fileSNPSingleNoSGE." -d ".$dataFastqsingleOneIndividuIrigin." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedTwoIndividusIrigin SGE mode";
+
+exit;
 
 # check final results
 print "\n### TEST Ouput list & content : $runCmd\n";
@@ -291,8 +359,7 @@ exit;
 
 
 
-#   - 
-#   - TOGGLE fastq singleOneIndividuIrigin
+
 #   - TOGGLE fastq singleTwoIndividuIrigin
 
 # *** RNASeq ***
@@ -310,7 +377,7 @@ exit;
 
 
 
-my $dataFastqsingleOneIndividuIrigin = "../DATA/testData/fastq/singleOneIndividuIrigin";
+
 my $dataFastqsingleTwoIndividuIrigin = "../DATA/testData/fastq/singleTwoIndividuIrigin";
 
 #rnaseq fastq
