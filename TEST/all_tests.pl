@@ -113,7 +113,7 @@ sub sedFunction
 # references files
 my $dataRefIrigin = "../DATA/Bank/referenceIrigin.fasta";
 my $dataRefArcad = "../DATA/Bank/referenceArcad.fasta";
-my $dataRefRnaseq = "../DATA/Bank/referenceRnaseq.fasta";
+my $dataRefRnaseq = "../DATA/Bank/referenceRnaseq.fa";
 my $dataRefRnaseqGFF = "../DATA/Bank/referenceRnaseq.gff3";
 
 
@@ -415,7 +415,7 @@ $testingDir="../DATA-TEST/RNAseq-pairedOneIndividu-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-$runCmd = "toggleGenerator.pl -c ".$fileRNAPairedNoSGE." -d ".$dataRNAseqPairedOneIndividu." -r ".$dataRefRnaseq." -g ".$dataRefRnaseqGFF."-o ".$testingDir;
+$runCmd = "toggleGenerator.pl -c ".$fileRNAPairedNoSGE." -d ".$dataRNAseqPairedOneIndividu." -r ".$dataRefRnaseq." -g ".$dataRefRnaseqGFF." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuRNASEQ no SGE mode";
 
@@ -444,8 +444,60 @@ exit;
 # *** RNASeq ***
 
 #   - TOGGLE RNASeq singleOneIndividu
+
 # *** samBam ***
 #   - TOGGLE samBam oneBam
+
+
+#####################
+## FASTQ TESTS
+#####################
+## TOGGLE fastq singleOneIndividuIrigin
+#####################
+
+my $dataFastqsingleOneIndividuIrigin = "../DATA/testData/fastq/singleOneIndividuIrigin";
+
+print "\n\n#################################################\n";
+print "#### TEST SNPdiscoverySingle Irigin (one individu) / no SGE mode\n";
+print "#################################################\n";
+
+# Copy file config
+my $fileSNPSingleIni="../SNPdiscoverySingle.config.txt";         
+my $fileSNPSingleNoSGE="SNPdiscoverySingleNoSGE.config.txt";
+
+$cmd="cp $fileSNPSingleIni $fileSNPSingleNoSGE";
+system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TEST
+
+# Change the TOGGLE addaptator configuration file
+sedFunction($fileSNPSingleNoSGE);
+
+# Remove files and directory created by previous test 
+$testingDir="../DATA-TEST/singleOneIndividuIrigin-noSGE";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+$runCmd = "toggleGenerator.pl -c ".$fileSNPSingleNoSGE." -d ".$dataFastqsingleOneIndividuIrigin." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for singleOneIndividusIrigin no SGE mode";
+
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - singleOneIndividu (no SGE) list ');
+
+# expected output content
+$observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
+chomp $observedOutput;
+$expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin2";
+is($observedOutput,$expectedOutput, 'toggleGenerator - singleOneIndividu (no SGE) content ');
+
+
+
 #   - TOGGLE samBam oneSam
 #   - TOGGLE samBam twoBamsIrigin
 # *** VCF ***
