@@ -78,26 +78,21 @@ sub sedFunction
     if ($bool)
     {
         my $sed="sed -i -e 's|#\$sge|\$sge|' ". $file;
-        print $sed;
+        ## DEBUG print $sed;
         system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
         $sed="sed -i -e 's|#-q YOURQUEUE.q|-q bioinfo.q|' ". $file;
-        print $sed;
+        ## DEBUG print $sed;
         system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
         $sed="sed -i -e 's|#-b Y|-b Y|' ". $file;
-        print $sed;
+        ## DEBUG print $sed;
         system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
         $sed="sed -i -e 's|#-V|-V|' ". $file;
-        print $sed;
+        ## DEBUG print $sed;
         system($sed) and die ("#### ERROR  SED COMMAND: $sed\n"); 
     }
     
     
 }
-
-
-
-
-
 
 
 
@@ -113,9 +108,6 @@ my $dataRefRnaseqGFF = "../DATA/Bank/referenceRnaseq.gff3";
 
 
 
-
-
-
 #####################
 ## FASTQ TESTS
 #####################
@@ -125,25 +117,24 @@ my $dataRefRnaseqGFF = "../DATA/Bank/referenceRnaseq.gff3";
 my $dataFastqpairedOneIndividuArcad = "../DATA/testData/fastq/pairedOneIndividuArcad";
 
 print "\n\n#################################################\n";
-print "#### TEST SNPdiscoveryPaired paired ARCAD / non SGE mode\n";
+print "#### TEST SNPdiscoveryPaired paired ARCAD (one individu) / no SGE mode\n";
 print "#################################################\n";
 
-# Copy file config SNPdiscoveryPaired for no SGE mode
+# Copy file config 
 my $fileSNPPairedIni="../SNPdiscoveryPaired.config.txt";          # Path of the SNPdiscoveryPaired.config.txt
 my $fileSNPPairedNoSGE="SNPdiscoveryPairedTest.config.txt";
 
 my $cmd="cp $fileSNPPairedIni $fileSNPPairedNoSGE";
-print "\n### COPY conf file SNPdiscoveryPaired : $cmd\n";
+## DEBUG print "\n### COPY conf file SNPdiscoveryPaired : $cmd\n";
 system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TEST
 
 # Change the TOGGLE addaptator configuration file
 sedFunction($fileSNPPairedNoSGE);
 
-#run with new fileconf SNPdiscoveryPaired for no SGE mode to pairedOneIndividuArcad
-my $testingDir="../DATA-TEST/pairedOneIndividuArcad";
+# Remove files and directory created by previous test 
+my $testingDir="../DATA-TEST/pairedOneIndividuArcad-noSGE";
 my $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
-
 
 my $runCmd = "toggleGenerator.pl -c ".$fileSNPPairedNoSGE." -d ".$dataFastqpairedOneIndividuArcad." -r ".$dataRefArcad." -o ".$testingDir;
 print "\n### $runCmd\n";
@@ -175,11 +166,11 @@ is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividu content
 my $dataFastqpairedTwoIndividusGzippedIrigin = "../DATA/testData/fastq/pairedTwoIndividusGzippedIrigin";
 
 print "\n\n#################################################\n";
-print "#### TEST SNPdiscoveryPaired / compressed fastq\n";
+print "#### TEST SNPdiscoveryPaired paired Irigin (two individus) / compressed fastq / no SGE mode\n";
 print "#################################################\n";
 
-#run with new fileconf SNPdiscoveryPaired for no SGE mode to pairedOneIndividuArcad
-$testingDir="../DATA-TEST/pairedTwoIndividusGzippedIrigin";
+# Remove files and directory created by previous test 
+$testingDir="../DATA-TEST/pairedTwoIndividusGzippedIrigin-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
@@ -214,14 +205,14 @@ is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividusGzipped
 my $dataFastqpairedTwoIndividusIrigin = "../DATA/testData/fastq/pairedTwoIndividusIrigin";
 
 print "\n\n#################################################\n";
-print "#### TEST SNPdiscoveryPaired / paired IRIGIN\n";
+print "#### TEST SNPdiscoveryPaired paired IRIGIN (two individu) / no SGE mode\n";
 print "#################################################\n";
 
-#run with new fileconf SNPdiscoveryPaired for no SGE mode to pairedTwoIndividusIrigin 
-$testingDir="../DATA-TEST/pairedTwoIndividusIrigin";
+
+# Remove files and directory created by previous test 
+$testingDir="../DATA-TEST/pairedTwoIndividusIrigin-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
-
 
 $runCmd = "toggleGenerator.pl -c ".$fileSNPPairedNoSGE." -d ".$dataFastqpairedTwoIndividusIrigin." -r ".$dataRefArcad." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
@@ -252,24 +243,24 @@ is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividusIrigin 
 $dataFastqpairedTwoIndividusIrigin = "../DATA/testData/fastq/pairedTwoIndividusIrigin";
 
 print "\n\n#################################################\n";
-print "#### TEST SNPdiscoveryPaired / paired IRIGIN / qsub mode\n";
+print "#### TEST SNPdiscoveryPaired paired Irigin (two individus) / SGE mode\n";
 print "#################################################\n";
 
-# Copy file config SNPdiscoveryPaired for no SGE mode
+# Copy file config
 $fileSNPPairedIni="../SNPdiscoveryPaired.config.txt";          # Path of the SNPdiscoveryPaired.config.txt
 my $fileSNPPairedSGE="SNPdiscoveryPairedTestSGE.config.txt";
 
 $cmd="cp $fileSNPPairedIni $fileSNPPairedSGE";
-print "\n### COPY conf file SNPdiscoveryPaired : $cmd\n";
+#print "\n### COPY conf file SNPdiscoveryPaired : $cmd\n";
 system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TEST
 
 # Change the TOGGLE addaptator configuration file
 sedFunction($fileSNPPairedSGE,1);
 
-$testingDir="../DATA-TEST/pairedTwoIndividusIrigin";
+# Remove files and directory created by previous test 
+$testingDir="../DATA-TEST/pairedTwoIndividusIrigin-SGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
-
 
 $runCmd = "toggleGenerator.pl -c ".$fileSNPPairedSGE." -d ".$dataFastqpairedTwoIndividusIrigin." -r ".$dataRefArcad." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
@@ -290,6 +281,11 @@ chomp $observedOutput;
 $expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin1	irigin3";
 is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividu content ');
 
+# expected output content (qsub word)
+$observedOutput=`grep "qsub" GLOBAL_ANALYSIS_*.o -c`;
+chomp $observedOutput;
+$expectedOutput=6;
+is($observedOutput,$expectedOutput, 'toggleGenerator - found qsub command');
 
 exit;
 
@@ -329,3 +325,6 @@ my $dataSamBamTwoBamsIrigin = "../DATA/testData/samBam/twoBamsIrigin";
 #vcf
 my $dataVcfSingleVCF = "../DATA/testData/vcf/singleVCF";
 my $dataVcfVcfForRecalibration = "../DATA/testData/vcf/vcfForRecalibration";
+
+
+#EFFACER les fichiers conf dans le repertoire test
