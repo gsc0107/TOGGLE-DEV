@@ -157,13 +157,13 @@ my @observedOutput = split /\n/,$observedOutput;
 my @expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
 
 # expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedOneIndividu list ');
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedOneIndividu (no SGE) list ');
 
 # expected output content
 $observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
 chomp $observedOutput;
 my $expectedOutput="LOC_Os12g32240.1	864	.	C	T	350.77	PASS	AC=2;AF=1.00;AN=2;DP=10;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;MQ0=0;QD=26.71;SOR=3.258	GT:AD:DP:GQ:PL	1/1:0,10:10:30:379,30,0";
-is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividu content ');
+is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividu (no SGE) content ');
 
 
 
@@ -196,13 +196,13 @@ $observedOutput = `ls $testingDir/finalResults`;
 @expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
 
 # expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedTwoIndividusGzippedIrigin list ');
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedTwoIndividusGzippedIrigin (no SGE) list ');
 
 # expected output content
 $observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
 chomp $observedOutput;
 $expectedOutput="2290182	1013	.	A	G	44.17	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=22.09;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:70,6,0";
-is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividusGzippedIrigin content ');
+is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividusGzippedIrigin (no SGE) content ');
 
 
 
@@ -235,13 +235,13 @@ $observedOutput = `ls $testingDir/finalResults`;
 @expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
 
 # expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedTwoIndividusIrigin  list ');
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedTwoIndividusIrigin (no SGE) list ');
 
 # expected output content
 $observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
 chomp $observedOutput;
 $expectedOutput="2290182	1013	.	A	G	44.17	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=22.09;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:70,6,0";
-is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividusIrigin  content ');
+is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividusIrigin  (no SGE) content ');
 
 
 #####################
@@ -283,20 +283,19 @@ $observedOutput = `ls $testingDir/finalResults`;
 @expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
 
 # expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedOneIndividu list ');
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedTwoIndividu (SGE mode) list  ');
 
 # expected output content
 $observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
 chomp $observedOutput;
 $expectedOutput="2290182	1013	.	A	G	44.17	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=22.09;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:70,6,0";
-is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividu content ');
+is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividu (SGE mode) content ');
 
 # expected output content (qsub word)
 $observedOutput=`grep "qsub" $testingDir/GLOBAL_ANALYSIS_*.o -c`;
-print 'grep "qsub" $testingDir/GLOBAL_ANALYSIS_*.o -c';
 chomp $observedOutput;
 $expectedOutput=6;
-is($observedOutput,$expectedOutput, 'toggleGenerator - found qsub command');
+is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividu (SGE mode) found qsub command');
 
 
 
@@ -321,7 +320,7 @@ $cmd="cp $fileSNPSingleIni $fileSNPSingleNoSGE";
 system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TEST
 
 # Change the TOGGLE addaptator configuration file
-sedFunction($fileSNPSingleNoSGE,1);
+sedFunction($fileSNPSingleNoSGE);
 
 # Remove files and directory created by previous test 
 $testingDir="../DATA-TEST/singleOneIndividuIrigin-noSGE";
@@ -330,7 +329,95 @@ system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test dire
 
 $runCmd = "toggleGenerator.pl -c ".$fileSNPSingleNoSGE." -d ".$dataFastqsingleOneIndividuIrigin." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedTwoIndividusIrigin SGE mode";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for singleOneIndividusIrigin no SGE mode";
+
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - singleOneIndividu (no SGE) list ');
+
+# expected output content
+$observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
+chomp $observedOutput;
+$expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin2";
+is($observedOutput,$expectedOutput, 'toggleGenerator - singleOneIndividu (no SGE) content ');
+
+
+
+
+#####################
+## FASTQ TESTS
+#####################
+## TOGGLE fastq singleTwoIndividuIrigin
+#####################
+
+my $dataFastqsingleTwoIndividuIrigin = "../DATA/testData/fastq/singleTwoIndividuIrigin";
+
+print "\n\n#################################################\n";
+print "#### TEST SNPdiscoverySingle Irigin (two individus) / no SGE mode\n";
+print "#################################################\n";
+
+
+# Remove files and directory created by previous test 
+$testingDir="../DATA-TEST/singleTwoIndividuIrigin-noSGE";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+$runCmd = "toggleGenerator.pl -c ".$fileSNPSingleNoSGE." -d ".$dataFastqsingleTwoIndividuIrigin." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for singleTwoIndividusIrigin no SGE mode";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - singleTwoIndividu (no SGE) list ');
+
+# expected output content
+$observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
+chomp $observedOutput;
+$expectedOutput="2179526	467	.	T	C	64.17	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=37.00;MQ0=0;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0	./.";
+is($observedOutput,$expectedOutput, 'toggleGenerator - singleTwoIndividu (no SGE) content ');
+
+
+#####################
+## FASTQ TESTS
+#####################
+## TOGGLE RNASeq pairedOneIndividu
+#####################
+
+my $dataRNAseqPairedOneIndividu = "../DATA/testData/rnaseq/pairedOneIndividu";
+
+print "\n\n#################################################\n";
+print "#### TEST RNASEQPaired  (one individu) / no SGE mode\n";
+print "#################################################\n";
+
+# Copy file config
+my $fileRNAPairedIni="../RNASeq.config.txt";         
+my $fileRNAPairedNoSGE="RNASeqNoSGE.config.txt";
+
+$cmd="cp $fileRNAPairedIni $fileRNAPairedNoSGE";
+system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TEST
+
+# Change the TOGGLE addaptator configuration file
+sedFunction($fileRNAPairedNoSGE);
+
+# Remove files and directory created by previous test 
+$testingDir="../DATA-TEST/RNAseq-pairedOneIndividu-noSGE";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+$runCmd = "toggleGenerator.pl -c ".$fileRNAPairedNoSGE." -d ".$dataRNAseqPairedOneIndividu." -r ".$dataRefRnaseq." -g ".$dataRefRnaseqGFF."-o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuRNASEQ no SGE mode";
 
 exit;
 
@@ -341,29 +428,21 @@ $observedOutput = `ls $testingDir/finalResults`;
 @expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
 
 # expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedOneIndividu list ');
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - singleTwoIndividu (no SGE) list ');
 
 # expected output content
 $observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
 chomp $observedOutput;
-$expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin1	irigin3";
-is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividu content ');
+$expectedOutput="2179526	467	.	T	C	64.17	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=37.00;MQ0=0;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0	./.";
+is($observedOutput,$expectedOutput, 'toggleGenerator - singleTwoIndividu (no SGE) content ');
 
-# expected output content (qsub word)
-$observedOutput=`grep "qsub" GLOBAL_ANALYSIS_*.o -c`;
-chomp $observedOutput;
-$expectedOutput=6;
-is($observedOutput,$expectedOutput, 'toggleGenerator - found qsub command');
 
 exit;
 
 
 
-
-#   - TOGGLE fastq singleTwoIndividuIrigin
-
 # *** RNASeq ***
-#   - TOGGLE RNASeq pairedOneIndividu
+
 #   - TOGGLE RNASeq singleOneIndividu
 # *** samBam ***
 #   - TOGGLE samBam oneBam
@@ -378,10 +457,10 @@ exit;
 
 
 
-my $dataFastqsingleTwoIndividuIrigin = "../DATA/testData/fastq/singleTwoIndividuIrigin";
+
 
 #rnaseq fastq
-my $dataRNAseqPairedOneIndividu = "../DATA/testData/rnaseq/pairedOneIndividu";
+
 my $dataRNAseqSingleOneIndividu = "../DATA/testData/rnaseq/singleOneIndividu";
 
 #samBam
