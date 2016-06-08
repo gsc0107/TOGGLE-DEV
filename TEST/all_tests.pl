@@ -503,7 +503,7 @@ system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test dire
 
 $runCmd = "toggleGenerator.pl -c ".$fileSamBam." -d ".$dataTwoBam." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for One Sam no SGE mode";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for Two Bams no SGE mode";
 
 # check final results
 print "\n### TEST Ouput list & content : $runCmd\n";
@@ -512,13 +512,13 @@ $observedOutput = `ls $testingDir/finalResults`;
 @expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
 
 # expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Sam (no SGE) list ');
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - Two Bams (no SGE) list ');
 
 # expected output content
 $observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
 chomp $observedOutput;
-$expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin2";
-is($observedOutput,$expectedOutput, 'toggleGenerator - One Sam (no SGE) content ');
+$expectedOutput="2290182	1013	.	A	G	42.74	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=21.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:70,6,0";
+is($observedOutput,$expectedOutput, 'toggleGenerator - Two Bams (no SGE) content ');
 
 
 
@@ -535,8 +535,7 @@ print "#### TEST one SAM / no SGE mode\n";
 print "#################################################\n";
 
 # Copy file config
-my $fileSamBam="../samBam.config.txt";         
-my $sed="sed -i -e 's|^-b|^-b -S|' ". $file;
+my $sed="sed -i -e 's|^-b|^-b -S|' ". $fileSamBam;
 ## DEBUG print $sed;
 system($sed) and die ("#### ERROR  SED COMMAND: $sed\n"); 
 
@@ -573,9 +572,6 @@ is($observedOutput,$expectedOutput, 'toggleGenerator - One Sam (no SGE) content 
 
 
 
-exit;
-
-
 
 # *** VCF ***
 #   - TOGGLE VCF singleVCF
@@ -586,20 +582,23 @@ exit;
 ## TOGGLE VCF singleVCF
 #####################
 
-my $dataOneVCF = "../DATA/testData/vcf/singleVCF";
+my $dataOneVcf = "../DATA/testData/vcf/singleVCF";
 
 print "\n\n#################################################\n";
 print "#### TEST one VCF / no SGE mode\n";
 print "#################################################\n";
+
+# Copy file config
+my $fileVcf="../vcf.config.txt";         
 
 # Remove files and directory created by previous test 
 $testingDir="../DATA-TEST/oneVcf-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-$runCmd = "toggleGenerator.pl -c ".$fileSamBam." -d ".$dataTwoBam." -r ".$dataRefIrigin." -o ".$testingDir;
+$runCmd = "toggleGenerator.pl -c ".$fileVcf." -d ".$dataOneVcf." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for One Sam no SGE mode";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for One Vcf no SGE mode";
 
 # check final results
 print "\n### TEST Ouput list & content : $runCmd\n";
@@ -617,27 +616,5 @@ $expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin2";
 is($observedOutput,$expectedOutput, 'toggleGenerator - One Sam (no SGE) content ');
 
 
-#   - TOGGLE VCF vcfForRecalibration
+exit;
 
-#dna fastq
-
-
-
-
-
-
-#rnaseq fastq
-
-my $dataRNAseqSingleOneIndividu = "../DATA/testData/rnaseq/singleOneIndividu";
-
-#samBam
-my $dataSamBamOneBam = "../DATA/testData/samBam/oneBam";
-my $dataSamBamOneSam = "../DATA/testData/samBam/oneSam";
-my $dataSamBamTwoBamsIrigin = "../DATA/testData/samBam/twoBamsIrigin";
-
-#vcf
-my $dataVcfSingleVCF = "../DATA/testData/vcf/singleVCF";
-my $dataVcfVcfForRecalibration = "../DATA/testData/vcf/vcfForRecalibration";
-
-
-#EFFACER les fichiers conf dans le repertoire test
