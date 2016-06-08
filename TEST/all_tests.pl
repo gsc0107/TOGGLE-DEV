@@ -419,22 +419,20 @@ $runCmd = "toggleGenerator.pl -c ".$fileRNAPairedNoSGE." -d ".$dataRNAseqPairedO
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuRNASEQ no SGE mode";
 
-exit;
-
 # check final results
 print "\n### TEST Ouput list & content : $runCmd\n";
 $observedOutput = `ls $testingDir/finalResults`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
+@expectedOutput = ('RNASeq.accepted_hits.HTSEQCOUNT.txt');
 
 # expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - singleTwoIndividu (no SGE) list ');
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedOneIndividuRNASEQ (no SGE) list ');
 
 # expected output content
-$observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
+$observedOutput=`wc -l $testingDir/finalResults/RNASeq.accepted_hits.HTSEQCOUNT.txt`;
 chomp $observedOutput;
-$expectedOutput="2179526	467	.	T	C	64.17	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=37.00;MQ0=0;QD=32.08;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:90,6,0	./.";
-is($observedOutput,$expectedOutput, 'toggleGenerator - singleTwoIndividu (no SGE) content ');
+$expectedOutput="2388 $testingDir/finalResults/RNASeq.accepted_hits.HTSEQCOUNT.txt";
+is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividuRNASEQ (no SGE) content ');
 
 
 exit;
