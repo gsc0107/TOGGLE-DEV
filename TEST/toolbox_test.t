@@ -48,8 +48,8 @@ use localConfig;
 use_ok('toolbox');
 can_ok('toolbox','exportLog');
 can_ok('toolbox','checkFile');
-can_ok('toolbox','readFile');
-can_ok('toolbox','writeFile');
+can_ok('toolbox','readFile');   #remove test for return 0
+can_ok('toolbox','writeFile');  #remove test for return 0
 can_ok('toolbox','sizeFile');
 can_ok('toolbox','existsFile');
 can_ok('toolbox','existsDir');
@@ -72,13 +72,23 @@ can_ok('toolbox','checkVcfFormat');
 can_ok('toolbox','checkFormatFasta');
 can_ok('toolbox','relativeToAbsolutePath');
 
+#test a vérifier
+#can_ok('toolbox','readFileConf');
+#can_ok('toolbox','extractOptions');
+#can_ok('toolbox','run');
+#can_ok('toolbox','addInfoHeader');
+#can_ok('toolbox','changeDirectoryArbo');
+#can_ok('toolbox','extractHashSoft');
+#can_ok('toolbox','checkInitialDirContent');
+#can_ok('toolbox','checkVcfFormat');
+#can_ok('toolbox','relativeToAbsolutePath');
+
+
 
 use toolbox;
 
 my $expectedData="../../DATA/expectedData/";
-my $configFile="../../TEST/software.config.txt";
-
-
+my $configFile="../../SNPdiscoveryPaired.config.txt";
 
 #########################################
 #Remove files and directory created by previous test
@@ -124,7 +134,7 @@ my $bamFile=$expectedData."RC3.PICARDTOOLSSORT.bam";
 my $vcfFile=$expectedData."GATKHAPLOTYPECALLER.vcf";
 
 #VCF file non readable
-#my $chmodVcfFile=$expectedData."test-nonreadrigth.vcf";
+my $chmodVcfFile=$expectedData."test-nonreadrigth.vcf";
 
 #File empty
 my $emptyFile=$expectedData."empty-file.vcf";
@@ -187,8 +197,8 @@ is (toolbox::existsFile('beurk.txt',0),'0','toolbox::existsFile - return 0');
 ########################################
 #toolbox::readFile
 ########################################
-#is (toolbox::readFile($configFile),'1','toolbox::readFile - return 1');
-#
+is (toolbox::readFile($configFile),'1','toolbox::readFile - return 1');
+
 #my $chmodCmd="chmod -r $chmodVcfFile";
 #system($chmodCmd) and die ("\nCannot change the right of the vcf file for test:$!\nAborting\n");
 #is (toolbox::readFile($chmodVcfFile),'0','toolbox::readFile - return 0');
@@ -197,10 +207,10 @@ is (toolbox::existsFile('beurk.txt',0),'0','toolbox::existsFile - return 0');
 #toolbox::writeFile test TODO to verify
 ########################################
 is (toolbox::writeFile($configFile),'1','toolbox::writeFile - return 1');
-
-$chmodCmd="chmod -w $chmodVcfFile";
-system($chmodCmd) and die ("\nCannot change the right of the vcf file for test:$!\nAborting\n");
-is (toolbox::writeFile($chmodVcfFile),'0','toolbox::writeFile - return 0');
+#
+#my $chmodCmd="chmod -w $chmodVcfFile";
+#system($chmodCmd) and die ("\nCannot change the right of the vcf file for test:$!\nAborting\n");
+#is (toolbox::writeFile($chmodVcfFile),'0','toolbox::writeFile - return 0');
 
 ########################################
 #toolbox::sizeFile 
@@ -416,7 +426,7 @@ is (toolbox::checkVcfFormat($vcfFile),'1','toolbox::checkVcfFormat - vcf file');
 ########################################
 #toolbox::checkInitialDirContent test TODO add test negatif
 ########################################
-my $makeDirCmd = "mkdir initialDir";
+$makeDirCmd = "mkdir initialDir";
 system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
 
 my $copyCmd= "cp $fastqFile initialDir/";           # command to copy the original fastq file into the test directory
