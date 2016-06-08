@@ -460,13 +460,9 @@ print "#################################################\n";
 
 # Copy file config
 my $fileSamBam="../samBam.config.txt";         
-my $fileSamBamNoSGE="samBamNoSGE.config.txt";
-
-$cmd="cp $fileSamBam $fileSamBamNoSGE";
-system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TEST
 
 # Remove files and directory created by previous test 
-$testingDir="../DATA-TEST/singleOneBam-noSGE";
+$testingDir="../DATA-TEST/oneBam-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
@@ -506,7 +502,7 @@ print "#################################################\n";
 
 
 # Remove files and directory created by previous test 
-$testingDir="../DATA-TEST/singleOneSam-noSGE";
+$testingDir="../DATA-TEST/oneSam-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
@@ -530,8 +526,6 @@ $expectedOutput="2290182	1013	.	A	G	42.74	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;FS=0.
 is($observedOutput,$expectedOutput, 'toggleGenerator - One Sam (no SGE) content ');
 
 
-exit;
-#   - TOGGLE samBam twoBamsIrigin
 
 
 
@@ -539,21 +533,21 @@ exit;
 #####################
 ## SAM-BAM TESTS
 #####################
-## TOGGLE samBam oneSam
+## TOGGLE samBam twoBamsIrigin
 #####################
 
-my $dataOneSam = "../DATA/testData/samBam/oneSam/";
+my $dataTwoBam = "../DATA/testData/samBam/twoBamsIrigin/";
 
 print "\n\n#################################################\n";
-print "#### TEST one SAM / no SGE mode\n";
+print "#### TEST two BAM / no SGE mode\n";
 print "#################################################\n";
 
 # Remove files and directory created by previous test 
-$testingDir="../DATA-TEST/singleOneSam-noSGE";
+$testingDir="../DATA-TEST/twoBams-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-$runCmd = "toggleGenerator.pl -c ".$fileSamBam." -d ".$dataOneSam." -r ".$dataRefIrigin." -o ".$testingDir;
+$runCmd = "toggleGenerator.pl -c ".$fileSamBam." -d ".$dataTwoBam." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for One Sam no SGE mode";
 
@@ -571,6 +565,9 @@ $observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTV
 chomp $observedOutput;
 $expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin2";
 is($observedOutput,$expectedOutput, 'toggleGenerator - One Sam (no SGE) content ');
+
+exit;
+
 
 
 # *** VCF ***
