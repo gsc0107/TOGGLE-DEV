@@ -74,3 +74,48 @@ my $cleaningCommand="rm -Rf pindel_TEST_log.*";
 system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
 
 
+##########################################
+#pindelCreateSequenceDictionary test
+##########################################
+
+#Input file
+my $refFile = "../../DATA/Bank/referencePindelChr1.fasta";
+my $pindelConfigFile = $expectedData."configChr1Pindel";
+
+
+#my $originalRefFile = $expectedData."/".$refFile;    
+#my $cpCmd = "cp $originalRefFile ."; # command to copy the original Ref fasta file into the test directory
+#system ($cpCmd) and die ("ERROR: $0 : Cannot copy the file $originalRefFile in the test directory with the command $cpCmd\n$!\n"); 
+
+#Output file
+my $outputPindelPrefix = "referencePindelChr1.PINDEL";
+
+#execution test
+is(pindel::pindelRun($pindelConfigFile,$outputPindelPrefix,$refFile),1,'pindel::pindelRun');
+
+# expected output test
+my $observedOutput = `ls`;
+my @observedOutput = split /\n/,$observedOutput;
+my @expectedOutput = ('individuSoft.txt','pindel_TEST_log.e','pindel_TEST_log.o','referencePindelChr1.PINDEL_BP','referencePindelChr1.PINDEL_CloseEndMapped','referencePindelChr1.PINDEL_D','referencePindelChr1.PINDEL_INT_final','referencePindelChr1.PINDEL_INV','referencePindelChr1.PINDEL_LI','referencePindelChr1.PINDEL_RP','referencePindelChr1.PINDEL_SI','referencePindelChr1.PINDEL_TD');
+#
+
+is_deeply(\@observedOutput,\@expectedOutput,'pindel::pindelRun - output list');
+#
+## expected content test
+
+$observedOutput = `wc -l *`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ("    2 individuSoft.txt","    0 pindel_TEST_log.e","    2 pindel_TEST_log.o","    0 referencePindelChr1.PINDEL_BP","    0 referencePindelChr1.PINDEL_CloseEndMapped","  139 referencePindelChr1.PINDEL_D","    0 referencePindelChr1.PINDEL_INT_final","   12 referencePindelChr1.PINDEL_INV","    0 referencePindelChr1.PINDEL_LI","    0 referencePindelChr1.PINDEL_RP","  105 referencePindelChr1.PINDEL_SI","    5 referencePindelChr1.PINDEL_TD","  265 total" );
+
+is_deeply(\@observedOutput,\@expectedOutput,'pindel::pindelRun - output number line liste');
+
+my $cmd = 'grep "\@FCD0REEACXX:8:1204:12111:37630#GTTACTTG_32/2" '.$outputPindelPrefix.'_D';
+#print $cmd;
+my $expectedLastLine="                                                                    GAATCTGGGTCGTCCGATGCGAACGAGCACTCGGCGTCGGGTCGGAGGTGAGGTCTCGAAACCCTAGCTGCTCCG		-	30066	37	pindelBam	\@FCD0REEACXX:8:1204:12111:37630#GTTACTTG_32/2";  
+my $observedLastLine=`$cmd`;
+chomp($observedLastLine);
+#my @withoutName = split ("LN:", $observedLastLine); 
+#$observedLastLine = $withoutName[0];       # just to have the md5sum result
+is($observedLastLine,$expectedLastLine,'pindel::pindelRun- output content');
+
+1;
