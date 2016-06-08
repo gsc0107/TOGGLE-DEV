@@ -161,3 +161,7 @@ OUT=NA
 $htseqCount
 IN=sam,bam
 OUT=NA
+
+$pindel
+IN=bam
+OUT=txt
