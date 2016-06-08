@@ -440,7 +440,6 @@ exit;
 
 
 # *** RNASeq ***
-
 #   - TOGGLE RNASeq singleOneIndividu
 
 # *** samBam ***
@@ -448,36 +447,32 @@ exit;
 
 
 #####################
-## FASTQ TESTS
+## SAM-BAM TESTS
 #####################
-## TOGGLE fastq singleOneIndividuIrigin
+## TOGGLE samBam oneBam
 #####################
 
-my $dataFastqsingleOneIndividuIrigin = "../DATA/testData/fastq/singleOneIndividuIrigin";
+my $dataOneBam = "../DATA/testData/samBam/oneBam/";
 
 print "\n\n#################################################\n";
-print "#### TEST SNPdiscoverySingle Irigin (one individu) / no SGE mode\n";
+print "#### TEST one BAM / no SGE mode\n";
 print "#################################################\n";
 
 # Copy file config
-my $fileSNPSingleIni="../SNPdiscoverySingle.config.txt";         
-my $fileSNPSingleNoSGE="SNPdiscoverySingleNoSGE.config.txt";
+my $fileSamBam="../samBam.config.txt";         
+my $fileSamBamNoSGE="samBamNoSGE.config.txt";
 
-$cmd="cp $fileSNPSingleIni $fileSNPSingleNoSGE";
+$cmd="cp $fileSamBam $fileSamBamNoSGE";
 system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TEST
 
-# Change the TOGGLE addaptator configuration file
-sedFunction($fileSNPSingleNoSGE);
-
 # Remove files and directory created by previous test 
-$testingDir="../DATA-TEST/singleOneIndividuIrigin-noSGE";
+$testingDir="../DATA-TEST/singleOneBam-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-$runCmd = "toggleGenerator.pl -c ".$fileSNPSingleNoSGE." -d ".$dataFastqsingleOneIndividuIrigin." -r ".$dataRefIrigin." -o ".$testingDir;
+$runCmd = "toggleGenerator.pl -c ".$fileSamBam." -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for singleOneIndividusIrigin no SGE mode";
-
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for One Bam no SGE mode";
 
 # check final results
 print "\n### TEST Ouput list & content : $runCmd\n";
@@ -486,15 +481,16 @@ $observedOutput = `ls $testingDir/finalResults`;
 @expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
 
 # expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - singleOneIndividu (no SGE) list ');
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) list ');
 
 # expected output content
 $observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
 chomp $observedOutput;
 $expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin2";
-is($observedOutput,$expectedOutput, 'toggleGenerator - singleOneIndividu (no SGE) content ');
+is($observedOutput,$expectedOutput, 'toggleGenerator - One Bam (no SGE) content ');
 
 
+exit;
 
 #   - TOGGLE samBam oneSam
 #   - TOGGLE samBam twoBamsIrigin
