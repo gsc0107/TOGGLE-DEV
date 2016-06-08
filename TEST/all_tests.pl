@@ -435,15 +435,12 @@ $expectedOutput="2388 $testingDir/finalResults/RNASeq.accepted_hits.HTSEQCOUNT.t
 is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividuRNASEQ (no SGE) content ');
 
 
-exit;
 
 
 
 # *** RNASeq ***
 #   - TOGGLE RNASeq singleOneIndividu
 
-# *** samBam ***
-#   - TOGGLE samBam oneBam
 
 
 #####################
@@ -572,6 +569,44 @@ exit;
 
 # *** VCF ***
 #   - TOGGLE VCF singleVCF
+
+#####################
+## SAM-BAM TESTS
+#####################
+## TOGGLE samBam twoBamsIrigin
+#####################
+
+my $dataTwoBam = "../DATA/testData/samBam/twoBamsIrigin/";
+
+print "\n\n#################################################\n";
+print "#### TEST two BAM / no SGE mode\n";
+print "#################################################\n";
+
+# Remove files and directory created by previous test 
+$testingDir="../DATA-TEST/twoBams-noSGE";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+$runCmd = "toggleGenerator.pl -c ".$fileSamBam." -d ".$dataTwoBam." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for One Sam no SGE mode";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Sam (no SGE) list ');
+
+# expected output content
+$observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
+chomp $observedOutput;
+$expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin2";
+is($observedOutput,$expectedOutput, 'toggleGenerator - One Sam (no SGE) content ');
+
+
 #   - TOGGLE VCF vcfForRecalibration
 
 #dna fastq
