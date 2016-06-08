@@ -36,4 +36,35 @@ use localConfig;
 use toolbox;
 use Data::Dumper;
 
+
+sub pindelRun
+{
+     my($pindelConfigFile,$pindelFileOut,$reference,$optionsHachees)=@_;
+     if (toolbox::sizeFile($pindelConfigFile)==1)
+     { ##Check if entry file exist and is not empty
+
+          my $options="";
+          if ($optionsHachees) {
+               $options=toolbox::extractOptions($optionsHachees); ##Get given options
+          }
+          my $command=$pindel." ".$options." -i ".$pindelConfigFile." -f ".$reference." -o ".$pindelFileOut;
+          #toolbox::exportLog($command."\n",1);
+          #Execute command
+          if(toolbox::run($command)==1)
+          {
+               return 1;#Command Ok
+          }
+          else
+          {
+               toolbox::exportLog("ERROR: pindel::pindelRun : Uncorrectly done\n",0);
+               return 0;#Command not Ok
+          }
+     }
+     else
+     {
+        toolbox::exportLog("ERROR: pindel::pindelRun : The file $pindelConfigFile is uncorrect\n",0);
+        return 0;#File not Ok
+     }
+}
+
 1;
