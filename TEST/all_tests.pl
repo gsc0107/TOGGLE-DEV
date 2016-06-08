@@ -456,14 +456,14 @@ print "#### TEST one BAM / no SGE mode\n";
 print "#################################################\n";
 
 # Copy file config
-my $fileSamBam="../samBam.config.txt";         
+my $fileBam="../bam.config.txt";         
 
 # Remove files and directory created by previous test 
 $testingDir="../DATA-TEST/oneBam-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-$runCmd = "toggleGenerator.pl -c ".$fileSamBam." -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
+$runCmd = "toggleGenerator.pl -c ".$fileBam." -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for One Bam no SGE mode";
 
@@ -496,12 +496,13 @@ print "\n\n#################################################\n";
 print "#### TEST two BAM / no SGE mode\n";
 print "#################################################\n";
 
+
 # Remove files and directory created by previous test 
 $testingDir="../DATA-TEST/twoBams-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-$runCmd = "toggleGenerator.pl -c ".$fileSamBam." -d ".$dataTwoBam." -r ".$dataRefIrigin." -o ".$testingDir;
+$runCmd = "toggleGenerator.pl -c ".$fileBam." -d ".$dataTwoBam." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for Two Bams no SGE mode";
 
@@ -517,7 +518,7 @@ is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - Two Bams (no SGE)
 # expected output content
 $observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
 chomp $observedOutput;
-$expectedOutput="2290182	1013	.	A	G	42.74	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=21.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:70,6,0";
+$expectedOutput="2290182	1013	.	A	G	44.17	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=22.09;SOR=0.693	GT:AD:DP:GQ:PL	./.	1/1:0,2:2:6:70,6,0";
 is($observedOutput,$expectedOutput, 'toggleGenerator - Two Bams (no SGE) content ');
 
 
@@ -535,21 +536,14 @@ print "#### TEST one SAM / no SGE mode\n";
 print "#################################################\n";
 
 # Copy file config
-my $sed="sed -i -e 's|^-b|^-b -S|' ". $fileSamBam;
-## DEBUG print $sed;
-system($sed) and die ("#### ERROR  SED COMMAND: $sed\n"); 
-
-# Remove files and directory created by previous test 
-$testingDir="../DATA-TEST/oneBam-noSGE";
-$cleaningCmd="rm -Rf $testingDir";
-system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+my $fileSam="../sam.config.txt";   
 
 # Remove files and directory created by previous test 
 $testingDir="../DATA-TEST/oneSam-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-$runCmd = "toggleGenerator.pl -c ".$fileSamBam." -d ".$dataOneSam." -r ".$dataRefIrigin." -o ".$testingDir;
+$runCmd = "toggleGenerator.pl -c ".$fileSam." -d ".$dataOneSam." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for One Sam no SGE mode";
 
