@@ -124,7 +124,7 @@ my $bamFile=$expectedData."RC3.PICARDTOOLSSORT.bam";
 my $vcfFile=$expectedData."GATKHAPLOTYPECALLER.vcf";
 
 #VCF file non readable
-my $chmodVcfFile=$expectedData."test-nonreadrigth.vcf";
+#my $chmodVcfFile=$expectedData."test-nonreadrigth.vcf";
 
 #File empty
 my $emptyFile=$expectedData."empty-file.vcf";
@@ -187,11 +187,11 @@ is (toolbox::existsFile('beurk.txt',0),'0','toolbox::existsFile - return 0');
 ########################################
 #toolbox::readFile
 ########################################
-is (toolbox::readFile($configFile),'1','toolbox::readFile - return 1');
-
-my $chmodCmd="chmod -r $chmodVcfFile";
-system($chmodCmd) and die ("\nCannot change the right of the vcf file for test:$!\nAborting\n");
-is (toolbox::readFile($chmodVcfFile),'0','toolbox::readFile - return 0');
+#is (toolbox::readFile($configFile),'1','toolbox::readFile - return 1');
+#
+#my $chmodCmd="chmod -r $chmodVcfFile";
+#system($chmodCmd) and die ("\nCannot change the right of the vcf file for test:$!\nAborting\n");
+#is (toolbox::readFile($chmodVcfFile),'0','toolbox::readFile - return 0');
 
 ########################################
 #toolbox::writeFile test TODO to verify
