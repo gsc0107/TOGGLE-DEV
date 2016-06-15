@@ -1,0 +1,14 @@
+$order
+1=trinity
+
+$cleaner
+
+#PUT YOUR OWN SGE CONFIGURATION HERE
+#$sge
+#-q YOURQUEUE.q
+#-b Y
+#-V
+
+$trinity
+--seqType fq
+--max_memory 20G
