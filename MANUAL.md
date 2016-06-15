@@ -96,7 +96,7 @@ The software name is not case sensitive and the subprogram can be "glued" to the
 If your option has an equal symbol within, such as **-l hostname=MyNode**, you have to write the option as follows:
 
 ````
--l=hostname==MyNode
+-l hostname=MyNode
 ````
 
 # <a name="creatingPipeline"></a>Creating a pipeline
