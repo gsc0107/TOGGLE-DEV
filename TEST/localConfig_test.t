@@ -143,8 +143,8 @@ is($line,"cutadapt: error: At least one parameter needed: name of a FASTA or FAS
 # Testing the correct location of java
 ######################################
 
-`$java 2> /tmp/out.txt`;#We works with the STDERR output
-open(OUT,"<", "/tmp/out.txt");
+`$java 2> /tmp/out2.txt`;#We works with the STDERR output
+open(OUT,"<", "/tmp/out2.txt");
 while (<OUT>) {
     $line=$_;
     next unless $line =~ /java \[-options\] class/;
@@ -152,7 +152,7 @@ while (<OUT>) {
     last; 
 }
 close OUT;
-unlink("/tmp/out.txt");
+unlink("/tmp/out2.txt");
 
 is($line,"Usage: java [-options] class [args...]\n","Test for java location");
 
