@@ -1,3 +1,36 @@
+
+Skip to content
+This repository
+
+    Pull requests
+    Issues
+    Gist
+
+    @aladjiSatina
+
+19
+0
+
+    2
+
+SouthGreenPlatform/TOGGLE-DEV
+Code
+Issues 0
+Pull requests 0
+Wiki
+Pulse
+Graphs
+TOGGLE-DEV/Modules/localConfig.pm
+824036e 7 days ago
+@Leelouh Leelouh add pindel in localConfig.pm
+@tranchant
+@francoissabot
+@amanzoug
+@sravel
+@julieaorjuela
+@Leelouh
+@3nrique0
+83 lines (64 sloc) 2.98 KB
 package localConfig;
 
 ###################################################################################################################################
@@ -79,4 +112,8 @@ our $cuffmerge = "/path/to/cuffmerge";
 #path for pindel
 our $pindel = "/path/to/pindel";
 
+#path for trinity
+our $trinity = "/path/to/trinity";
+
 1;
+
