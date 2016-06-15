@@ -60,7 +60,7 @@ use toolbox;
 use samTools;
 
 
-my $configInfos = toolbox::readFileConf("software.config.txt");
+#my $configInfos = toolbox::readFileConf("software.config.txt");
 
 #########################################
 #Remove files and directory created by previous test
