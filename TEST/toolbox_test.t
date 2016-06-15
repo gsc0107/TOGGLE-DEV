@@ -72,17 +72,6 @@ can_ok('toolbox','checkVcfFormat');
 can_ok('toolbox','checkFormatFasta');
 can_ok('toolbox','relativeToAbsolutePath');
 
-#test a vérifier
-#can_ok('toolbox','readFileConf');
-#can_ok('toolbox','extractOptions');
-#can_ok('toolbox','run');
-#can_ok('toolbox','addInfoHeader');
-#can_ok('toolbox','changeDirectoryArbo');
-#can_ok('toolbox','extractHashSoft');
-#can_ok('toolbox','checkInitialDirContent');
-#can_ok('toolbox','checkVcfFormat');
-#can_ok('toolbox','relativeToAbsolutePath');
-
 
 
 use toolbox;
