@@ -38,6 +38,7 @@ $bwa aln
 -n=5
 
 $bwa sampe
+-a 500
 
 $picardToolsSortSam
 SORT_ORDER=coordinate

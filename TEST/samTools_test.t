@@ -60,7 +60,7 @@ use toolbox;
 use samTools;
 
 
-my $configInfos = toolbox::readFileConf("software.config.txt");
+#my $configInfos = toolbox::readFileConf("software.config.txt");
 
 #########################################
 #Remove files and directory created by previous test
@@ -144,7 +144,7 @@ $observedOutput = `ls`;
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsIndex - output list');
 
 # expected output structure
-$expectedMD5sum = "891640725352614f9981d41726eed04f";
+$expectedMD5sum = "29bed7c8c70c24cd84a439d3fc473474";
 $observedMD5sum=`md5sum $bamFile.bai`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
@@ -227,11 +227,10 @@ $observedOutput = `ls`;
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsMerge - output list');
 
 # expected output structure
-$expectedMD5sum = "f1a4da94237ced60649daa729f0f60f1";
-$observedMD5sum=`md5sum $bamFileOut`;# structure of the test file
-@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'samTools::samToolsMerge - output structure');
+my $expectedLineNumber = "3996";
+my $observedLineNumber=`samtools view $bamFileOut | wc -l`;# structure of the test file
+chomp $observedLineNumber;
+is($observedLineNumber,$expectedLineNumber,'samTools::samToolsMerge - output structure');
 
 
 #################################################################################################
@@ -331,7 +330,7 @@ $observedOutput = `ls`;
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsIdxstats - output list');
 
 # expected output structure
-$expectedMD5sum = "de3b20969a5e852c9b3627890e3f86f8";
+$expectedMD5sum = "c08ff58a41733e3e1ab782ca22653397";
 $observedMD5sum=`md5sum $statsBamFile`;	# structure of the test file
 @withoutName = split (" ", $observedMD5sum);    				# to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];     						# just to have the md5sum result
@@ -357,7 +356,7 @@ $observedOutput = `ls`;
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsMpileUp - output list');
 
 # expected output structure
-$expectedMD5sum = "ac58aafee6f02d90424c21f5db0a657a";
+$expectedMD5sum = "0247045dd18fa40cf0a75b612e1c484d";
 $observedMD5sum=`md5sum $mpileupFile`;	# structure of the test file
 @withoutName = split (" ", $observedMD5sum);    				# to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];     						# just to have the md5sum result
