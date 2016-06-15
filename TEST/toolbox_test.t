@@ -336,16 +336,16 @@ my $command='grep "^\\\$" '.$configFile.' -c';
 ##DEBUG print "DEBUG: $0: Number of softwares returned by grep command: $command\n";
 my $numberOfSoftExpected=`$command`;
 chomp $numberOfSoftExpected;
-ok ($numberOfSoft == $numberOfSoftExpected, 'toolbox::readFileConf - the number of software to configure');
+is ($numberOfSoft, $numberOfSoftExpected, 'toolbox::readFileConf - the number of software to configure');
 
 #checking for info retrieval, directly, ie data structure
 ##DEBUG print "DEBUG: $0: ".$configInfos->{"samToolsView"}{"-F"}." \n";
-is ($configInfos->{"samToolsView"}{-F},'0x02','toolbox::readFileConf - samToolsView infos retrieval');
-isnt ($configInfos->{"samTooView"}{-F},'0x02','toolbox::readFileConf - samTooView infos retrieval');
+is ($configInfos->{"samToolsView"}{-f},'0x02','toolbox::readFileConf - samToolsView infos retrieval');
+isnt ($configInfos->{"samTooView"}{-F},'0x02','toolbox::readFileConf - samToolsView infos retrieval');
 
 #checking for info extract
 my $optionLine=toolbox::extractOptions($configInfos->{"bwaAln"}," ");
-is ($optionLine =~ m/-n 5/ && $optionLine =~ m/-e -1/,'1','toolbox::extractOptions - is'); #Test as an Test form because of randomness of hash sorting, to be sure of controlling the data
+is ($optionLine =~ m/-n 5/,'1','toolbox::extractOptions - is'); #Test as an Test form because of randomness of hash sorting, to be sure of controlling the data
 
 $optionLine=toolbox::extractOptions($configInfos->{"bwaln"}," ");
 isnt ($optionLine =~ m/-n 5/ && $optionLine =~ m/-e -1/,'1','toolbox::extractOptions - option test'); 
@@ -379,26 +379,12 @@ is(toolbox::changeDirectoryArbo($directory,'8'),undef,"toolbox::changeDirectoryA
 ########################################
 # Get option for bwa index
 my $hashConfig ={
-                    "-a" => "is"
+                    "-n" => "5"
                 };
 
 my $testHashConfig = toolbox::readFileConf($configFile);
-my $softInfos = toolbox::extractHashSoft($testHashConfig, "bwaIndex");
-cmp_deeply($hashConfig, $softInfos, 'toolbox::extractHashSoft - bwaIndex');
-
-# Get no option for picardTools createSequenceDictionary
-$hashConfig =   {
-                    " " => " "
-                };
-
-$testHashConfig = toolbox::readFileConf($configFile);
-$softInfos = toolbox::extractHashSoft($testHashConfig, "picardToolsCreateSequenceDictionary");
-cmp_deeply($hashConfig, $softInfos, 'toolbox::extractHashSoftPicard - with a correct software name');
-    
-# Get option for a tool that doen't exist
-$testHashConfig = toolbox::readFileConf($configFile);
-$softInfos = toolbox::extractHashSoft($testHashConfig, "picarTools sortsam pair");
-cmp_deeply(undef, $softInfos, 'toolbox::extractHashSoft - picarTools sortsam pair with a uncorrect software name');
+my $softInfos = toolbox::extractHashSoft($testHashConfig, "bwaAln");
+cmp_deeply($hashConfig, $softInfos, 'toolbox::extractHashSoft - bwaAln');
 
 
 ########################################
