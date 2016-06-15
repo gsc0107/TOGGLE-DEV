@@ -78,11 +78,6 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 
 
 
-########################################
-#use of snpeff module ok
-########################################
-
-toolbox::readFileConf("software.config.txt");
 
 ########################################
 #Picking up data for tests
