@@ -176,11 +176,11 @@ $observedOutput = `ls`;
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsMarkDuplicates - output list');
 
 # expected content test
-my $expectedMD5sum="23180154325eaf0bedb97488846a3592";      # structure of the ref file
-my $observedMD5sum=`md5sum $bamFileOut`;       # structure of the test file
-@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'picardTools::picardToolsMarkDuplicates - output structure');
+my $expectedLastLines="H2:C381HACXX:5:1101:9881:2219	77	*	0	0	*	*	0	0	AGTCCATGATATAACCAAATTGGATGGATCTTCCACCCGTTTAGCTAAGAAAGAATAGATGCAGAGGTGGATAATAGATCGATATGAAGATCATGAGCTGC	?7=DBB;=DF>C?CG<?FFEIIF3E<?EE\@FBFF<EGB6):D?4<9?D309??\@BF<B)8BBF).6;=CEF<E?A7?>@)?7==?A:AA>ABA5,:>>A:A	PG:Z:MarkDuplicates	RG:Z:RC3
+H2:C381HACXX:5:1101:9881:2219	141	*	0	0	*	*	0	0	CTCTTAGATCTTCTTTCTCCAATCTTGGATTAGGGAAGAAGGAGATATTCGCGACTCCTGGTGGTTTCATTATGGGGCAGCTCATGATCTTCATATCGATC	=;?DDAFBF>?<,<EF\@CIH:EHG4,<3+<293AF;:;?DBE8B\@9B<BF;\@D';@\@CDA).71'56??6(.6632;3>;8:(:@@(5:3(>\@:>BC?<?<	PG:Z:MarkDuplicates	RG:Z:RC3";      
+my $observedLastLines=`samtools view $bamFileOut |tail -n 2`;       
+chomp $observedLastLines;       
+is($observedLastLines,$expectedLastLines,'picardTools::picardToolsMarkDuplicates - output structure');
 
 
 ###########################################
@@ -203,11 +203,12 @@ $observedOutput = `ls`;
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsCleanSam - output list');
 
 # expected content test
-$expectedMD5sum="26e34963c6927c77b7f78629d4204175";      # structure of the ref file
-$observedMD5sum=`md5sum $bamFileOut`;       # structure of the test file
-@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'picardTools::picardToolsCleanSam - output structure');
+$expectedLastLines="H2:C381HACXX:5:1101:9881:2219	77	*	0	0	*	*	0	0	AGTCCATGATATAACCAAATTGGATGGATCTTCCACCCGTTTAGCTAAGAAAGAATAGATGCAGAGGTGGATAATAGATCGATATGAAGATCATGAGCTGC	?7=DBB;=DF>C?CG<?FFEIIF3E<?EE\@FBFF<EGB6):D?4<9?D309??\@BF<B)8BBF).6;=CEF<E?A7?>@)?7==?A:AA>ABA5,:>>A:A	RG:Z:RC3
+H2:C381HACXX:5:1101:9881:2219	141	*	0	0	*	*	0	0	CTCTTAGATCTTCTTTCTCCAATCTTGGATTAGGGAAGAAGGAGATATTCGCGACTCCTGGTGGTTTCATTATGGGGCAGCTCATGATCTTCATATCGATC	=;?DDAFBF>?<,<EF\@CIH:EHG4,<3+<293AF;:;?DBE8B\@9B<BF;\@D';@\@CDA).71'56??6(.6632;3>;8:(:@@(5:3(>\@:>BC?<?<	RG:Z:RC3";      
+$observedLastLines=`samtools view $bamFileOut |tail -n 2`;       
+chomp $observedLastLines;       
+is($observedLastLines,$expectedLastLines,'picardTools::picardToolsCleanSam - output structure');
+
 
 ###########################################
 # picardToolsSamFormatConverter test
@@ -229,11 +230,11 @@ $observedOutput = `ls`;
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsSamFormatConverter - output list');
 
 # expected content test
-$expectedMD5sum="539400bf26e82d5040459f581d912156";      # structure of the ref file
-$observedMD5sum=`md5sum $samFileOut`;       # structure of the test file
-@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-$observedMD5sum = $withoutName[0];       # just to have the md5sum result
-is($observedMD5sum,$expectedMD5sum,'picardTools::picardToolsSamFormatConverter - output structure');
+$expectedLastLines="H2:C381HACXX:5:1101:9881:2219	77	*	0	0	*	*	0	0	AGTCCATGATATAACCAAATTGGATGGATCTTCCACCCGTTTAGCTAAGAAAGAATAGATGCAGAGGTGGATAATAGATCGATATGAAGATCATGAGCTGC	?7=DBB;=DF>C?CG<?FFEIIF3E<?EE\@FBFF<EGB6):D?4<9?D309??\@BF<B)8BBF).6;=CEF<E?A7?>@)?7==?A:AA>ABA5,:>>A:A	RG:Z:RC3
+H2:C381HACXX:5:1101:9881:2219	141	*	0	0	*	*	0	0	CTCTTAGATCTTCTTTCTCCAATCTTGGATTAGGGAAGAAGGAGATATTCGCGACTCCTGGTGGTTTCATTATGGGGCAGCTCATGATCTTCATATCGATC	=;?DDAFBF>?<,<EF\@CIH:EHG4,<3+<293AF;:;?DBE8B\@9B<BF;\@D';@\@CDA).71'56??6(.6632;3>;8:(:@@(5:3(>\@:>BC?<?<	RG:Z:RC3";      
+$observedLastLines=`tail -n 2 $samFileOut`;       
+chomp $observedLastLines;       
+is($observedLastLines,$expectedLastLines,'picardTools::picardToolsSamFormatConverter - output structure');
 
 
 ###########################################
