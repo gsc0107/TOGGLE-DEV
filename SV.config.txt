@@ -1,0 +1,20 @@
+$order
+1000=pindel
+
+$cleaner
+
+#PUT YOUR OWN SGE CONFIGURATION HERE
+#$sge
+#-q YOURQUEUE.q
+#-b Y
+#-V
+
+$pindel
+-c ALL
+-x 4
+-l #report long insertion
+-k #report breakpoint
+-s #report_close_mapped_reads
+-M 10 #minimum_support_for_event
+-A 20 #anchor_quality
+--MIN_DD_MAP_DISTANCE 2000 #Minimum mapping distance of read pairs for them to be considered discordant. (default: 8000)
