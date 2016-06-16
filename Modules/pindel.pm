@@ -68,3 +68,35 @@ sub pindelRun
 }
 
 1;
+
+=head1 NAME
+
+    Package I<pindel> 
+
+=head1 SYNOPSIS
+
+     use pindel;
+     use pindel::pindelRun;
+     
+=head1 DESCRIPTION
+
+     Pindel can detect breakpoints of large deletions, medium sized insertions, inversions, tandem duplications and other structural variants at single-based resolution from next-gen sequence data. It uses a pattern growth approach to identify the breakpoints of these variants from paired-end short reads.
+
+=head2 FUNCTIONS
+
+
+=head3 pindel::pindelRun
+
+This module generate differents files of structurals variants.
+It takes at least three arguments: the pindel config file, the reference ".fasta", the prefix of the name of the ouput file ""
+
+=head1 AUTHORS
+
+Intellectual property belongs to IRD, CIRAD and South Green developpement plateform 
+Written by Cecile Monat, Ayite Kougbeadjo, Marilyne Summo, Cedric Farcy, Mawusse Agbessi, Christine Tranchant and Francois Sabot
+
+=head1 SEE ALSO
+
+L<http://www.southgreen.fr/>
+
+=cut
