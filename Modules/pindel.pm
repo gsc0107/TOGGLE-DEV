@@ -67,6 +67,25 @@ sub pindelRun
      }
 }
 
+sub pindelConfig
+{
+     my $listOfBam = @_;
+     my $line;
+     foreach my $file (@{$listOfBam})       # for each BAM file(s)
+     {
+          if (toolbox::checkSamOrBamFormat($file)==2 and toolbox::sizeFile($file)==1)        # if current file is not empty
+          {
+              $line.=$file."\n";
+          }
+          else        # if current file is empty
+          {
+              toolbox::exportLog("ERROR: gatk::gatkHaplotypeCaller : The file $file is uncorrect\n", 0);      # returns the error message
+              return 0;
+          }
+     }
+     toolbox:exportLog("$line");       # recovery of informations fo command line used later
+}
+
 1;
 
 =head1 NAME
