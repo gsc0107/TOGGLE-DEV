@@ -752,9 +752,10 @@ sub checkFormatFastq
     chomp $endLines;
     
     my $valid=1;
-    
+    toolbox::exportLog("----$beginLines----",1);
     if ($beginLines !~ m/^@/ and $endLines !~ m/^@/)
     {
+	   toolbox::exportLog("JE RENTRE----$beginLines----",1);
 	$valid = 0; # The file is not containing a 4 lines sequence in FASTQ format
     }
     
@@ -811,7 +812,7 @@ sub checkFormatFastq
                     $notOk++;                                           # one error occured, so count it
                 }
                 
-                elsif ( (($idLine=~m/^\@.*/) or ($idLine=~m/^\>.*/) ) and ($plusLine=~m/^\+$/) )   # if ID ligne is not empty and it starts by "@" or ">" and the
+                elsif ( (($idLine=~m/^\@.*/) or ($idLine=~m/^\>.*/) ) and ($plusLine=~m/^\+/) )   # if ID ligne is not empty and it starts by "@" or ">" and the
                 # plus line has a "+", the block of four lines ($i to $i+3) is traited.
                 {
                     if ( length($fastaLine) == length($qualityLine) )   # comparing the fasta line and the quality line lengths.
@@ -835,7 +836,7 @@ sub checkFormatFastq
                 
                 else													#error if the ID line do not start with @ or >.
                 {
-                    toolbox::exportLog("ERROR: toolbox::checkFormatFastq : ID line has to start with @ or > in line $nbIDLine of file $fileToTest.\n",0);
+                    toolbox::exportLog("ERROR: toolbox::checkFormatFastq : ID line has to start with @ or > in line $nbIDLine of file $fileToTest. $idLine\n",0);
                     $notOk++;
                 }
                 $i=$i+4; 												# jumping to next read.
