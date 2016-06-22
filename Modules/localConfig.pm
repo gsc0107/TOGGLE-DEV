@@ -79,4 +79,12 @@ our $cuffmerge = "/path/to/cuffmerge";
 #path for pindel
 our $pindel = "/path/to/pindel";
 
+#path for bam2cfg
+our $bam2cfg = "/path/to/bam2cfg";
+
+#path for breakdancer
+our $breakdancer = "/path/to/breakdancer";
+
+
+
 1;
