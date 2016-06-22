@@ -138,7 +138,7 @@ push (@{$listOfBam}, $bam);
 #execution test
 is(pindel::pindelConfig($listOfBam),1,'pindel::pindelConfig');
 exit;
-_END_
+__END__
 
 # expected output test
 my $observedOutput = `ls`;
