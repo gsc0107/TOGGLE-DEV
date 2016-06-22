@@ -172,6 +172,9 @@ sub correctName
         
         #FOR cutadapt functions
         case ($name =~ m/^cutadapt/i){$correctedName="cutadapt"} # Correction for cutadapt step
+        
+        #FOR pindel
+        case ($name =~m/^pindel/i){$correctedName="pindel"} 
      
         
         
