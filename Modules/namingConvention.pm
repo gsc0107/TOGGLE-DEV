@@ -173,7 +173,8 @@ sub correctName
         #FOR cutadapt functions
         case ($name =~ m/^cutadapt/i){$correctedName="cutadapt"} # Correction for cutadapt step
      
-        
+        #FOR trinity
+        case ($name =~ m/^trinity/i){$correctedName="Trinity"} 
         
         else {toolbox::exportLog("ERROR : $0 : the $name function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
     }

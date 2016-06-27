@@ -165,3 +165,7 @@ OUT=NA
 $pindel
 IN=bam
 OUT=txt
+
+$trinity
+IN=fastq
+OUT=fasta
