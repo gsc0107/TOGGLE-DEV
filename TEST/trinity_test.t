@@ -49,7 +49,7 @@ can_ok('trinity','trinityRun');
 use toolbox;
 use trinity;
 
-my $expectedData="../../DATA/expectedData/";
+my $expectedData="../../DATA/expectedData/contigTrinity.fasta";
 
 #########################################
 #Remove files and directory created by previous test
@@ -78,9 +78,9 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 ##########################################
 
 #Input file
-my $forwardFastqFileIn = "../../DATA/Bank/referencePindelChr1.fasta";
-my $reverseFastqFileIn = $expectedData."configChr1Pindel";
-
+my $forwardFastqFileIn = "../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.fq";
+my $reverseFastqFileIn = "../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.fq";
+my $outputTrinity = "./";
 
 #my $originalRefFile = $expectedData."/".$refFile;    
 #my $cpCmd = "cp $originalRefFile ."; # command to copy the original Ref fasta file into the test directory
@@ -90,15 +90,17 @@ my $reverseFastqFileIn = $expectedData."configChr1Pindel";
 #my $outputPindelPrefix = "referencePindelChr1.PINDEL";
 
 #execution test
-is(trinity::trinityRun($forwardFastqFileIn,$reverseFastqFilein),1,'trinity::trinityRun');
+is(trinity::trinityRun($outputTrinity,$forwardFastqFileIn,$reverseFastqFileIn),1,'trinity::trinityRun');
 
 # expected output test
 my $observedOutput = `ls`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('trinity.fasta');
+my @expectedOutput = ('both.fa','both.fa.ok','both.fa.read_count','chrysalis','inchworm.K25.L25.DS.fa','inchworm.K25.L25.DS.fa.finished','inchworm.kmer_count','jellyfish.kmers.fa','jellyfish.kmers.fa.histo','left.fa.ok','partitioned_reads.files.list','partitioned_reads.files.list.ok','read_partitions','recursive_trinity.cmds','recursive_trinity.cmds.completed','recursive_trinity.cmds.ok','right.fa.ok','Trinity.fasta','Trinity.timing');
 #
 
 is_deeply(\@observedOutput,\@expectedOutput,'trinity::trinityRun - output list');
+exit;
+__END__
 #
 ## expected content test
 

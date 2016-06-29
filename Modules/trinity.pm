@@ -42,7 +42,7 @@ sub trinityRun
      my($outputDir,$single,$paired,$optionsHachees)=@_;  ## if paired reads give $single as --left and $paired as --right; else give only $single
      if ($single ne "NA" and toolbox::checkFormatFastq($single)==1 )
      { ##Check if entry file exist and is not empty
-        
+        my $command="";
         my $options="";
         if ($optionsHachees)
         {
@@ -62,7 +62,7 @@ sub trinityRun
                 {
                     $options .= " --seqType fq";
                 }
-                my $command=$trinity." ".$options." --left ".$single." --right ".$paired --output $outputDir;
+                $command=$trinity." ".$options." --left ".$single." --right ".$paired.' --output '. $outputDir;
             }
             else
             {
@@ -76,7 +76,7 @@ sub trinityRun
             {
                 $options .= " --seqType fq";
             }
-            my $command=$trinity." ".$options." --single ".$single --output $outputDir;
+            $command=$trinity." ".$options." --single ".$single.' --output '.$outputDir;
         }
         
         #toolbox::exportLog($command."\n",1);
