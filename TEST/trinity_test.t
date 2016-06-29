@@ -80,7 +80,7 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 #Input file
 my $forwardFastqFileIn = "../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.fq";
 my $reverseFastqFileIn = "../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.fq";
-my $outputTrinity = "./";
+my $outputTrinity = "./trinityOutdir/"; # output directory must contain the word 'trinity' as a safety precaution, given that auto-deletion can take place
 
 #my $originalRefFile = $expectedData."/".$refFile;    
 #my $cpCmd = "cp $originalRefFile ."; # command to copy the original Ref fasta file into the test directory
@@ -93,31 +93,27 @@ my $outputTrinity = "./";
 is(trinity::trinityRun($outputTrinity,$forwardFastqFileIn,$reverseFastqFileIn),1,'trinity::trinityRun');
 
 # expected output test
-my $observedOutput = `ls`;
+my $observedOutput = `ls $outputTrinity`;
 my @observedOutput = split /\n/,$observedOutput;
 my @expectedOutput = ('both.fa','both.fa.ok','both.fa.read_count','chrysalis','inchworm.K25.L25.DS.fa','inchworm.K25.L25.DS.fa.finished','inchworm.kmer_count','jellyfish.kmers.fa','jellyfish.kmers.fa.histo','left.fa.ok','partitioned_reads.files.list','partitioned_reads.files.list.ok','read_partitions','recursive_trinity.cmds','recursive_trinity.cmds.completed','recursive_trinity.cmds.ok','right.fa.ok','Trinity.fasta','Trinity.timing');
 #
 
 is_deeply(\@observedOutput,\@expectedOutput,'trinity::trinityRun - output list');
-exit;
-__END__
+
 #
 ## expected content test
 
-$observedOutput = `wc -l *`;
-@observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ("    2 individuSoft.txt","    0 pindel_TEST_log.e","    2 pindel_TEST_log.o","    0 referencePindelChr1.PINDEL_BP","    0 referencePindelChr1.PINDEL_CloseEndMapped","  139 referencePindelChr1.PINDEL_D","    0 referencePindelChr1.PINDEL_INT_final","   12 referencePindelChr1.PINDEL_INV","    0 referencePindelChr1.PINDEL_LI","    0 referencePindelChr1.PINDEL_RP","  105 referencePindelChr1.PINDEL_SI","    5 referencePindelChr1.PINDEL_TD","  265 total" );
-
-is_deeply(\@observedOutput,\@expectedOutput,'trinity::trinityRun - output number line liste');
-
-my $cmd = 'grep "\@FCD0REEACXX:8:1204:12111:37630#GTTACTTG_32/2" '.$outputPindelPrefix.'_D';
+my $cmd = 'grep -c "^>" '.$outputTrinity.'Trinity.fasta';
 #print $cmd;
-my $expectedLastLine="                                                                    GAATCTGGGTCGTCCGATGCGAACGAGCACTCGGCGTCGGGTCGGAGGTGAGGTCTCGAAACCCTAGCTGCTCCG		-	30066	37	pindelBam	\@FCD0REEACXX:8:1204:12111:37630#GTTACTTG_32/2";  
-my $observedLastLine=`$cmd`;
-chomp($observedLastLine);
+my $expectedAnswer="6";
+my $observedAnswer=`$cmd`;
+chomp($observedAnswer);
 #my @withoutName = split ("LN:", $observedLastLine); 
 #$observedLastLine = $withoutName[0];       # just to have the md5sum result
-is($observedLastLine,$expectedLastLine,'trinity::trinityRun- output content');
+is($observedAnswer,$expectedAnswer,'trinity::trinityRun- output content');
+
+#exit;
+#__END__
 
 1;
 
