@@ -49,10 +49,14 @@
 # *** VCF ***
 #   - TOGGLE VCF singleVCF
 #   - TOGGLE VCF vcfForRecalibration
+# *** Assembly ***
+#   - TOGGLE Assembly Trinity
+#
 
 
 
-use strict;
+
+#use strict;
 use warnings;
 use Test::More 'no_plan'; 
 use Test::Deep;
@@ -120,11 +124,52 @@ my $dataRefRnaseqGFF = "../DATA/Bank/referenceRnaseq.gff3";
 
 #####################
 ## FASTQ TESTS
+
+#####################
+## TOGGLE assembly pairedOneIndividuPacaya
+#####################
+print "\n\n#################################################\n";
+print "#### TEST assembly pairedOneIndividuPacaya (one individu) / no SGE mode\n";
+print "#################################################\n";
+
+my $dataFastqpairedOneIndividuPacaya = "../DATA/testData/fastq/assembly/pairedOneIndivuPacaya";
+my $fileAssemblyPairedNoSGE="../assembly.config.txt"; 
+
+# Remove files and directory created by previous test 
+my $testingDir="../DATA-TEST/pairedOneIndividuPacaya-noSGE";
+my $cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+
+my $runCmd = "toggleGenerator.pl -c ".$fileAssemblyPairedNoSGE." -d ".$dataFastqpairedOneIndividuPacaya." -r ".$dataRefArcad." -o ".$testingDir;
+
+print "\n### $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuPacaya";
+exit();
+__END__
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+my $observedOutput = `ls $testingDir/finalResults`;
+my @observedOutput = split /\n/,$observedOutput;
+my @expectedOutput = ('multipleAnalysis.GATKSELECTVARIANT.vcf','multipleAnalysis.GATKSELECTVARIANT.vcf.idx');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - pairedOneIndividu (no SGE) list ');
+
+# expected output content
+$observedOutput=`tail -n 1 $testingDir/finalResults/multipleAnalysis.GATKSELECTVARIANT.vcf`;
+chomp $observedOutput;
+my $expectedOutput="LOC_Os12g32240.1	864	.	C	T	350.77	PASS	AC=2;AF=1.00;AN=2;DP=10;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;MQ0=0;QD=26.71;SOR=3.258	GT:AD:DP:GQ:PL	1/1:0,10:10:30:379,30,0";
+is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividu (no SGE) content ');
+
+
 #####################
 ## TOGGLE fastq pairedOneIndividuArcad
 #####################
 
 my $dataFastqpairedOneIndividuArcad = "../DATA/testData/fastq/pairedOneIndividuArcad";
+
+
 
 print "\n\n#################################################\n";
 print "#### TEST SNPdiscoveryPaired paired ARCAD (one individu) / no SGE mode\n";
@@ -133,6 +178,7 @@ print "#################################################\n";
 # Copy file config 
 my $fileSNPPairedIni="../SNPdiscoveryPaired.config.txt";          # Path of the SNPdiscoveryPaired.config.txt
 my $fileSNPPairedNoSGE="SNPdiscoveryPairedTest.config.txt";
+
 
 my $cmd="cp $fileSNPPairedIni $fileSNPPairedNoSGE";
 ## DEBUG print "\n### COPY conf file SNPdiscoveryPaired : $cmd\n";

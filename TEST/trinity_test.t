@@ -79,7 +79,7 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 
 #Input file
 my $forwardFastqFileIn = "../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.fq";
-my $reverseFastqFileIn = "../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.fq";
+my $reverseFastqFileIn = "../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R2.fq";
 my $outputTrinity = "./trinityOutdir/"; # output directory must contain the word 'trinity' as a safety precaution, given that auto-deletion can take place
 
 #my $originalRefFile = $expectedData."/".$refFile;    
@@ -99,13 +99,12 @@ my @expectedOutput = ('both.fa','both.fa.ok','both.fa.read_count','chrysalis','i
 #
 
 is_deeply(\@observedOutput,\@expectedOutput,'trinity::trinityRun - output list');
-
 #
 ## expected content test
 
 my $cmd = 'grep -c "^>" '.$outputTrinity.'Trinity.fasta';
 #print $cmd;
-my $expectedAnswer="6";
+my $expectedAnswer="17";
 my $observedAnswer=`$cmd`;
 chomp($observedAnswer);
 #my @withoutName = split ("LN:", $observedLastLine); 

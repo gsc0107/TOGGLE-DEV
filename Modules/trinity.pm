@@ -51,7 +51,7 @@ sub trinityRun
         #print $options,"\n";
         if ($options !~ m/--max_memory\s\w+/) # The type of walker is not informed in the options
         {
-            $options .= " --max_memory 20G";
+            $options .= "--max_memory 20G";
         }      
         
         if ($paired ne "NA") ## we have paired reads

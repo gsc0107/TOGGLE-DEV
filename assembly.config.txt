@@ -3,6 +3,9 @@ $order
 
 $cleaner
 
+$compressor
+1
+
 #PUT YOUR OWN SGE CONFIGURATION HERE
 #$sge
 #-q YOURQUEUE.q
@@ -12,3 +15,4 @@ $cleaner
 $trinity
 --seqType fq
 --max_memory 20G
+--full_cleanup

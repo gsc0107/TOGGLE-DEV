@@ -174,7 +174,10 @@ sub correctName
         case ($name =~ m/^cutadapt/i){$correctedName="cutadapt"} # Correction for cutadapt step
      
         #FOR trinity
-        case ($name =~ m/^trinity/i){$correctedName="Trinity"} 
+        case ($name =~ m/^trinity/i){$correctedName="trinity"}  # pour chercher le nom du block
+ 
+         #FOR Pindel
+        case ($name =~ m/^pindel/i){$correctedName="pindel"} 
         
         else {toolbox::exportLog("ERROR : $0 : the $name function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
     }
