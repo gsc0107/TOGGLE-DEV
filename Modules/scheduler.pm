@@ -104,7 +104,7 @@ sub checkingCapability { #Will test the capacity of launching using various sche
     chomp $capabilityValue{"mprun"};
     
     #lsf test
-    $capabilityValue{"lsf"}=`bsub -h 2>&1 | grep -i usage`; #Will provide a not-empty output if lsf is installed
+    $capabilityValue{"lsf"}=`bsub -h 2>&1 | grep -i Synopsis`; #Will provide a not-empty output if lsf is installed
     chomp $capabilityValue{"lsf"};
     
     
