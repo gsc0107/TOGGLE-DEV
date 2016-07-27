@@ -291,7 +291,7 @@ is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::generateGraphviz - output
 
 # expected content test
 
-$expectedMD5sum="9";
+$expectedMD5sum="14";
 $observedMD5sum=`wc -l togglePipeline.dot`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
