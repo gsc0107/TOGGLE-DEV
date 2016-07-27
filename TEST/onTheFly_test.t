@@ -272,6 +272,12 @@ isnt($observedOutput,$initialModifDate,'onTheFly::indexCreator forcing creation 
 #generateGraphviz test
 #######################################
 
+#Generating normal hash for order
+$hashConf = {
+            "1" => "bwaSampe",
+            "2" => "gatkHaplotypeCaller",
+            "3" => "bwaIndex"
+            };
 
 #execution test
 is (onTheFly::generateGraphviz($hashConf,$toggle."/DATA-TEST/onTheFlyTestDir"),'1','onTheFly::generateGraphviz');
