@@ -39,26 +39,25 @@ use Data::Dumper;
 
 sub tgiclRun
 {
-    my($refFastaFileIn,$optionsHachees)=@_;
-    if (toolbox::sizeFile($refFastaFileIn)==1)		##Check if the reference file exist and is not empty
+    my($outputDir,$FastaFileIn,$optionsHachees)=@_;
+    if ($FastaFileIn ne "NA" and  toolbox::checkFormatFasta($FastaFileIn)==1)
     {
         my $options=toolbox::extractOptions($optionsHachees, " ");		##Get given options
-        my $command=$tgicl." ".$refFastaFileIn." ".$options;		##command
+        my $command=$tgicl." ".$FastaFileIn." ".$options;		##command
         #Execute command
         if(toolbox::run($command)==1)		##The command should be executed correctly (ie return) before exporting the log
         {
-            ##DEBUG toolbox::exportLog("INFOS: bwa::bwaIndex : correctly done\n",1);		# bwaIndex have been correctly done
             return 1;
         }
         else
         {
-            toolbox::exportLog("ERROR: tgicl::tgiclRun : ABORTED\n",0);		# bwaIndex have not been correctly done
+            toolbox::exportLog("ERROR: tgicl::tgiclRun : ABORTED\n",0);		# tgicl have not been correctly done
             return 0;
         }
     }
     else
     {
-        toolbox::exportLog("ERROR: tgicl::tgiclRun : the file $refFastaFileIn is empty\n",0);		# bwaIndex can not function because of wrong/missing reference file
+        toolbox::exportLog("ERROR: tgicl::tgiclRun : the file $FastaFileIn is empty or not a Fasta\n",0);		
         return 0;
     }
 }
@@ -73,7 +72,7 @@ sub tgiclRun
 
         use tgicl;
     
-        tgicl::tgiclRun ($refFastaFileIn, $option_prog{'TGICL option'});
+        tgicl::tgiclRun ($outputDir,$FastaFileIn, $option_prog{'TGICL option'});
     
         
 =head1 DESCRIPTION
