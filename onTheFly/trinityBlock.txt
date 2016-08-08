@@ -8,6 +8,8 @@
 my $hashOfPairs = pairing::pairRecognition($previousDir);
 #my @listOfSequences = keys %{$hashOfPairs}; #Pick up the names of first sequences (key values of the reference)
 my ($paired,$single)=(-1,-1);
+my $firstListOfFastq=();
+my $secondListOfFastq=();
 foreach my $couple (keys %{$hashOfPairs})		# for each pair
 {
     ###DEBUG toolbox::exportLog("<<<<<<<<<<<<<<<<<<< DEBUG<<<<<<<<<<<<<<< je rentre dans foreach\n",1);
