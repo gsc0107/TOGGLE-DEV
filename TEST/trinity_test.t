@@ -81,10 +81,13 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 my $forwardFastqFileIn = "../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.fq";
 my @forwardFastqList = ($forwardFastqFileIn);
 my @forwardFastqsList = ($forwardFastqFileIn,$forwardFastqFileIn);
+my $forwardFastqList = \@forwardFastqList;
+    
 
 my $reverseFastqFileIn = "../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R2.fq";
 my @reverseFastqList = ($reverseFastqFileIn);
 my @reverseFastqsList = ($reverseFastqFileIn,$reverseFastqFileIn);
+my $reverseFastqList = \@reverseFastqList;
 
 my $trinityPairedOutDir = "./trinityPairedOutdir/"; # output directory must contain the word 'trinity' as a safety precaution, given that auto-deletion can take place
 my $trinitySingleOutDir = "./trinitySingleOutdir/";
@@ -94,25 +97,26 @@ my $trinitySeveralOutDir = "./trinitySeveralOutdir/";
 #system ($cpCmd) and die ("ERROR: $0 : Cannot copy the file $originalRefFile in the test directory with the command $cpCmd\n$!\n"); 
 
 #Output file
-#my $outputPindelPrefix = "referencePindelChr1.PINDEL";
+my $readGroup = 'g02L5'; ## à remplacer par le readGroup
 
 #########################################################
-###  Test for trinityRun with one bank (2 paired files)
+###  Test for trinityRun with one bank (paired files)
 #########################################################
 
-is(trinity::trinityRun($trinityPairedOutDir,\@forwardFastqList,\@reverseFastqList),1,'trinity::trinityRun');
+is(trinity::trinityRun($trinityPairedOutDir,$readGroup,$forwardFastqList,$reverseFastqList),1,'trinity::trinityRun');
 
 # expected output test
+
 my $observedOutput = `ls $trinityPairedOutDir`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('both.fa','both.fa.ok','both.fa.read_count','chrysalis','inchworm.K25.L25.DS.fa','inchworm.K25.L25.DS.fa.finished','inchworm.kmer_count','jellyfish.kmers.fa','jellyfish.kmers.fa.histo','left.fa.ok','partitioned_reads.files.list','partitioned_reads.files.list.ok','read_partitions','recursive_trinity.cmds','recursive_trinity.cmds.completed','recursive_trinity.cmds.ok','right.fa.ok','Trinity.fasta','Trinity.timing');
-#
+
+my @expectedOutput = ($readGroup.'_both.fa',$readGroup.'_both.fa.ok',$readGroup.'_both.fa.read_count',$readGroup.'_inchworm.K25.L25.DS.fa',$readGroup.'_inchworm.K25.L25.DS.fa.finished',$readGroup.'_inchworm.kmer_count',$readGroup.'_jellyfish.kmers.fa',$readGroup.'_jellyfish.kmers.fa.histo',$readGroup.'_left.fa.ok',$readGroup.'_partitioned_reads.files.list',$readGroup.'_partitioned_reads.files.list.ok',$readGroup.'_recursive_trinity.cmds',$readGroup.'_recursive_trinity.cmds.completed',$readGroup.'_recursive_trinity.cmds.ok',$readGroup.'_right.fa.ok',$readGroup.'_Trinity.fasta',$readGroup.'_Trinity.timing');
 
 is_deeply(\@observedOutput,\@expectedOutput,'trinity::trinityRun - output list - One paired bank');
 #
 ## expected content test
 
-my $cmd = 'grep -c "^>" '.$trinityPairedOutDir.'Trinity.fasta';
+my $cmd = 'grep -c "^>" '.$trinityPairedOutDir.$readGroup.'_Trinity.fasta';
 #print $cmd;
 my $expectedAnswer="17";
 my $observedAnswer=`$cmd`;
@@ -120,24 +124,23 @@ chomp($observedAnswer);
 
 is($observedAnswer,$expectedAnswer,'trinity::trinityRun- output content - One paired bank');
 
-
 #########################################################
 ###  Test for trinityRun with several banks
 #########################################################
 
-is(trinity::trinityRun($trinitySeveralOutDir,\@forwardFastqsList,\@reverseFastqsList),1,'trinity::trinityRun');
+is(trinity::trinityRun($trinitySeveralOutDir,$readGroup,\@forwardFastqsList,\@reverseFastqsList),1,'trinity::trinityRun');
 
 # expected output test
 $observedOutput = `ls $trinitySeveralOutDir`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('both.fa','both.fa.ok','both.fa.read_count','chrysalis','inchworm.K25.L25.DS.fa','inchworm.K25.L25.DS.fa.finished','inchworm.kmer_count','jellyfish.kmers.fa','jellyfish.kmers.fa.histo','left.fa.ok','partitioned_reads.files.list','partitioned_reads.files.list.ok','read_partitions','recursive_trinity.cmds','recursive_trinity.cmds.completed','recursive_trinity.cmds.ok','right.fa.ok','Trinity.fasta','Trinity.timing');
+@expectedOutput = ($readGroup.'_both.fa',$readGroup.'_both.fa.ok',$readGroup.'_both.fa.read_count',$readGroup.'_inchworm.K25.L25.DS.fa',$readGroup.'_inchworm.K25.L25.DS.fa.finished',$readGroup.'_inchworm.kmer_count',$readGroup.'_jellyfish.kmers.fa',$readGroup.'_jellyfish.kmers.fa.histo',$readGroup.'_left.fa.ok',$readGroup.'_partitioned_reads.files.list',$readGroup.'_partitioned_reads.files.list.ok',$readGroup.'_recursive_trinity.cmds',$readGroup.'_recursive_trinity.cmds.completed',$readGroup.'_recursive_trinity.cmds.ok',$readGroup.'_right.fa.ok',$readGroup.'_Trinity.fasta',$readGroup.'_Trinity.timing');
 #
 
 is_deeply(\@observedOutput,\@expectedOutput,'trinity::trinityRun - output list - Several banks');
 #
 ## expected content test
 
-$cmd = 'grep -c "^>" '.$trinitySeveralOutDir.'Trinity.fasta';
+$cmd = 'grep -c "^>" '.$trinitySeveralOutDir.$readGroup.'_Trinity.fasta';
 #print $cmd;
 $expectedAnswer="15";
 $observedAnswer=`$cmd`;
@@ -149,19 +152,20 @@ is($observedAnswer,$expectedAnswer,'trinity::trinityRun- output content - Severa
 ###  Test for trinityRun with single mode
 #########################################################
 my @emptyList = ();
-is(trinity::trinityRun($trinitySingleOutDir,\@forwardFastqList,\@emptyList),1,'trinity::trinityRun');
+is(trinity::trinityRun($trinitySingleOutDir,$readGroup,\@forwardFastqList,\@emptyList),1,'trinity::trinityRun');
 
 # expected output test
 $observedOutput = `ls $trinitySingleOutDir`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('chrysalis','inchworm.K25.L25.DS.fa','inchworm.K25.L25.DS.fa.finished','inchworm.kmer_count','jellyfish.kmers.fa','jellyfish.kmers.fa.histo','partitioned_reads.files.list','partitioned_reads.files.list.ok','read_partitions','recursive_trinity.cmds','recursive_trinity.cmds.completed','recursive_trinity.cmds.ok','single.fa','single.fa.ok','single.fa.read_count','Trinity.fasta','Trinity.timing');
+@expectedOutput = ($readGroup.'_inchworm.K25.L25.DS.fa',$readGroup.'_inchworm.K25.L25.DS.fa.finished',$readGroup.'_inchworm.kmer_count',$readGroup.'_jellyfish.kmers.fa',$readGroup.'_jellyfish.kmers.fa.histo',$readGroup.'_partitioned_reads.files.list',$readGroup.'_partitioned_reads.files.list.ok',$readGroup.'_recursive_trinity.cmds',$readGroup.'_recursive_trinity.cmds.completed',$readGroup.'_recursive_trinity.cmds.ok',$readGroup.'_single.fa',$readGroup.'_single.fa.ok',$readGroup.'_single.fa.read_count',$readGroup.'_Trinity.fasta',$readGroup.'_Trinity.timing');
+#@expectedOutput = ($readGroup.'_both.fa',$readGroup.'_both.fa.ok',$readGroup.'_both.fa.read_count',$readGroup.'_chrysalis',$readGroup.'_inchworm.K25.L25.DS.fa',$readGroup.'_inchworm.K25.L25.DS.fa.finished',$readGroup.'_inchworm.kmer_count',$readGroup.'_jellyfish.kmers.fa',$readGroup.'_jellyfish.kmers.fa.histo',$readGroup.'_left.fa.ok',$readGroup.'___log.e',$readGroup.'___log.o',$readGroup.'_partitioned_reads.files.list',$readGroup.'_partitioned_reads.files.list.ok',$readGroup.'_read_partitions',$readGroup.'_recursive_trinity.cmds',$readGroup.'_recursive_trinity.cmds.completed',$readGroup.'_recursive_trinity.cmds.ok',$readGroup.'_right.fa.ok',$readGroup.'_Trinity.fasta',$readGroup.'_Trinity.timing');
 #
 
 is_deeply(\@observedOutput,\@expectedOutput,'trinity::trinityRun - output list - single mode');
 #
 ## expected content test
 
-$cmd = 'grep -c "^>" '.$trinitySingleOutDir.'Trinity.fasta';
+$cmd = 'grep -c "^>" '.$trinitySingleOutDir.$readGroup.'_Trinity.fasta';
 #print $cmd;
 $expectedAnswer="8";
 $observedAnswer=`$cmd`;
