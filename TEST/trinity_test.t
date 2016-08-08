@@ -79,9 +79,16 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 
 #Input file
 my $forwardFastqFileIn = "../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.fq";
-my $reverseFastqFileIn = "../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R2.fq";
-my $outputTrinity = "./trinityOutdir/"; # output directory must contain the word 'trinity' as a safety precaution, given that auto-deletion can take place
+my @forwardFastqList = ($forwardFastqFileIn);
+my @forwardFastqsList = ($forwardFastqFileIn,$forwardFastqFileIn);
 
+my $reverseFastqFileIn = "../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R2.fq";
+my @reverseFastqList = ($reverseFastqFileIn);
+my @reverseFastqsList = ($reverseFastqFileIn,$reverseFastqFileIn);
+
+my $trinityPairedOutDir = "./trinityPairedOutdir/"; # output directory must contain the word 'trinity' as a safety precaution, given that auto-deletion can take place
+my $trinitySingleOutDir = "./trinitySingleOutdir/";
+my $trinitySeveralOutDir = "./trinitySeveralOutdir/";
 #my $originalRefFile = $expectedData."/".$refFile;    
 #my $cpCmd = "cp $originalRefFile ."; # command to copy the original Ref fasta file into the test directory
 #system ($cpCmd) and die ("ERROR: $0 : Cannot copy the file $originalRefFile in the test directory with the command $cpCmd\n$!\n"); 
@@ -89,30 +96,79 @@ my $outputTrinity = "./trinityOutdir/"; # output directory must contain the word
 #Output file
 #my $outputPindelPrefix = "referencePindelChr1.PINDEL";
 
-#execution test
-is(trinity::trinityRun($outputTrinity,$forwardFastqFileIn,$reverseFastqFileIn),1,'trinity::trinityRun');
+#########################################################
+###  Test for trinityRun with one bank (2 paired files)
+#########################################################
+
+is(trinity::trinityRun($trinityPairedOutDir,\@forwardFastqList,\@reverseFastqList),1,'trinity::trinityRun');
 
 # expected output test
-my $observedOutput = `ls $outputTrinity`;
+my $observedOutput = `ls $trinityPairedOutDir`;
 my @observedOutput = split /\n/,$observedOutput;
 my @expectedOutput = ('both.fa','both.fa.ok','both.fa.read_count','chrysalis','inchworm.K25.L25.DS.fa','inchworm.K25.L25.DS.fa.finished','inchworm.kmer_count','jellyfish.kmers.fa','jellyfish.kmers.fa.histo','left.fa.ok','partitioned_reads.files.list','partitioned_reads.files.list.ok','read_partitions','recursive_trinity.cmds','recursive_trinity.cmds.completed','recursive_trinity.cmds.ok','right.fa.ok','Trinity.fasta','Trinity.timing');
 #
 
-is_deeply(\@observedOutput,\@expectedOutput,'trinity::trinityRun - output list');
+is_deeply(\@observedOutput,\@expectedOutput,'trinity::trinityRun - output list - One paired bank');
 #
 ## expected content test
 
-my $cmd = 'grep -c "^>" '.$outputTrinity.'Trinity.fasta';
+my $cmd = 'grep -c "^>" '.$trinityPairedOutDir.'Trinity.fasta';
 #print $cmd;
 my $expectedAnswer="17";
 my $observedAnswer=`$cmd`;
 chomp($observedAnswer);
-#my @withoutName = split ("LN:", $observedLastLine); 
-#$observedLastLine = $withoutName[0];       # just to have the md5sum result
-is($observedAnswer,$expectedAnswer,'trinity::trinityRun- output content');
 
-#exit;
-#__END__
+is($observedAnswer,$expectedAnswer,'trinity::trinityRun- output content - One paired bank');
+
+
+#########################################################
+###  Test for trinityRun with several banks
+#########################################################
+
+is(trinity::trinityRun($trinitySeveralOutDir,\@forwardFastqsList,\@reverseFastqsList),1,'trinity::trinityRun');
+
+# expected output test
+$observedOutput = `ls $trinitySeveralOutDir`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('both.fa','both.fa.ok','both.fa.read_count','chrysalis','inchworm.K25.L25.DS.fa','inchworm.K25.L25.DS.fa.finished','inchworm.kmer_count','jellyfish.kmers.fa','jellyfish.kmers.fa.histo','left.fa.ok','partitioned_reads.files.list','partitioned_reads.files.list.ok','read_partitions','recursive_trinity.cmds','recursive_trinity.cmds.completed','recursive_trinity.cmds.ok','right.fa.ok','Trinity.fasta','Trinity.timing');
+#
+
+is_deeply(\@observedOutput,\@expectedOutput,'trinity::trinityRun - output list - Several banks');
+#
+## expected content test
+
+$cmd = 'grep -c "^>" '.$trinitySeveralOutDir.'Trinity.fasta';
+#print $cmd;
+$expectedAnswer="15";
+$observedAnswer=`$cmd`;
+chomp($observedAnswer);
+
+is($observedAnswer,$expectedAnswer,'trinity::trinityRun- output content - Several banks');
+
+#########################################################
+###  Test for trinityRun with single mode
+#########################################################
+my @emptyList = ();
+is(trinity::trinityRun($trinitySingleOutDir,\@forwardFastqList,\@emptyList),1,'trinity::trinityRun');
+
+# expected output test
+$observedOutput = `ls $trinitySingleOutDir`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('chrysalis','inchworm.K25.L25.DS.fa','inchworm.K25.L25.DS.fa.finished','inchworm.kmer_count','jellyfish.kmers.fa','jellyfish.kmers.fa.histo','partitioned_reads.files.list','partitioned_reads.files.list.ok','read_partitions','recursive_trinity.cmds','recursive_trinity.cmds.completed','recursive_trinity.cmds.ok','single.fa','single.fa.ok','single.fa.read_count','Trinity.fasta','Trinity.timing');
+#
+
+is_deeply(\@observedOutput,\@expectedOutput,'trinity::trinityRun - output list - single mode');
+#
+## expected content test
+
+$cmd = 'grep -c "^>" '.$trinitySingleOutDir.'Trinity.fasta';
+#print $cmd;
+$expectedAnswer="8";
+$observedAnswer=`$cmd`;
+chomp($observedAnswer);
+is($observedAnswer,$expectedAnswer,'trinity::trinityRun- output content - single mode');
 
 1;
 
+#exit;
+#__END__

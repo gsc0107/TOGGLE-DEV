@@ -129,7 +129,7 @@ my $dataRefRnaseqGFF = "../DATA/Bank/referenceRnaseq.gff3";
 ## TOGGLE assembly pairedOneIndividuPacaya
 #####################
 print "\n\n#################################################\n";
-print "#### TEST assembly pairedOneIndividuPacaya (one individu) / no SGE mode\n";
+print "#### TEST Trinity assembly pairedOneIndividuPacaya (one individu) / no SGE mode\n";
 print "#################################################\n";
 
 my $dataFastqpairedOneIndividuPacaya = "../DATA/testData/fastq/assembly/pairedOneIndivuPacaya";

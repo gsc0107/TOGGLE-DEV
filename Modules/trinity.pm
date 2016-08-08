@@ -39,63 +39,108 @@ use Data::Dumper;
 
 sub trinityRun
 {
-     my($outputDir,$single,$paired,$optionsHachees)=@_;  ## if paired reads give $single as --left and $paired as --right; else give only $single
-     if ($single ne "NA" and toolbox::checkFormatFastq($single)==1 )
-     { ##Check if entry file exist and is not empty
-        my $command="";
-        my $options="";
-        if ($optionsHachees)
-        {
-             $options=toolbox::extractOptions($optionsHachees); ##Get given options
-        }
-        #print $options,"\n";
-        if ($options !~ m/--max_memory\s\w+/) # The type of walker is not informed in the options
-        {
-            $options .= "--max_memory 20G";
-        }      
-        
-        if ($paired ne "NA") ## we have paired reads
-        { ##Check if entry file exist and is not empty
-            if (toolbox::checkFormatFastq($paired)==1)
-            {
-                if ($options !~ m/--seqType fq/) # The type of walker is not informed in the options
-                {
-                    $options .= " --seqType fq";
-                }
-                $command=$trinity." ".$options." --left ".$single." --right ".$paired.' --output '. $outputDir;
-            }
-            else
-            {
-                toolbox::exportLog("ERROR: trinity::trinityRun : The file $paired is not a Fastq\n",0);
-                return 0;#File not Ok
-            }
-        }
-        else  ## $paired is empty or doesn't exist
-        {
-            if ($options !~ m/--seqType fq/) # The type of walker is not informed in the options
-            {
-                $options .= " --seqType fq";
-            }
-            $command=$trinity." ".$options." --single ".$single.' --output '.$outputDir;
-        }
-        
-        #toolbox::exportLog($command."\n",1);
-        #Execute command
-        if(toolbox::run($command)==1)
-        {
-             return 1;#Command Ok
-        }
-        else
-        {
-             toolbox::exportLog("ERROR: trinity::trinityRun : Uncorrectly done\n",0);
-             return 0;#Command not Ok
-        }
+     my($outputDir,$readGroup,$firstListOfFastq,$secondListOfFastq,$optionsHachees)=@_;  ## if paired reads give $single as --left and $paired as --right; else give only $single
+     #print "taille: ", scalar (@{$firstListOfFastq}),"\n";
+     if (scalar (@{$firstListOfFastq}) > 0)  # if is not empty
+     {
+          my $singleFiles=""; my $pairedFiles="";
+          my $command="";
+          my $options="";
+          my $i=0;
+          foreach my $file (@{$firstListOfFastq})       # for each Fastq file(s)
+          {
+               if ($file ne "NA" and toolbox::checkFormatFastq($file)==1 )
+               { ##Check if entry file exist and is not empty
+                    if (++$i < scalar (@{$firstListOfFastq}))
+                    {
+                         $singleFiles .= $file."," ;       # recovery of informations fo command line used later
+                    }
+                    else 
+                    {
+                         $singleFiles .= "".$file;
+                    }
+               }
+               else
+               {
+                   toolbox::exportLog("ERROR: trinity::trinityRun : The file $file is uncorrect or is not a Fastq\n",0);
+                   return 0;#File not Ok
+               }
+          }
+          #print @{$firstListOfFastq},"\n";
+          if ($optionsHachees)
+          {
+               $options=toolbox::extractOptions($optionsHachees); ##Get given options
+          }
+          #print $options,"\n";
+          if ($options !~ m/--max_memory\s\w+/) # The type of walker is not informed in the options
+          {
+              $options .= "--max_memory 20G";
+          }      
+          
+          if (scalar (@{$secondListOfFastq}) > 0)  # if is not empty,we have paired reads
+          { ##Check if entry file exist and is not empty
+              $i=0;
+              foreach my $file (@{$secondListOfFastq})       # for each Fastq file(s)
+               {
+                    if ($file ne "NA" and toolbox::checkFormatFastq($file)==1 )              
+                    {
+                         if (++$i < scalar (@{$firstListOfFastq}))
+                         {
+                              $pairedFiles .=$file."," ;       # recovery of informations fo command line used later
+                         }
+                         else 
+                         {
+                              $pairedFiles .=$file;
+                         }
+                    }
+                    else
+                    {
+                        toolbox::exportLog("ERROR: trinity::trinityRun : The file $file is not a Fastq\n",0);
+                        return 0;#File not Ok
+                    }
+               }
+               if ($options !~ m/--seqType fq/) # The type of walker is not informed in the options
+               {
+                   $options .= " --seqType fq";
+               }
+               $command=$trinity." ".$options." --left ".$singleFiles." --right ".$pairedFiles.' --output '. $outputDir;
+               
+          }
+          else  ## $paired is empty or doesn't exist
+          {
+              if ($options !~ m/--seqType fq/) # The type of walker is not informed in the options
+              {
+                  $options .= " --seqType fq";
+              }
+              $command=$trinity." ".$options." --single ".$singleFiles.' --output '.$outputDir;
+              
+          }
+          #Execute command
+          if(toolbox::run($command)==1)
+          {
+               #my $moveCmd='mv '.$outputDir.'/*Trinity.fasta '.$outputDir.$readGroup; #rename the output file
+               chdir "$outputDir";
+               #rename the output files
+               my $moveCmd="ls | sed -rn \"s/(.*)\$/mv '&' '".$readGroup."_\\1'/ p\" | sh"; 
+               toolbox::run($moveCmd,"noprint");
+               #remove the sub-repositories to avoid errors during copy in the finalResults repository.     
+               my $rmCmd='find . -maxdepth 1 -mindepth 1 -type d -exec rm -r {} \;';
+               toolbox::run($rmCmd,"noprint");
+               # come back to the working directory.
+               chdir "../";
+               
+               return 1;#Command Ok
+          }
+          else
+          {
+               toolbox::exportLog("ERROR: trinity::trinityRun : Uncorrectly done\n",0);
+               return 0;#Command not Ok
+          }
      }
      else
      {
-        toolbox::exportLog("ERROR: trinity::trinityRun : The file $single is uncorrect or is not a Fastq\n",0);
+        toolbox::exportLog("ERROR: trinity::trinityRun : The list of fastq files is empty\n",0);
         return 0;#File not Ok
      }
 }
-
 1;
