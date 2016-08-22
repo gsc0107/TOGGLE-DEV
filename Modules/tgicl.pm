@@ -39,21 +39,41 @@ use Data::Dumper;
 
 sub tgiclRun
 {
-    my($outputDir,$FastaFileIn,$optionsHachees)=@_;
+    my($FastaFileIn,$optionsHachees)=@_;
     if ($FastaFileIn ne "NA" and  toolbox::checkFormatFasta($FastaFileIn)==1)
     {
+        
         my $options=toolbox::extractOptions($optionsHachees, " ");		##Get given options
         my $command=$tgicl." ".$FastaFileIn." ".$options;		##command
         #Execute command
-        if(toolbox::run($command)==1)		##The command should be executed correctly (ie return) before exporting the log
+        #my $currentDir=`pwd`;
+        #chdir "$outputDir";
+        
+        if(toolbox::run($command)==1) ##The command should be executed correctly (ie return) before exporting the log
         {
+            #move indexed files into working Directory
+            my $moveCmd="mv ".$FastaFileIn.".* ./";
+            toolbox::run($moveCmd);
+            # getting all assembled contigs (scaffold) and generating singletons
+            ##TODO erreur avec *.singletons pour rester generique
+            my $reOrder="cat asm_*/contigs > all_contigs.fasta && cdbyank *.cidx < contig_tgicl.fasta.singletons > singletons.fasta";  
+            toolbox::run($reOrder);
+            #$reOrder="cdbyank *.cidx < contig_tgicl.singletons > singletons.fasta";
+            #toolbox::run($reOrder);
+            #
+            ##remove the sub-repositories to avoid errors during copy in the finalResults repository.     
+            my $rmCmd='find . -maxdepth 1 -mindepth 1 -type d -exec rm -r {} \;';
+            toolbox::run($rmCmd,"noprint");            
+            
             return 1;
         }
         else
-        {
+        {   
             toolbox::exportLog("ERROR: tgicl::tgiclRun : ABORTED\n",0);		# tgicl have not been correctly done
             return 0;
         }
+        # come back to the working directory.
+        #chdir "../";
     }
     else
     {
