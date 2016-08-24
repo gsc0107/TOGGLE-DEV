@@ -1,0 +1,13 @@
+$order
+1=transabyss
+
+#PUT YOUR OWN SGE CONFIGURATION HERE
+#$sge
+#-q YOURQUEUE.q
+#-b Y
+#-V
+
+$transabyss
+--threads 1
+-k 32
+-c 1
