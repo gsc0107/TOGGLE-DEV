@@ -58,6 +58,7 @@ use toolbox;
 use onTheFly;
 use tophat;
 use HTSeq;
+use tgicl;
 
 #TO BE COMPLETED
 
@@ -147,6 +148,9 @@ my $hashOrder=toolbox::extractHashSoft($optionRef,"order"); #Picking up the opti
 
 #Global variables declaration
 
+##FASTA associated variables
+my $fastaFileIn="NA";
+
 ##FASTQ associated variables
 my ($fastqForwardIn, $fastqForwardOut, $fastqReverseIn, $fastqReverseOut)=("NA","NA","NA","NA");
 
@@ -179,7 +183,7 @@ my ($cleanerCommand, $compressorCommand,$replacementCommand);
 my $fileList=toolbox::readDir($previousDir);
 my $globalAnalysis=0; #to check if all data are to be treated one by one  (0) or in group (1)
 
-if ($$fileList[0] !~ m/fastq|fq|fastq\.gz|fq\.gz|sam|bam|vcf|bai|vcf\.gz$/)
+if ($$fileList[0] !~ m/fasta|fastq|fq|fastq\.gz|fq\.gz|sam|bam|vcf|bai|vcf\.gz$/)
 {
   toolbox::exportLog("ERROR: The input files are not in a format usable by TOGGLE",0); # Not the good formats
 }

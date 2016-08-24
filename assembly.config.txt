@@ -1,7 +1,5 @@
 $order
-1=trinity
-
-$cleaner
+1=tgicl
 
 #PUT YOUR OWN SGE CONFIGURATION HERE
 #$sge
@@ -9,6 +7,7 @@ $cleaner
 #-b Y
 #-V
 
-$trinity
---seqType fq
---max_memory 20G
+$tgicl
+-c 6
+-p 90
+-l 20

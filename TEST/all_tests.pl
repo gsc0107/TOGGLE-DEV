@@ -117,6 +117,40 @@ my $dataRefRnaseq = "../DATA/Bank/referenceRnaseq.fa";
 my $dataRefRnaseqGFF = "../DATA/Bank/referenceRnaseq.gff3";
 
 
+#####################
+## FASTA TESTS 
+#####################
+print "\n\n#################################################\n";
+print "#### TEST TGICL Assembly\n";
+print "#################################################\n";
+
+my $dataFasta = "../DATA/testData/fasta/TGICL";
+my $fileAssemblyNoSGE="../assembly.config.txt"; 
+
+# Remove files and directory created by previous test 
+my $testingDir="../DATA-TEST/tgiclPacaya-noSGE";
+my $cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+
+my $runCmd = "toggleGenerator.pl -c ".$fileAssemblyNoSGE." -d ".$dataFasta." -r ".$dataRefArcad." -o ".$testingDir;
+
+print "\n### $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for TGICL-Pacaya";
+
+# check final results
+
+# expected output content
+my $cmd = 'grep -c "^>" '.$testingDir.'/finalResults/all_contigs.fasta';
+##print $cmd;
+my $expectedAnswer="88";
+my $observedAnswer=`$cmd`;
+chomp($observedAnswer);
+#
+is($observedAnswer,$expectedAnswer,'tgicl::tgiclRun- output content');
+exit();
+__END__
+
 
 #####################
 ## FASTQ TESTS

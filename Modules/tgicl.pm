@@ -39,7 +39,7 @@ use Data::Dumper;
 
 sub tgiclRun
 {
-    my($FastaFileIn,$optionsHachees)=@_;
+    my($outputDir,$FastaFileIn,$optionsHachees)=@_;
     if ($FastaFileIn ne "NA" and  toolbox::checkFormatFasta($FastaFileIn)==1)
     {
         
@@ -47,7 +47,7 @@ sub tgiclRun
         my $command=$tgicl." ".$FastaFileIn." ".$options;		##command
         #Execute command
         #my $currentDir=`pwd`;
-        #chdir "$outputDir";
+        chdir $outputDir;
         
         if(toolbox::run($command)==1) ##The command should be executed correctly (ie return) before exporting the log
         {
@@ -64,16 +64,16 @@ sub tgiclRun
             ##remove the sub-repositories to avoid errors during copy in the finalResults repository.     
             my $rmCmd='find . -maxdepth 1 -mindepth 1 -type d -exec rm -r {} \;';
             toolbox::run($rmCmd,"noprint");            
-            
+    
             return 1;
         }
         else
         {   
-            toolbox::exportLog("ERROR: tgicl::tgiclRun : ABORTED\n",0);		# tgicl have not been correctly done
+            toolbox::exportLog("ERROR: tgicl::tgiclRun : ABORTED\n",0);		# tgicl have not been correctly done    
             return 0;
         }
         # come back to the working directory.
-        #chdir "../";
+        chdir "../";
     }
     else
     {

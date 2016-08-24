@@ -58,6 +58,10 @@ system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creati
 
 chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
 
+my $outdir="./outputDir";
+my $creatingSubDirCom="mkdir -p $outdir";                                    #Allows to have a working directory for the tests
+system($creatingSubDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingSubDirCom\n$!\n");
+chdir $outdir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $outdir\"\n$!\n");
 
 #######################################
 #Creating the IndividuSoft.txt file
@@ -71,13 +75,14 @@ system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt
 my $cleaningCommand="rm -Rf tgicl_TEST_log.*";
 system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
 
+
 ##########################################
 #tgiclCreateSequenceDictionary test
 ##########################################
 
 #Input file
 #my $reference = "../../DATA/testData/fasta/contig_tgicl.fasta"; 
-my $reference = "/home/adiall/TOGGLE-DEV/DATA/testData/fasta/contig_tgicl.fasta";
+my $reference = "/home/adiall/TOGGLE-DEV/DATA/testData/fasta/TGICL/contig_tgicl.fasta";  ### TODO: remplacer par chemin relatif mais bug dans module
 #Output file
 #my $readGroup = 'g02L5'; ## à remplacer par le readGroup
 
@@ -85,7 +90,7 @@ my $reference = "/home/adiall/TOGGLE-DEV/DATA/testData/fasta/contig_tgicl.fasta"
 ###  Test for tgiclRun 
 #########################################################
 
-is(tgicl::tgiclRun($reference),1,'tgicl::tgiclRun');
+is(tgicl::tgiclRun($outdir,$reference),1,'tgicl::tgiclRun');
 
 # expected output test
 
