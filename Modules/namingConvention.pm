@@ -172,6 +172,9 @@ sub correctName
         
         #FOR cutadapt functions
         case ($name =~ m/^cutadapt/i){$correctedName="cutadapt"} # Correction for cutadapt step
+        
+        #FOR transabyss functions
+        case ($name =~ m/^transabyss/i){$correctedName="transabyss"} # Correction for transabyss step
      
         
         

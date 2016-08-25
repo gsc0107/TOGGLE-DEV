@@ -58,6 +58,7 @@ use toolbox;
 use onTheFly;
 use tophat;
 use HTSeq;
+use transabyss;
 
 #TO BE COMPLETED
 

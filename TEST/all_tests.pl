@@ -121,6 +121,48 @@ my $dataRefRnaseqGFF = "../DATA/Bank/referenceRnaseq.gff3";
 #####################
 ## FASTQ TESTS
 #####################
+## TOGGLE assembly Transabyss
+#####################
+print "\n\n#################################################\n";
+print "#### TEST Transabyss assembly (single) / no SGE mode\n";
+print "#################################################\n";
+
+my $dataFastqsinglePacaya = "../DATA/testData/fastq/assembly/singlePacaya";
+my $fileAssemblyPairedNoSGE="../assembly.config.txt"; 
+
+# Remove files and directory created by previous test 
+my $testingDir="../DATA-TEST/singleOneIndividuPacaya-noSGE";
+my $cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+
+my $runCmd = "toggleGenerator.pl -c ".$fileAssemblyPairedNoSGE." -d ".$dataFastqsinglePacaya." -r ".$dataRefArcad." -o ".$testingDir;
+
+print "\n### $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuPacaya";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+my $observedOutput = `ls $testingDir/finalResults`;
+my @observedOutput = split /\n/,$observedOutput;
+my @expectedOutput = ('coverage.hist','g02-1.adj','g02-1.fa','g02-3.adj','g02-3.fa','g02-bubbles.fa','g02.DBG.COMPLETE','g02.FINAL.COMPLETE','g02-final.fa','g02-jn.fa','g02-jn.path','g02.JUNCTIONS.COMPLETE','g02.REFERENCES.COMPLETE','g02-ref.fa','g02-ref.path','g02.UNITIGS.COMPLETE');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - singleOneIndividu (no SGE) list ');
+
+# expected output content
+
+my $cmd = 'grep -c "^>" '.$testingDir.'/finalResults/g02-final.fa';
+#print $cmd;
+my $expectedOutput = "9";
+$observedOutput=`$cmd`;
+chomp($observedOutput);
+is($observedOutput,$expectedOutput, 'toggleGenerator - singleOneIndividu (no SGE) content ');
+
+exit();
+__END__
+
+#####################
 ## TOGGLE fastq pairedOneIndividuArcad
 #####################
 

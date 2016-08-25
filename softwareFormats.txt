@@ -161,3 +161,7 @@ OUT=NA
 $htseqCount
 IN=sam,bam
 OUT=NA
+
+$transabyss
+IN=fastq
+OUT=fasta
