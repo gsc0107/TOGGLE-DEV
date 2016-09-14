@@ -279,12 +279,12 @@ my $hashOrder=toolbox::extractHashSoft($configInfo,"order");					#Picking up the
 my @values = values($hashOrder);
 if ("processRadtags" ~~ @values)												# Check if processRadtags in step order
 {
-    radseq::checkOrder($outputDir,%param,$configInfo, $initialDir);
+    $initialDirContent = radseq::checkOrder($outputDir,%param);
+    $hashOrder = radseq::rmHashOrder($hashOrder)
 }
 
-
-print Dumper($hashOrder);
-exit();
+#print Dumper($hashOrder);
+#exit();
 
 foreach my $file (@{$initialDirContent})
 {
