@@ -160,7 +160,7 @@ sub processRadtags
 	radseq::parseKeyFile($keyFile);
 
 	#my $command = "$stacks/process_radtags --retain_header -p $initialDir -o $outDir -b $keyFile $options "; 		# running radseq
-	my $command = "$stacks/process_radtags -p $initialDir -o $outDir -b $keyFile $options "; 		# running radseq
+	my $command = "$stacks -p $initialDir -o $outDir -b $keyFile $options "; 		# running radseq
 
 
 	toolbox::exportLog("INFOS: radseq::processRadtags : $command\n",1);
@@ -190,20 +190,23 @@ sub processRadtags
 # 	- $outputDir : outputDir pass to toggle
 #	- $param : arg pass to toggle
 #	- $hashOrder : order of step
-#	- $configInfo : configInfo
 #	- $initialDir : initialDir
 ################################################################################################
-# return boolean :
-#	- 1 if runned correctly
-#	- else 0
+# return  :
+#	- $initialDirContent
 ################################################################################################
 
 sub checkOrder
 {
-	toolbox::exportLog("ERROR: radseq::processRadtags : should get at least four arguments\n",0) if (@_ < 4);
-	my ($outputDir,%param,$configInfo, $initialDir)=@_;
+	toolbox::exportLog("ERROR: radseq::checkOrder : should get at least two arguments\n",0) if (@_ < 2);
+	my ($outputDir,%param)=@_;
 
+	my $fileConf = $param{'-c'};
+	my $initialDir = $param{'-d'};        # recovery of the name of the directory to analyse
+	my $configInfo=toolbox::readFileConf($fileConf);
+	my $optionsRadtags=toolbox::extractHashSoft($configInfo,"processRadtags"); 		# Picking up the options for radseq::processRadtags
 	my $hashOrder=toolbox::extractHashSoft($configInfo,"order");					#Picking up the options for the order of the pipeline
+
 	my $resultsDirRadseq = "demultiplexing";
 	my $workingDirRadseq = $outputDir."/$resultsDirRadseq";
 	my @firstKeys;
@@ -219,7 +222,7 @@ sub checkOrder
 		else
 		{
 			toolbox::makeDir($workingDirRadseq);
-			my $optionsRadtags=toolbox::extractHashSoft($configInfo,"processRadtags"); 		# Picking up the options for radseq::processRadtags
+
 			radseq::executeDemultiplexing($keyFile,$initialDir,$workingDirRadseq,$optionsRadtags);
 	  }
 	}
@@ -229,22 +232,25 @@ sub checkOrder
 	}
 
 	my $initialDirContent=toolbox::readDir($workingDirRadseq);
-	#delete key processRadtags in hashOrder
-	delete $$hashOrder{$firstKeys[0]};
 
+	return $initialDirContent
 }
 ################################################################################################
 # END sub radseq::checkOrder
 ################################################################################################
 
+sub rmHashOrder
+{
+	toolbox::exportLog("ERROR: radseq::rmHashOrder : should get at least one arguments\n",0) if (@_ < 1);
+	my ($hashOrder)=@_;
 
-
-	#my @firstKeys = sort {$a <=> $b} (keys(%{$hashOrder}));
-	#if ($hashOrder->{$firstKeys[0]} eq "processRadtags")
-	#{
-		#delete $$hashOrder{$firstKeys[0]};
-	#}
-
+	my @firstKeys = sort {$a <=> $b} (keys(%{$hashOrder}));
+	if ($hashOrder->{$firstKeys[0]} eq "processRadtags")
+	{
+		delete $$hashOrder{$firstKeys[0]};
+	}
+	return $hashOrder;
+}
 1;
 
 
