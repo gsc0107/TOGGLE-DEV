@@ -282,9 +282,10 @@ if ("processRadtags" ~~ @values)												# Check if processRadtags in step or
     $initialDirContent = radseq::checkOrder($outputDir,%param);
     $hashOrder = radseq::rmHashOrder($hashOrder)
 }
+#########################################
+# END check if 1=processRadtags in $order
+#########################################
 
-#print Dumper($hashOrder);
-#exit();
 
 foreach my $file (@{$initialDirContent})
 {
