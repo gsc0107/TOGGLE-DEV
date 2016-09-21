@@ -57,20 +57,25 @@ use toolbox;
 
 sub executeDemultiplexing
 {
-	toolbox::exportLog("ERROR: radseq::executeDemultiplexing : should done at least one arguments\n",0) if (@_ < 4);
-	my ($keyFile,$initialDir,$workingDirRadseq,$optionsRadtags)=@_;
+	toolbox::exportLog("ERROR: radseq::executeDemultiplexing : should done at least five arguments\n",0) if (@_ < 5);
+	my ($keyFile,$initialDir,$workingDirRadseq,$optionsRadtags, $checkFastq)=@_;
 	toolbox::exportLog("#########################################\nINFOS: Demultiplexing Step \n#########################################\n",1);
 
 	my $initialDirContent=toolbox::readDir($initialDir);
-	foreach my $file (@{$initialDirContent})
+	
+	if ( $checkFastq == 0 )
 	{
-	  toolbox::checkFormatFastq($file);
+		foreach my $file (@{$initialDirContent})
+		{
+			toolbox::checkFormatFastq($file);
+		}
 	}
+
 	radseq::processRadtags($keyFile, $initialDir, $workingDirRadseq, $optionsRadtags);	# run demultiplexing
 	# Reinitialise the initialDir with output of demultiplexing and add output for toggle
 	$initialDirContent=toolbox::readDir($workingDirRadseq);
 
-	#check if data files are not empty
+	#check if data files are not empty because sometime demultiplexing created empty file
 	foreach my $file (@{$initialDirContent})
 	{
 	  if (toolbox::sizeFile($file) == 0)   #file empty
@@ -198,11 +203,10 @@ sub processRadtags
 
 sub checkOrder
 {
-	toolbox::exportLog("ERROR: radseq::checkOrder : should get at least two arguments\n",0) if (@_ < 2);
-	my ($outputDir,%param)=@_;
+	toolbox::exportLog("ERROR: radseq::checkOrder : should get at least five arguments\n",0) if (@_ < 5);
+	my ($outputDir,$fileConf,$initialDir,$checkFastq,%param)=@_;
 
-	my $fileConf = $param{'-c'};
-	my $initialDir = $param{'-d'};        # recovery of the name of the directory to analyse
+
 	my $configInfo=toolbox::readFileConf($fileConf);
 	my $optionsRadtags=toolbox::extractHashSoft($configInfo,"processRadtags"); 		# Picking up the options for radseq::processRadtags
 	my $hashOrder=toolbox::extractHashSoft($configInfo,"order");					#Picking up the options for the order of the pipeline
@@ -223,7 +227,7 @@ sub checkOrder
 		{
 			toolbox::makeDir($workingDirRadseq);
 
-			radseq::executeDemultiplexing($keyFile,$initialDir,$workingDirRadseq,$optionsRadtags);
+			radseq::executeDemultiplexing($keyFile,$initialDir,$workingDirRadseq,$optionsRadtags,$checkFastq);
 	  }
 	}
 	else
@@ -242,10 +246,10 @@ sub checkOrder
 sub rmHashOrder
 {
 	toolbox::exportLog("ERROR: radseq::rmHashOrder : should get at least one arguments\n",0) if (@_ < 1);
-	my ($hashOrder)=@_;
+	my ($hashOrder,$stepName)=@_;
 
 	my @firstKeys = sort {$a <=> $b} (keys(%{$hashOrder}));
-	if ($hashOrder->{$firstKeys[0]} eq "processRadtags")
+	if ($hashOrder->{$firstKeys[0]} eq $stepName)
 	{
 		delete $$hashOrder{$firstKeys[0]};
 	}

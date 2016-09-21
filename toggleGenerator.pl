@@ -98,12 +98,11 @@ my $initialDir = $param{'-d'};        # recovery of the name of the directory to
 my $fileConf = $param{'-c'};          # recovery of the name of the software.configuration.txt file
 my $refFastaFile = $param{'-r'};      # recovery of the reference file
 my $outputDir = $param{'-o'};         # recovery of the output folder
-
 my $gffFile;                          # recovery of the gff file used by topHat and rnaseq analysis
 $gffFile = $param{'-g'} if (defined $param{'-g'});
 
-
-
+ my $checkFastq = 1;
+ $checkFastq = 0 if (defined $param{'-nocheckfastq'});
 
 
 ##########################################
@@ -279,8 +278,8 @@ my $hashOrder=toolbox::extractHashSoft($configInfo,"order");					#Picking up the
 my @values = values($hashOrder);
 if ("processRadtags" ~~ @values)												# Check if processRadtags in step order
 {
-    $initialDirContent = radseq::checkOrder($outputDir,%param);
-    $hashOrder = radseq::rmHashOrder($hashOrder)
+    $initialDirContent = radseq::checkOrder($outputDir,$fileConf,$initialDir,$checkFastq,%param);
+    $hashOrder = radseq::rmHashOrder($hashOrder, "processRadtags")
 }
 #########################################
 # END check if 1=processRadtags in $order

@@ -92,7 +92,7 @@ my $hashOrder = \%hashOrder;
 
 # execution test
 my $hashOrderRM;
-$hashOrderRM = radseq::rmHashOrder($hashOrder);
+$hashOrderRM = radseq::rmHashOrder($hashOrder, "processRadtags");
 
 # expected content test
 is_deeply($hashOrder, $hashOrderRM, "radseq::rmHashOrder - cleanning step one OK");               # TEST IF THE STRUCTURE OF THE FILE OUT IS GOOD
@@ -104,11 +104,10 @@ is_deeply($hashOrder, $hashOrderRM, "radseq::rmHashOrder - cleanning step one OK
 
 
 my $outputDir = "./";
-my %param = (
-				'-c' => '../../demultiplexingPaired.config.txt',
-				'-d' => '../../DATA/testData/radseq/single/',
-				'-k' => '../../DATA/testData/radseq/keyfileTestSingle'
-				);
+my $fileConf = '../../demultiplexingPaired.config.txt';
+my $initialDir = '../../DATA/testData/radseq/single/';
+my %param = ('-k' => '../../DATA/testData/radseq/keyfileTestSingle');
+my $checkFastq = 1;
 
 
 # execution test
@@ -117,7 +116,7 @@ my $initialDirContent;
 #print Dumper($initialDirContent);
 
 my @expectedOutput = ('.//demultiplexing/33-16.fq', './/demultiplexing/A239.fq', './/demultiplexing/A272.fq', './/demultiplexing/A554.fq', './/demultiplexing/A619.fq', './/demultiplexing/A632.fq', './/demultiplexing/A654.fq', './/demultiplexing/A659.fq', './/demultiplexing/A680.fq', './/demultiplexing/A682.fq', './/demultiplexing/B103.fq', './/demultiplexing/B104.fq', './/demultiplexing/B109.fq', './/demultiplexing/B10.fq', './/demultiplexing/B73Htrhm.fq', './/demultiplexing/B76.fq', './/demultiplexing/B77.fq', './/demultiplexing/B84.fq', './/demultiplexing/B97.fq', './/demultiplexing/C103.fq', './/demultiplexing/CH701-30.fq', './/demultiplexing/CI28A.fq', './/demultiplexing/CI3A.fq', './/demultiplexing/CI66.fq', './/demultiplexing/CI-7.fq', './/demultiplexing/CM105.fq', './/demultiplexing/CM174.fq', './/demultiplexing/CML14.fq', './/demultiplexing/CML157Q.fq', './/demultiplexing/CML220.fq', './/demultiplexing/CML228.fq', './/demultiplexing/CML238.fq', './/demultiplexing/CML258.fq', './/demultiplexing/CML277.fq', './/demultiplexing/CML281.fq', './/demultiplexing/CML311.fq', './/demultiplexing/CML323.fq', './/demultiplexing/CML332.fq', './/demultiplexing/CML333.fq', './/demultiplexing/CML45.fq', './/demultiplexing/CML52.fq', './/demultiplexing/CML91.fq', './/demultiplexing/CML92.fq', './/demultiplexing/CO106.fq', './/demultiplexing/CO125.fq', './/demultiplexing/DE-2.fq', './/demultiplexing/DE-3.fq', './/demultiplexing/EMPTY.fq', './/demultiplexing/EP1.fq', './/demultiplexing/F6.fq', './/demultiplexing/F7.fq', './/demultiplexing/H91.fq', './/demultiplexing/H95.fq', './/demultiplexing/I137TN.fq', './/demultiplexing/I29.fq', './/demultiplexing/IDS28.fq', './/demultiplexing/K55.fq', './/demultiplexing/Ki11.fq', './/demultiplexing/Ki14.fq', './/demultiplexing/L317.fq', './/demultiplexing/M14.fq', './/demultiplexing/NC230.fq', './/demultiplexing/NC250.fq', './/demultiplexing/NC262.fq', './/demultiplexing/NC290A.fq', './/demultiplexing/NC298.fq', './/demultiplexing/NC300.fq', './/demultiplexing/NC318.fq', './/demultiplexing/NC320.fq', './/demultiplexing/NC328.fq', './/demultiplexing/NC338.fq', './/demultiplexing/NC356.fq', './/demultiplexing/NC364.fq', './/demultiplexing/NC368.fq', './/demultiplexing/Oh40B.fq', './/demultiplexing/Oh43E.fq', './/demultiplexing/Oh603.fq', './/demultiplexing/Os420.fq', './/demultiplexing/Pa875.fq', './/demultiplexing/R109B.fq', './/demultiplexing/R168.fq', './/demultiplexing/SC213R.fq', './/demultiplexing/Sg18.fq', './/demultiplexing/tripsacum.fq', './/demultiplexing/Tzi25.fq', './/demultiplexing/Va22.fq', './/demultiplexing/Va35.fq', './/demultiplexing/Va59.fq', './/demultiplexing/Va99.fq', './/demultiplexing/W117Ht.fq', './/demultiplexing/W153R.fq', './/demultiplexing/W182B.fq', './/demultiplexing/W22.fq', './/demultiplexing/WD.fq' );
-is_deeply(radseq::checkOrder($outputDir,%param),\@expectedOutput,'radseq::checkOrder - running');
+is_deeply(radseq::checkOrder($outputDir,$fileConf,$initialDir,$checkFastq,%param),\@expectedOutput,'radseq::checkOrder - running');
 
 # expected output test
 #Check if files created
