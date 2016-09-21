@@ -94,8 +94,11 @@ my $hashOrderOk =   {
                                         "3" => "samToolsSort"
                                     }
                     };
+my %param = (
+                        "-r" => "../../DATA/Bank/referenceIrigin.fasta"
+);
 
-my @output = onTheFly::checkOrder($hashOrderOk);
+my @output = onTheFly::checkOrder($hashOrderOk,%param);
 my @expected=('1','3');
 is_deeply(\@output,\@expected,'onTheFly::checkOrder - normal order');
 
@@ -120,7 +123,7 @@ my $hashOrderNAOk =   {
                                     }
                     };
 
-@output = onTheFly::checkOrder($hashOrderNAOk);
+@output = onTheFly::checkOrder($hashOrderNAOk,%param);
 @expected=('1','4');
 is_deeply(\@output,\@expected,'onTheFly::checkOrder - dead-end beginning');
 
@@ -133,7 +136,7 @@ my $hashOrderNAOkBis =   {
                                         "4" => "samToolsSort"
                                     }
                     };
-@output = onTheFly::checkOrder($hashOrderNAOkBis);
+@output = onTheFly::checkOrder($hashOrderNAOkBis,%param);
 @expected=('1','4');
 is_deeply(\@output,\@expected,'onTheFly::checkOrder - dead-end intermediate');
 
@@ -143,7 +146,7 @@ my $hashOrderSingle =   {
                                         "3" => "bwaSampe"
                                     }
                     };
-@output = onTheFly::checkOrder($hashOrderSingle);
+@output = onTheFly::checkOrder($hashOrderSingle,%param);
 @expected=('3','3');
 is_deeply(\@output,\@expected,'onTheFly::checkOrder - Single software');
 
@@ -157,7 +160,7 @@ my $hashOrderMultiple =   {
                                         "4" => "samToolsView"
                                     }
                     };
-@output = onTheFly::checkOrder($hashOrderMultiple);
+@output = onTheFly::checkOrder($hashOrderMultiple,%param);
 @expected=('1','4');
 is_deeply(\@output,\@expected,'onTheFly::checkOrder - multiple calls of the same software');
 
