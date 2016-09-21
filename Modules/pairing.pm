@@ -66,8 +66,8 @@ use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 #########################################
 sub pairRecognition
 {
-    
-    my ($folder)=@_;		# recovery of informations
+    toolbox::exportLog("ERROR: pairing::pairRecognition : should done at least two arguments\n",0) if (@_ < 2);
+    my ($folder,$checkFastq)=@_;		# recovery of informations
     my %pairs;
     use Data::Dumper;
     
@@ -75,52 +75,55 @@ sub pairRecognition
     my $listFiles_ref=toolbox::readDir($folder);
     my @listFiles=@{$listFiles_ref};
     
-    foreach my $currentFile (@listFiles)		# for each file
-    {  
-	my $checkFastq=toolbox::checkFormatFastq($currentFile);		# check the file is a fastq one
-	if ($checkFastq == 0)		# If the file is not a Fastq File, we cannot consider it
-	{
-	    next; # go to the next sequence
-	}
 	
-	# If the file is a fastq one:
-	my $firstLineComplete=`head -n 1 $currentFile`;		#Fetching the first line to obtain the ID sequence
-	#if the file is a gz Compressed file
-	$firstLineComplete = `zcat $currentFile | head -n 1` if ($currentFile =~ m/gz$/);
-	chomp $firstLineComplete;
-	my $namingConvention;		#Infos for the type of modification
+	foreach my $currentFile (@listFiles)		# for each file
+	{  
+		if ($checkFastq == 1 )
+		{	
+			my $isFastq=toolbox::checkFormatFastq($currentFile);		# check the file is a fastq one
+			if ($isFastq == 0)		# If the file is not a Fastq File, we cannot consider it
+			{
+				next; # go to the next sequence
+			}
+		}
 	
-	#We need 3 infos: the coding convention ($namingConvention), the name of the pair ($sequenceName) and the strand of the current mate of the pair ($typeOfStrand)
-	
-	#Picking up the name of the pair and its coding convention 
-	my $sequenceName=$firstLineComplete; 
-	$sequenceName =~ s/\/.$// and $namingConvention = 1; # old agreement /1 /2
-	$sequenceName =~ s/\s\d:\w:\d:.*$// and $namingConvention = 2; # new agreement 1:N:[A-Z]1 to 10
-	
-	#Picking up the strand of the current mate of the pair 
-	my $typeOfStrand=$firstLineComplete;
-	$typeOfStrand =~ s/.+\/(.)$/$1/ if $namingConvention == 1;
-	$typeOfStrand =~ s/.+\s(\d:\w:\d:.*)$/$1/ if $namingConvention == 2;
-	
-	#Converting the end of Line in forward and reverse
-	my $nameOfStrand = "unknown"; # May correspond to the single sequence
-	$nameOfStrand = "forward" if $typeOfStrand =~ m/^1/;
-	$nameOfStrand = "reverse" if $typeOfStrand =~ m/^2/;
-	
-	#Completing the hash
-	$pairs{$sequenceName}{$nameOfStrand}=$currentFile;
-	
-	
-	if  (not defined($pairs{$sequenceName}{"ReadGroup"})) #If the current file is the first one of the pair, we do not have yet infos on the readGroup to be associated with
-	{
-	    my ($tag, $readGroup) = extractName($currentFile); #picking up the info of readGroup based on the name of the file
-	    $pairs{$sequenceName}{"ReadGroup"}=$readGroup; #Adding the readGroup to the name
-	}
+		# If the file is a fastq one:
+		my $firstLineComplete=`head -n 1 $currentFile`;		#Fetching the first line to obtain the ID sequence
+		#if the file is a gz Compressed file
+		$firstLineComplete = `zcat $currentFile | head -n 1` if ($currentFile =~ m/gz$/);
+		chomp $firstLineComplete;
+		my $namingConvention;		#Infos for the type of modification
+		
+		#We need 3 infos: the coding convention ($namingConvention), the name of the pair ($sequenceName) and the strand of the current mate of the pair ($typeOfStrand)
+		
+		#Picking up the name of the pair and its coding convention 
+		my $sequenceName=$firstLineComplete; 
+		$sequenceName =~ s/\/.$// and $namingConvention = 1; # old agreement /1 /2
+		$sequenceName =~ s/\s\d:\w:\d:.*$// and $namingConvention = 2; # new agreement 1:N:[A-Z]1 to 10
+		
+		#Picking up the strand of the current mate of the pair 
+		my $typeOfStrand=$firstLineComplete;
+		$typeOfStrand =~ s/.+\/(.)$/$1/ if $namingConvention == 1;
+		$typeOfStrand =~ s/.+\s(\d:\w:\d:.*)$/$1/ if $namingConvention == 2;
+		
+		#Converting the end of Line in forward and reverse
+		my $nameOfStrand = "unknown"; # May correspond to the single sequence
+		$nameOfStrand = "forward" if $typeOfStrand =~ m/^1/;
+		$nameOfStrand = "reverse" if $typeOfStrand =~ m/^2/;
+		
+		#Completing the hash
+		$pairs{$sequenceName}{$nameOfStrand}=$currentFile;
+		
+		
+		if  (not defined($pairs{$sequenceName}{"ReadGroup"})) #If the current file is the first one of the pair, we do not have yet infos on the readGroup to be associated with
+		{
+			my ($tag, $readGroup) = extractName($currentFile); #picking up the info of readGroup based on the name of the file
+			$pairs{$sequenceName}{"ReadGroup"}=$readGroup; #Adding the readGroup to the name
+		}
     }
     
     #Exporting log   
     return (\%pairs);
-    
 }
 #########################################
 #createDirPerCouple
@@ -166,17 +169,20 @@ sub createDirPerCouple
 ##################################################################################
 sub repairing
 {
-    toolbox::exportLog("ERROR: pairing::repairing : should get at least two arguments\n",0) if (@_ < 2);
+    toolbox::exportLog("ERROR: pairing::repairing : should get at least four arguments\n",0) if (@_ < 4);
 
-    my($forwardFile,$reverseFile,$directory)=@_;		# recovery of informations
+    my($forwardFile,$reverseFile,$directory,$checkFastq)=@_;		# recovery of informations
     
     toolbox::existsDir($directory);		# check if the directory exits  
     my $dirOut=defined($directory)?$directory.'/':'./';		#### ????????????????
 
     #Check Fastq format
-    toolbox::checkFormatFastq($forwardFile);		# check if forward file is a fastq one
-    toolbox::checkFormatFastq($reverseFile);		# check if reverse file is a fastq one
-    
+	if ($checkFastq == 1 )
+	{
+		toolbox::checkFormatFastq($forwardFile);		# check if forward file is a fastq one
+		toolbox::checkFormatFastq($reverseFile);		# check if reverse file is a fastq one
+	}
+
     #Extraction of the name and creation of output names
     my ($forwardTag,$readGroup) = extractName($forwardFile);
     my $forwardFileOut=$dirOut.$forwardTag.".REPAIRING.fastq";
