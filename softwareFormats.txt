@@ -1,30 +1,37 @@
 $bwaAln
 IN=fastq
 OUT=sai
+MANDATORY=reference
 
 $bwaSampe
 IN=fastq,sai
 OUT=sam
+MANDATORY=reference
 
 $bwaSamse
 IN=fastq,sai
 OUT=sam
+MANDATORY=reference
 
 $bwaMem
 IN=fastq
 OUT=sam
+MANDATORY=reference
 
 $bowtieBuild
 IN=fasta
 OUT=NA
+MANDATORY=reference
 
 $bowtie2Build
 IN=fasta
 OUT=NA
+MANDATORY=reference
 
 $bwaIndex
 IN=fasta
 OUT=NA
+MANDATORY=reference
 
 $samToolsSort
 IN=bam
@@ -37,6 +44,7 @@ OUT=sam,bam
 #$samToolsFaidx
 #IN=fasta
 #OUT=NA
+#MANDATORY=reference
 
 $samToolsIndex
 IN=bam
@@ -73,38 +81,47 @@ OUT=NA
 $gatkHaplotypeCaller
 IN=bam,vcf
 OUT=vcf
+MANDATORY=reference
 
 $gatkBaseRecalibrator
 IN=bam
 OUT=NA
+MANDATORY=reference
 
 $gatkPrintReads
 IN=bam
 OUT=bam
+MANDATORY=reference
 
 $gatkRealignerTargetCreator
 IN=bam,fasta
 OUT=intervals
+MANDATORY=reference
 
 $gatkIndelRealigner
 IN=intervals,bam,fasta
 OUT=bam
+MANDATORY=reference
 
 $gatkSelectVariants
 IN=vcf
 OUT=vcf
+MANDATORY=reference
 
 $gatkVariantFiltration
 IN=vcf
 OUT=vcf
+MANDATORY=reference
 
 $gatkUnifiedGenotyper
 IN=bam,vcf
 OUT=vcf
+MANDATORY=reference
 
 #$gatkReadBackedPhasing
 #IN=vcf,bam
 #OUT=vcf
+#MANDATORY=reference
 
 #$checkEncodeByASCIIcontrol
 #IN=fastq
@@ -121,6 +138,7 @@ OUT=vcf
 #$snpeffAnnotation
 #IN=vcf,gff
 #OUT=vcf
+MANDATORY=gff
 
 $cutadapt
 IN=fastq
@@ -129,6 +147,7 @@ OUT=fastq
 $tophat2
 IN=fastq
 OUT=bam
+MANDATORY=reference,gff
 
 $picardToolsSortSam
 IN=sam,bam
@@ -157,11 +176,14 @@ OUT=sam,bam
 $picardToolsCreateSequenceDictionary
 IN=fasta
 OUT=NA
+MANDATORY=reference
 
 $htseqCount
 IN=sam,bam
 OUT=NA
+MANDATORY=gff
 
 $processRadtags
 IN=fastq
 OUT=fastq
+MANDATORY=keyfile
