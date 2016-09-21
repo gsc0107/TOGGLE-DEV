@@ -47,6 +47,9 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 
 [You can find a detailed MANUAL here][manualLink]
 
+## KNOWN ISSUES
+[You can find detailed known issues][KnownIssues]
+
 ## Release Notes
 
 [Current Release Notes][releaseLink]
