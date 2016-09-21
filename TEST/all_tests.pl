@@ -569,6 +569,10 @@ is($observedOutput,$expectedOutput, 'toggleGenerator - One Sam (no SGE) content 
 #Input data
 $dataOneBam = "../DATA/testData/samBam/oneBamUnsorted/";
 
+print "\n\n#################################################\n";
+print "#### TEST SAMtools sort and other blocks / no SGE mode\n";
+print "#################################################\n";
+
 
 # Remove files and directory created by previous test 
 $testingDir="../DATA-TEST/oneBam-noSGE-otherBlocks";
