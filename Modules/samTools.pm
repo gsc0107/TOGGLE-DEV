@@ -170,7 +170,7 @@ sub samToolsSort
           {
                $options=toolbox::extractOptions($optionsHachees);
           }
-          my $command=$samtools." sort ".$options." ".$bamFileIn." > ".$bamFileOut;
+          my $command=$samtools." sort ".$options." ".$bamFileIn." -o ".$bamFileOut;
           
           #Execute command
           if(toolbox::run($command)==1)
