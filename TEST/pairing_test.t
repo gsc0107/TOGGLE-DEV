@@ -106,6 +106,7 @@ is_deeply($obsRG2,$expectRG2,'pairing::extractName - RG RC3');
 ########################################
 
 # input file
+my $checkFastq = 1;
 my $fastqFile1 = $expectedData."RC*_1.fastq";     # fastq file 
 my $copyCmd= "cp $fastqFile1 pairingDir";           # command to copy the original fastq file into the test directory
 system ($copyCmd) and die ("ERROR: $0 : Cannot copy the file $fastqFile1 in the test directory with the command $copyCmd\n$!\n");    # RUN the copy command
@@ -132,7 +133,7 @@ my $expectedOutput={
                                                 } 
         };
 
-my $observedOutput=pairing::pairRecognition("pairingDir");
+my $observedOutput=pairing::pairRecognition("pairingDir",$checkFastq);
 ##DEBUG print "pairRecognition Expected :\n"; print Dumper ($expectedOutput);print "pairRecognition Observed:\n"; print Dumper ($observedoutput);
 is_deeply($observedOutput,$expectedOutput,'pairing::pairRecognition - output list');
 
@@ -185,7 +186,7 @@ system ($copyCmd) and die ("ERROR: $0 : Cannot link the file $fastqFile2 in the 
 
 
 #Check if running
-my $checkValue=pairing::repairing('RC3_1.CUTADAPT.fastq','RC3_2.CUTADAPT.fastq',".");
+my $checkValue=pairing::repairing('RC3_1.CUTADAPT.fastq','RC3_2.CUTADAPT.fastq',".",$checkFastq);
 is ($checkValue,'1','pairing::repairing - running');
 
 #Check if files created
