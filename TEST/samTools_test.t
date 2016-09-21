@@ -330,7 +330,7 @@ $observedOutput = `ls`;
 is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsIdxstats - output list');
 
 # expected output structure
-$expectedMD5sum = "c08ff58a41733e3e1ab782ca22653397";
+$expectedMD5sum = "0cbd99e7e43e2a515b53f61c696d4949";
 $observedMD5sum=`md5sum $statsBamFile`;	# structure of the test file
 @withoutName = split (" ", $observedMD5sum);    				# to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];     						# just to have the md5sum result
