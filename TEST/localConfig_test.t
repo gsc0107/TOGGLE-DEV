@@ -64,7 +64,8 @@ while (<LOCALCONFIG>)
 	{
 		chop $_;
 		my @line = split ("our ", $_);
-		$line[1] =~ s/\s=\s/=/g;
+		$line[1] =~ s/\s=\s/=/g; # remove space $java = "/....";
+		$line[1] =~ s/;\s*$//g; # remove ;\s in the end line
 		@line = split("=", $line[1]);
 		$line[1]=~s/"//g if defined $line[1];
 		$dictLocation{$line[0]} = $line[1];
