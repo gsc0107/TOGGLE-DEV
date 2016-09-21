@@ -63,7 +63,7 @@ sub executeDemultiplexing
 
 	my $initialDirContent=toolbox::readDir($initialDir);
 	
-	if ( $checkFastq == 0 )
+	if ( $checkFastq == 1 )
 	{
 		foreach my $file (@{$initialDirContent})
 		{
