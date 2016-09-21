@@ -182,7 +182,7 @@ is($observedMD5sum,$expectedMD5sum,'samTools::samToolsView - output structure');
 ################################################################################################
 
 #Output file
-$bamFileOut = "RC3.SAMTOOOLSSORT";
+$bamFileOut = "RC3.SAMTOOOLSSORT.bam";
 
 #execution test
 is(samTools::samToolsSort($bamFile, $bamFileOut),1,'samTools::samToolsSort');
