@@ -47,6 +47,10 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 
 [You can find a detailed MANUAL here][manualLink]
 
+## KNOWN ISSUES
+
+[You can find detailed known issues][knownIssues]
+
 ## Release Notes
 
 [Current Release Notes][releaseLink]
@@ -156,4 +160,6 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 [paperLink]:http://www.biomedcentral.com/1471-2105/16/374
 [installLink]:https://github.com/SouthGreenPlatform/TOGGLE/blob/master/INSTALL.md
 [manualLink]:https://github.com/SouthGreenPlatform/TOGGLE/blob/master/MANUAL.md
+[knownIssues]:https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/master/KnownIssues.md
 [releaseLink]:https://github.com/SouthGreenPlatform/TOGGLE/blob/master/ReleaseNotes.md
+
