@@ -562,8 +562,40 @@ chomp $observedOutput;
 $expectedOutput="2290182	1013	.	A	G	42.74	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=21.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:70,6,0";
 is($observedOutput,$expectedOutput, 'toggleGenerator - One Sam (no SGE) content ');
 
+#####################
+## TOGGLE samtools sortsam and other blocks
+#####################
+
+#Input data
+$dataOneBam = "../DATA/testData/samBam/oneBamUnsorted/";
 
 
+# Remove files and directory created by previous test 
+$testingDir="../DATA-TEST/oneBam-noSGE-otherBlocks";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for samtools sort and other blocks";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('unsorted.SAMTOOLSSORT.bam');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) sorting list ');
+
+# expected output content
+$observedOutput=`samtools view $testingDir/finalResults/unsorted.SAMTOOLSSORT.bam | head -n 2 | cut -f4`; # We pick up only the position field
+chomp $observedOutput;
+my @position = split /\n/, $observedOutput;
+$observedOutput= 0;
+$observedOutput = 1 if ($position[0] < $position[1]); # the first read is placed before the second one
+is($observedOutput,"1", 'toggleGenerator - One Bam (no SGE) sorting content ');
 
 
 
