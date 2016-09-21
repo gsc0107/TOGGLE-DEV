@@ -300,7 +300,7 @@ if ($previousExtension eq "fastq")               # the data are all in FASTQ for
     #########################################
     # recognition of pairs of files and create a folder for each pair
     #########################################
-    my $pairsInfos = pairing::pairRecognition($workingDir);            # from files fasta recognition of paired files
+    my $pairsInfos = pairing::pairRecognition($workingDir,$checkFastq);            # from files fasta recognition of paired files
     pairing::createDirPerCouple($pairsInfos,$workingDir);              # from infos of pairs, construction of the pair folder
 
     ##DEBUG toolbox::exportLog("INFOS: $0 : toolbox::readDir : $workingDir after create dir per couple: @$listOfFiles\n",1);
