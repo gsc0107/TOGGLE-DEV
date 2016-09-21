@@ -96,13 +96,14 @@ foreach my $inputParameters (keys %param)
 
 my $initialDir = $param{'-d'};        # recovery of the name of the directory to analyse
 my $fileConf = $param{'-c'};          # recovery of the name of the software.configuration.txt file
-my $refFastaFile = $param{'-r'};      # recovery of the reference file
 my $outputDir = $param{'-o'};         # recovery of the output folder
-my $gffFile;                          # recovery of the gff file used by topHat and rnaseq analysis
-$gffFile = $param{'-g'} if (defined $param{'-g'});
 
- my $checkFastq = 1;
- $checkFastq = 0 if (defined $param{'-nocheckfastq'});
+my $refFastaFile = $param{'-r'} if (defined $param{'-r'});      # recovery of the reference file
+my $gffFile = $param{'-g'} if (defined $param{'-g'});           # recovery of the gff file used by topHat and rnaseq analysis
+my $keyfile = $param{'-k'} if (defined $param{'-k'});           # recovery of the keyfile used by radseq
+
+my $checkFastq = 1;
+$checkFastq = 0 if (defined $param{'-nocheckfastq'});
 
 
 ##########################################
@@ -177,7 +178,6 @@ while (my $line = <$fhConfig>)
 toolbox::exportLog("\n#########################################\nINFOS: Data checking \n#########################################\n",1);
 toolbox::checkFile($fileConf);                              # check if this file exists
 toolbox::existsDir($initialDir);                            # check if this directory exists
-toolbox::checkFile($refFastaFile);                          #Retriving the configuration
 
 ##########################################
 # Charging config Infos and copying the software config file
@@ -196,7 +196,7 @@ toolbox::run($copyCommand,"noprint");
 ##DEBUG }
 
 #Verifying the correct ordering for the experiment, based on input output files and recovering the last step value
-my ($firstOrder,$lastOrder) = onTheFly::checkOrder($configInfo);
+my ($firstOrder,$lastOrder) = onTheFly::checkOrder($configInfo,%param);
 
 
 ##########################################
