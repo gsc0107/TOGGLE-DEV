@@ -145,7 +145,7 @@ is($line,"cutadapt: error: At least one parameter needed: name of a FASTA or FAS
 ######################################
 
 #Be careful, we redirect only the STDIN, some java send it in STDOUT
-`$java 2> /tmp/out.txt`;#We works with the STDERR output
+`$java 2>/tmp/out.txt`;#We works with the STDERR output
 open(OUT,"<", "/tmp/out.txt");
 while (<OUT>) {
     $line=$_;
@@ -239,7 +239,7 @@ close OUT;
 unlink("/tmp/out.txt");
 
 is($line,"No input sequence or sequence file specified!
-Bowtie 2 version 2.2.5 by Ben Langmead (langmea\@cs.jhu.edu, www.cs.jhu.edu/~langmea)","Test for bowtie2-build location");
+Bowtie 2 version 2.2.9 by Ben Langmead (langmea\@cs.jhu.edu, www.cs.jhu.edu/~langmea)","Test for bowtie2-build location");
 
 ######################################
 # Testing the correct location of tophat2
