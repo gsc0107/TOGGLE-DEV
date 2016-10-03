@@ -149,7 +149,7 @@ chomp($observedAnswer);
 #
 is($observedAnswer,$expectedAnswer,'tgicl::tgiclRun- output content');
 exit();
-__END__
+
 
 
 #####################
