@@ -155,7 +155,7 @@ push(@{$bamIn},$bamOut);
 my $vcfOut="RC3.GATKUNIFIEDGENOTYPER.vcf";
 
 # execution test
-is(gatk::gatkUnifiedGenotyper($fastaRef,$bamIn, $vcfOut),1,'gatkUnifiedGenotyper');
+is(gatk::gatkUnifiedGenotyper($fastaRef,$bamIn, $vcfOut),1,'gatk::gatkUnifiedGenotyper');
 
 
 # expected output test
