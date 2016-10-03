@@ -1,0 +1,13 @@
+$order
+1=tgicl
+
+#PUT YOUR OWN SGE CONFIGURATION HERE
+#$sge
+#-q YOURQUEUE.q
+#-b Y
+#-V
+
+$tgicl
+-c 6
+-p 90
+-l 20

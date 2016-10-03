@@ -161,3 +161,7 @@ OUT=NA
 $htseqCount
 IN=sam,bam
 OUT=NA
+
+$tgicl
+IN=fasta
+OUT=fasta
