@@ -37,7 +37,7 @@ use warnings;
 use Exporter;
 
 our @ISA=qw(Exporter);
-our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $trinity);
+our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $pindel $trinity $ tgicl);
 
 #toggle path
 our $toggle="/path/to/toggleFolder";
@@ -76,8 +76,14 @@ our $cufflinks = "/path/to/cufflinks";
 our $cuffdiff = "/path/to/cuffdiff";
 our $cuffmerge = "/path/to/cuffmerge";
 
+#path for pindel
+our $pindel = "/path/to/pindel";
+
 #path for trinity
 our $trinity = "/path/to/trinity";
+
+#path for tgicl
+our $tgicl = "/path/to/tgicl";
 
 
 1;
