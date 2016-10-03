@@ -118,7 +118,7 @@ is_deeply(\@observedOutput,\@expectedOutput,'trinity::trinityRun - output list -
 
 my $cmd = 'grep -c "^>" '.$trinityPairedOutDir.$readGroup.'_Trinity.fasta';
 #print $cmd;
-my $expectedAnswer="17";
+my $expectedAnswer="13";
 my $observedAnswer=`$cmd`;
 chomp($observedAnswer);
 
@@ -142,7 +142,7 @@ is_deeply(\@observedOutput,\@expectedOutput,'trinity::trinityRun - output list -
 
 $cmd = 'grep -c "^>" '.$trinitySeveralOutDir.$readGroup.'_Trinity.fasta';
 #print $cmd;
-$expectedAnswer="15";
+$expectedAnswer="9";
 $observedAnswer=`$cmd`;
 chomp($observedAnswer);
 
