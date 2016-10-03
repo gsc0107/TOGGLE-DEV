@@ -1,5 +1,0 @@
-package structuralVariant
-
-
-
-1;
