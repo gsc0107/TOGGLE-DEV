@@ -1,6 +1,9 @@
 $order
 1=tgicl
 
+$compressor
+1
+
 #PUT YOUR OWN SGE CONFIGURATION HERE
 #$sge
 #-q YOURQUEUE.q
@@ -11,3 +14,9 @@ $tgicl
 -c 6
 -p 90
 -l 20
+
+$trinity
+--seqType fq
+--max_memory 20G
+--full_cleanup
+

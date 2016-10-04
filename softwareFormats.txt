@@ -165,3 +165,8 @@ OUT=NA
 $tgicl
 IN=fasta
 OUT=fasta
+
+$trinity
+IN=fastq
+OUT=fasta
+

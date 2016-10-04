@@ -59,6 +59,8 @@ use onTheFly;
 use tophat;
 use HTSeq;
 use tgicl;
+use trinity;
+
 
 #TO BE COMPLETED
 

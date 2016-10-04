@@ -49,10 +49,14 @@
 # *** VCF ***
 #   - TOGGLE VCF singleVCF
 #   - TOGGLE VCF vcfForRecalibration
+# *** Assembly ***
+#   - TOGGLE Assembly Trinity
+#
 
 
 
-use strict;
+
+#use strict;
 use warnings;
 use Test::More 'no_plan'; 
 use Test::Deep;
@@ -154,11 +158,36 @@ is($observedAnswer,$expectedAnswer,'tgicl::tgiclRun- output content');
 
 #####################
 ## FASTQ TESTS
+
+#####################
+## TOGGLE assembly pairedOneIndividuPacaya
+#####################
+print "\n\n#################################################\n";
+print "#### TEST Trinity assembly pairedOneIndividuPacaya (one individu) / no SGE mode\n";
+print "#################################################\n";
+
+my $dataFastqpairedOneIndividuPacaya = "../DATA/testData/fastq/assembly/pairedOneIndivuPacaya";
+my $fileAssemblyPairedNoSGE="../assembly.config.txt"; 
+
+# Remove files and directory created by previous test 
+my $testingDir="../DATA-TEST/pairedOneIndividuPacaya-noSGE";
+my $cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+
+my $runCmd = "toggleGenerator.pl -c ".$fileAssemblyPairedNoSGE." -d ".$dataFastqpairedOneIndividuPacaya." -r ".$dataRefArcad." -o ".$testingDir;
+
+print "\n### $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuPacaya";
+
+
 #####################
 ## TOGGLE fastq pairedOneIndividuArcad
 #####################
 
 my $dataFastqpairedOneIndividuArcad = "../DATA/testData/fastq/pairedOneIndividuArcad";
+
+
 
 print "\n\n#################################################\n";
 print "#### TEST SNPdiscoveryPaired paired ARCAD (one individu) / no SGE mode\n";
@@ -167,6 +196,7 @@ print "#################################################\n";
 # Copy file config 
 my $fileSNPPairedIni="../SNPdiscoveryPaired.config.txt";          # Path of the SNPdiscoveryPaired.config.txt
 my $fileSNPPairedNoSGE="SNPdiscoveryPairedTest.config.txt";
+
 
 my $cmd="cp $fileSNPPairedIni $fileSNPPairedNoSGE";
 ## DEBUG print "\n### COPY conf file SNPdiscoveryPaired : $cmd\n";
