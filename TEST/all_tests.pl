@@ -170,12 +170,12 @@ my $dataFastqpairedOneIndividuPacaya = "../DATA/testData/fastq/assembly/pairedOn
 my $fileAssemblyPairedNoSGE="../assembly.config.txt"; 
 
 # Remove files and directory created by previous test 
-my $testingDir="../DATA-TEST/pairedOneIndividuPacaya-noSGE";
-my $cleaningCmd="rm -Rf $testingDir";
+$testingDir="../DATA-TEST/pairedOneIndividuPacaya-noSGE";
+$cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
 
-my $runCmd = "toggleGenerator.pl -c ".$fileAssemblyPairedNoSGE." -d ".$dataFastqpairedOneIndividuPacaya." -r ".$dataRefArcad." -o ".$testingDir;
+$runCmd = "toggleGenerator.pl -c ".$fileAssemblyPairedNoSGE." -d ".$dataFastqpairedOneIndividuPacaya." -r ".$dataRefArcad." -o ".$testingDir;
 
 print "\n### $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuPacaya";
@@ -198,7 +198,7 @@ my $fileSNPPairedIni="../SNPdiscoveryPaired.config.txt";          # Path of the 
 my $fileSNPPairedNoSGE="SNPdiscoveryPairedTest.config.txt";
 
 
-my $cmd="cp $fileSNPPairedIni $fileSNPPairedNoSGE";
+$cmd="cp $fileSNPPairedIni $fileSNPPairedNoSGE";
 ## DEBUG print "\n### COPY conf file SNPdiscoveryPaired : $cmd\n";
 system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TEST
 
@@ -206,11 +206,11 @@ system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TE
 sedFunction($fileSNPPairedNoSGE);
 
 # Remove files and directory created by previous test 
-my $testingDir="../DATA-TEST/pairedOneIndividuArcad-noSGE";
-my $cleaningCmd="rm -Rf $testingDir";
+$testingDir="../DATA-TEST/pairedOneIndividuArcad-noSGE";
+$cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-my $runCmd = "toggleGenerator.pl -c ".$fileSNPPairedNoSGE." -d ".$dataFastqpairedOneIndividuArcad." -r ".$dataRefArcad." -o ".$testingDir;
+$runCmd = "toggleGenerator.pl -c ".$fileSNPPairedNoSGE." -d ".$dataFastqpairedOneIndividuArcad." -r ".$dataRefArcad." -o ".$testingDir;
 print "\n### $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuArcad";
 
