@@ -148,7 +148,7 @@ my $observedAnswer=`$cmd`;
 chomp($observedAnswer);
 #
 is($observedAnswer,$expectedAnswer,'tgicl::tgiclRun- output content');
-exit();
+
 
 
 
