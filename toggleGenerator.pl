@@ -66,11 +66,11 @@ Mesg
 }
 
 my %param = @ARGV;                     # get the parameters
-if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined($param{'-r'}) or not defined ($param{'-o'}))
+if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined ($param{'-o'}))
 {
   print <<"Mesg";
 
-  ERROR: Parameters -d and -c and -r and -o are required.
+  ERROR: Parameters -d and -c and -o are required.
   perldoc $nomprog display the help
 
 Mesg
