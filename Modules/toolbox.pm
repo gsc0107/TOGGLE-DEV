@@ -1747,6 +1747,11 @@ Take note that if the relative is wrong, the absolute will be wrong too.
 The module will inform for transformation and will not modify already absolute paths (starting by '/')
 It takes only one argument, the relative path you want to change
 
+=head3 toolbox::rmHashOrder
+
+This function removes the step given in argument from $hashOrder.
+True only if this step is the first one defined in the configuration file
+
 =head1 AUTHORS
 
 Cecile Monat, Ayite Kougbeadjo, Julie Orjuela-Bouniol, Marilyne Summo, Cedric Farcy, Mawusse Agbessi, Christine Tranchant and Francois Sabot
