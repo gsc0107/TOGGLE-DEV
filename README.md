@@ -78,6 +78,7 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 * [FastxToolkit](http://hannonlab.cshl.edu/fastx_toolkit/)
 * [Tophat](https://ccb.jhu.edu/software/tophat/index.shtml)
 * [Snpeff](http://snpeff.sourceforge.net/)
+* [Stacks v1.29](http://catchenlab.life.illinois.edu/stacks/)
 
 #### Bioinformatics tools included
 
@@ -147,6 +148,10 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 ##### Cutadapt (https://pypi.python.org/pypi/cutadapt)
 
 - cutadapt
+
+##### Stacks (http://catchenlab.life.illinois.edu/stacks/)
+
+- process_radtags
 
 #### OPTIONAL
 - Graphviz v2.xx (http://www.graphviz.org/)
