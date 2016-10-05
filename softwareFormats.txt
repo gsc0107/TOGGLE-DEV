@@ -170,3 +170,6 @@ $trinity
 IN=fastq
 OUT=fasta
 
+$pindel
+IN=bam
+OUT=txt
