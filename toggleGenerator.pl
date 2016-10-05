@@ -41,6 +41,7 @@ use onTheFly;
 use scheduler;
 use radseq;
 
+
 #For gz files
 use IO::Compress::Gzip qw(gzip $GzipError);
 use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
@@ -275,7 +276,13 @@ toolbox::makeDir($workingDir);
 # check if 1=processRadtags in $order
 #########################################
 my $hashOrder=toolbox::extractHashSoft($configInfo,"order");					#Picking up the options for the order of the pipeline
-my @values = values($hashOrder);
+
+my @values;
+for my $value ( values %{ $hashOrder } )
+{
+    push(@values,$value);
+}
+
 if ("processRadtags" ~~ @values)												# Check if processRadtags in step order
 {
     $initialDirContent = radseq::checkOrder($outputDir,$fileConf,$initialDir,$checkFastq,%param);
