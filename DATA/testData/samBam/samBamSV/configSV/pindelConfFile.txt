@@ -1,0 +1,2 @@
+../../DATA/testData/samBam/samBamSV/pindelBam.bam	440.81
+	../../DATA/testData/samBam/samBamSV/pindelBam.bam
