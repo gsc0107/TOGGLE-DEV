@@ -147,21 +147,21 @@ sub checkMandatory
 			{
 				if (! defined($param{'-r'}))
 				{
-					toolbox::exportLog("ERROR: onTheFly::checkMandatory : $currentSoft needs reference file with -r option in toggleGenerator.pl\nExiting...\n",0);
+					toolbox::exportLog("ERROR: onTheFly::checkMandatory : $currentSoft needs a reference file. Use -r option in Toggle command line\nExiting...\n",0);
 				}
 			}
 			if ($paramMandatory =~ m/gff/)
 			{
 				if (! defined($param{'-g'}))
 				{
-					toolbox::exportLog("ERROR: onTheFly::checkMandatory : $currentSoft needs gff file with -g option in toggleGenerator.pl\nExiting...\n",0);
+					toolbox::exportLog("ERROR: onTheFly::checkMandatory : $currentSoft needs a gff file. Use -g option in Toggle command line\nExiting...\n",0);
 				}
 			}
 			if ($paramMandatory =~ m/keyfile/)
 			{
 				if (! defined($param{'-k'}))
 				{
-					toolbox::exportLog("ERROR: onTheFly::checkMandatory : $currentSoft needs keyfile file with -k option in toggleGenerator.pl\nExiting...\n",0);
+					toolbox::exportLog("ERROR: onTheFly::checkMandatory : $currentSoft needs a keyfile file . Use -k option in Toggle command line\nExiting...\n",0);
 				}
 			}
 		}
