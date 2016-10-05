@@ -60,36 +60,36 @@ use namingConvention;
 #	- Boolean :  control the type of log. If 0, print logs into error log file and die.
 # if 1, print logs into log file. If 2, print logs into error log file and the program continue.
 ################################################################################################
-# no value returned 
+# no value returned
 ################################################################################################
 sub exportLog
 {
-    
+
     my ($logLines,$controlValue)=@_;
 
     # Get the name of indivudal analysed when this function is called
     my $indivName = `head -n 1 individuSoft.txt`;
     chomp $indivName;
- 
-    # Get the name of software executed when this function is called 
+
+    # Get the name of software executed when this function is called
     my $currentSoft = `tail -n 1 individuSoft.txt`;
     chomp $currentSoft;
-    
+
     # Initialization of the log name from the name of the individual and the name of software
     my $logBasicName=$indivName."_".$currentSoft."_log";
-    
-    # Opening of the log file and erro file 
+
+    # Opening of the log file and erro file
     open (OUT, '>>', $logBasicName.".o") or toolbox::exportLog("Cannot create $logBasicName.o file: $!",0);
     open (ERR, '>>', $logBasicName.".e") or toolbox::exportLog("Cannot create $logBasicName.e file: $!",0);
-    
+
     # According to the value of the $controlValue, the log message is written either in log file or in log file and error file
     if ($controlValue eq "0")		#Something wrong and die
     {
 	print OUT "ERROR: toolbox::exportLog : Look at $logBasicName.e for more infos\n";
         print ERR $logLines;
 	print OUT "ANALYSIS ABORTED\n";
-	die("ANALYSIS ABORTED... Look at $logBasicName.e\n");   #toolbox::exportLog("ANALYSIS ABORTED... Look at $logBasicName.e\n",0);        
-    }	
+	die("ANALYSIS ABORTED... Look at $logBasicName.e\n");   #toolbox::exportLog("ANALYSIS ABORTED... Look at $logBasicName.e\n",0);
+    }
     elsif ($controlValue eq "1")	#Everything is Ok
     {
 	print OUT $logLines."\n";
@@ -99,12 +99,12 @@ sub exportLog
 	print OUT "WARNING: toolbox::exportLog : Look at $logBasicName.e for more infos\n";
 	print ERR $logLines."\n";
     }
-	
+
     close OUT;
     close ERR;
 }
 ################################################################################################
-# END sub toolbox::exportLog 
+# END sub toolbox::exportLog
 ################################################################################################
 
 
@@ -127,14 +127,14 @@ sub exportLog
 sub checkFile
 {
     my ($file)=@_;
-    
+
     #Check existence
     my $existence = existsFile($file);
     if ($existence == 0)		#File does not exist
     {
         return 0;
     }
-    
+
     #Check size
     my $size = sizeFile($file);
     if ($size == 0)		#Empty file
@@ -142,19 +142,19 @@ sub checkFile
         my $infoSize ="ERROR: toolbox::checkFile : $file empty\n";
         return $infoSize;
     }
-    
-    #Check read and write right   
+
+    #Check read and write right
     my $readingRights = readFile($file);
-    
+
     my $logOut;
-    
-  
+
+
     if($readingRights == 0)
     {
         $logOut="ERROR: toolbox::checkFile : The file $file is not readable\n";
         exportLog($logOut,0);
     }
-     
+
     return 1;
 }
 ################################################################################################
@@ -169,13 +169,13 @@ sub checkFile
 # arguments :
 # 	- file :  name of the file to check
 ################################################################################################
-# A boolean value is returned. 1 if the file is readable. else 0. 
+# A boolean value is returned. 1 if the file is readable. else 0.
 ################################################################################################
 sub readFile
 {
     my ($file)=@_;
     existsFile($file); 		#Check if exists
-    
+
     if (-r $file){return 1;}  	#Check if readable
     else {return 0;}
 }
@@ -192,7 +192,7 @@ sub readFile
 # arguments :
 # 	- file :  name of the file to check
 ################################################################################################
-# A boolean value is returned. 1 if the file is writable. else 0. 
+# A boolean value is returned. 1 if the file is writable. else 0.
 ################################################################################################
 sub writeFile
 {
@@ -214,7 +214,7 @@ sub writeFile
 # arguments :
 # 	- file :  name of the file to check
 ################################################################################################
-# A boolean value is returned. 1 if the file isn't empty. else 0. 
+# A boolean value is returned. 1 if the file isn't empty. else 0.
 ################################################################################################
 sub sizeFile
 {
@@ -238,22 +238,22 @@ sub sizeFile
 #	- boolean : if the file doesn't exist and the boolean parameter is equal to 0, print just a log
 # if the file doesn't exist and the boolean parameter is equal to 1, print a log/error and die (via toolbox::exportLog)
 ################################################################################################
-# A boolean value is returned. 1 if the file exists. else 0. 
+# A boolean value is returned. 1 if the file exists. else 0.
 ################################################################################################
 sub existsFile
 {
     my ($file, $boolean)=@_;
     $boolean = 1 if (not defined $boolean);
-    
+
     if ((-e $file))	#file exists
-    {return 1;} 
+    {return 1;}
     elsif ($boolean)	#file does not exists and boolean==1 means error + die
     {
-        
+
         my $logOut ="ERROR: toolbox::existsFile : The file $file does not exist or is not a file\n$!\n";
         exportLog($logOut,0); 	#report an error to exportLog and die
     }
-    else		#file does not exists and boolean==0 means log 
+    else		#file does not exists and boolean==0 means log
     {
         ##DEBUG my $logOut ="INFOS: toolbox::existsFile : The file $file does not exist or is not a file\n$!\n";
         ##DEBUG exportLog($logOut,1);
@@ -275,19 +275,19 @@ sub existsFile
 #	- boolean : if the directory doesn't exist and the boolean parameter is equal to 0, print just a log
 # if the file doesn't exist and the boolean parameter is equal to 1, print a log/error and die (via toolbox::exportLog)
 ################################################################################################
-# A boolean value is returned. 1 if the directory exists. else 0. 
+# A boolean value is returned. 1 if the directory exists. else 0.
 ################################################################################################
-sub existsDir 
+sub existsDir
 {
     my ($dir,$boolean)=@_;
     $boolean = 1 if (not defined $boolean);
-        
+
     if (-e $dir and -d $dir) { return 1; } 	#directory exists
     elsif ($boolean) 				#directory does not exists and boolean==1 means error + die
     {
         toolbox::exportLog("ERROR: toolbox::existsDir : The directory $dir does not exist\n$!\n",0);
     }
-    else					#directory does not exists and boolean==0 means log 
+    else					#directory does not exists and boolean==0 means log
     {
         toolbox::exportLog("INFOS: toolbox::existsDir : The directory $dir does not exist or is not a file\n$!\n",1);
 	return 0;
@@ -308,27 +308,27 @@ sub existsDir
 #	- boolean (optional, 0 by default): if the boolean parameter is equal to 1 and
 # the directory already exists, the existing directory is removed before creatong again
 #
-# A boolean value is returned. 1 if the directory has been created. else 0. 
+# A boolean value is returned. 1 if the directory has been created. else 0.
 ################################################################################################
 sub makeDir
 {
     toolbox::exportLog("ERROR: toolbox::makeDir : should get one argument at least\n",0) if (@_ < 1 );
-    
+
     my ($dir, $erase)=@_;
-    
+
     $erase = 0 if (not defined $erase);
-    
+
     # if $erase equal to 1 and the directory exists, the directory is removed
-    run("rm -rf $dir") if ($erase and existsDir($dir)); 
+    run("rm -rf $dir") if ($erase and existsDir($dir));
 
     # the directory is created unless there is a problem. Then a error is generated and managed
     # with the function exportLog
-    unless (mkdir $dir)  
+    unless (mkdir $dir)
     {
 	my $logOut = "ERROR: toolbox::makeDir : Unable to create the directory $dir \n$!\n";
-        toolbox::exportLog($logOut,0); 
+        toolbox::exportLog($logOut,0);
     }
-    
+
     return 1;
 
 }
@@ -344,24 +344,24 @@ sub makeDir
 ################################################################################################
 # arguments :
 # 	- name of the directory to parse
-#	- part of the filename (optional): list only the file that end by the word given (part of the filename) 
+#	- part of the filename (optional): list only the file that end by the word given (part of the filename)
 #
-# The list of files (table) is returned. 
+# The list of files (table) is returned.
 ################################################################################################
 sub readDir
 {
     toolbox::exportLog("ERROR: toolbox::readDir : should get at one argument at least\n",0) if (@_ < 1 );
-    
+
     my ($dir)= shift @_;
-    
+
     # if the part of name is given in the second argument, search for files directory/*part_of_name
     # else search for all files directory/*
     my $path = defined ($_[0]) ? $dir.'/*'.$_[0] : $dir."/*";
-    
+
     # ls run
     my $file=`ls $path` or toolbox::exportLog("ERROR: toolbox::readDir : Can't open the directory $path\n$!\n",0);
     chomp $file;
-    
+
     # split the list into a table returned after
     my @fileList = split /\n/, $file; #print Dumper(\@fileList);
 
@@ -398,26 +398,26 @@ sub readDir
 ################################################################################################
 # arguments :
 # 	- name of the directory to parse
-#	- part of the filename (optional): list only the file that begin by the word given (part of the filename) 
+#	- part of the filename (optional): list only the file that begin by the word given (part of the filename)
 #
-# The list of files (table) is returned. 
+# The list of files (table) is returned.
 ################################################################################################
 #sub readDir2
 #{
 #    toolbox::exportLog("ERROR: toolbox::readDir2 : should get at one argument at least\n",0) if (@_ < 1 );
-#    
+#
 #    my ($dir)= shift @_;
-#    
+#
 #    # if the part of name is given in the second argument, search for files directory/part_of_name*
 #    # else search for all files directory/*
 #    my $path = defined ($_[0]) ? $dir.'/'.$_[0].'*' : $dir."/*";
-#    
+#
 #    # ls command
 #    my $file=`ls $path` or toolbox::exportLog("ERROR: toolbox::readDir : Can't open the directory $path\n$!\n",0);
 #    chomp $file;
-#    
+#
 #    # split the list into a table returned after
-#    my @fileList = split /\n/, $file; 
+#    my @fileList = split /\n/, $file;
 #    return(\@fileList);
 #
 #}
@@ -429,7 +429,7 @@ sub readDir
 
 
 ################################################################################################
-# sub toolbox::extractPath => to extract separately the directory name from the filename 
+# sub toolbox::extractPath => to extract separately the directory name from the filename
 ################################################################################################
 # arguments :
 # 	- pathfile
@@ -438,17 +438,17 @@ sub readDir
 ################################################################################################
 sub extractPath
 {
-  
+
   my ($path) = shift @_;
-  
+
   # split the filepath into a table
   # the last element only contains the name of the file
   my @pathTab = split /\//, $path;
   my $file = $pathTab[$#pathTab];
-  
+
   # remove the filename in the path given by argument
   $path =~ s/$file//;
-  
+
   # return 2 parameters : the filename, the path
   return ($file,$path);
 }
@@ -479,7 +479,7 @@ sub extractPath
 ################################################################################################
 # arguments :
 # 	- name of the software configuration file directory
-#	
+#
 # Returns a hash of hashes
 # ex : $configInfos->{$currentProgram}{$optionName}=$optionValue;
 ################################################################################################
@@ -489,51 +489,51 @@ sub readFileConf
     my $configInfos;
     #chech if the configuration file is readable
     readFile($fileConf) or exportLog("ERROR: toolbox::readFileConf : Cannot read the configuration file $fileConf\n$!\n",0);
- 
-    #store the file content into the table @lines 
+
+    #store the file content into the table @lines
     open (FILE,"<",$fileConf) or toolbox::exportLog("ERROR: toolbox::readFileConf  : Cannot open the file $$fileConf\n$!\n",0);;
     my @lines = <FILE>;
     close FILE;
-    
+
     #Generating the hash with all infos
     my $currentProgram;		#Need to be declared outside the loop
-    
+
     while (@lines)		#Reading all lines
     {
         my $currentLine=shift @lines;
         chomp $currentLine;
-        
+
         #Avoided lines
         next if $currentLine =~ m/^$/;#Empty line
         next if $currentLine =~ m/^#/;#Commented line
-           
+
         if ($currentLine =~ m/^\$/)		#New program to be configured, line starting by $
 	{
             $currentProgram=$currentLine;
             $currentProgram =~ s/\$//;#remove the "$" in front of the name
-	    
+
 	    if ($currentProgram =~ m/sge/i) #even if no options are provided, we must see the SGE key
 	    {
 		$configInfos->{$currentProgram}{' '}=' ';
 	    }
-		    
-        }										
+
+        }
         else		#Config lines
-	{	
+	{
 	    if($currentLine =~/^no_option$/)
 	    {
 		$configInfos->{$currentProgram}{' '}=' '; ## add a key for programme without options to be considered
 		next;
-	    }				
+	    }
             my($optionName,$optionValue)=split /=/,$currentLine, 2;
             $optionValue = "NA" unless $optionValue; # For option without value, eg -v for verbose
             #Populating the hash
             $configInfos->{$currentProgram}{$optionName}=$optionValue;
         }
     }
-  
+
     $configInfos=namingConvention::softwareNomenclature($configInfos); # will correct the configInfo names
-    
+
     return $configInfos;
 
 }
@@ -550,35 +550,35 @@ sub readFileConf
 # commands)
 ################################################################################################
 # arguments :
-# 	- a hash of hash (reference) with the software name as key, then the option as key and 
+# 	- a hash of hash (reference) with the software name as key, then the option as key and
 #         the value as element
 #       - separator used to separate an option from its value (\t, =)
 #	- concatenator used to concatenate each option/value couples
 #
 # ex : my $optionLine=toolbox::extractOptions($configInfos->{"BWA aln"}," "," ");
 #
-# Returns the list of options for a software given. 
+# Returns the list of options for a software given.
 ################################################################################################
 sub extractOptions
 {
     ##Getting the two parameters, the options hash and the option-value separator
     my($optionsHashees,$separateur,$concatenator)=@_;
-    
+
     # The concatenation of option is classically a space (eg -b 1 -c2), but sometimes we may need to put them one per line (eg
     # export TOTO=$TOTO:/my/new/path
     # export PATH=$PATH:/my/second/path)
     $concatenator = " " unless $concatenator;
-    
+
     #The separator between option and its value is generally a space but can also be an equal (as in INPUT=/my/file for picardTools) sign.
     $separateur=" " unless $separateur;
-    
+
     if ($optionsHashees)			# the option hash isn't empty/is defined => options are extracted
     {
 	my %options=%{$optionsHashees};
 	my $option=" ";
 	 	## if no separator is given, set it as a single space
 	try
-	{                               
+	{
 	    foreach my $cle (keys %options)
 	    {
 		if ($options{$cle} eq 'NA') 	## The option has no value  => no print $options{$cle}
@@ -588,7 +588,7 @@ sub extractOptions
 		else				## The option has value  => print $options{$cle}
 		{
 		    $option=$option.$cle.$separateur.$options{$cle}.$concatenator;
-		    
+
 		    #if option is of type -l mem_free=10G
 		    $option=~ s/ =/=/g;
 		}
@@ -617,13 +617,13 @@ sub extractOptions
 ################################################################################################
 # sub toolbox::extractName => for extracting Name (remove the extention and return the name)
 ################################################################################################
-# arguments : complete path of a file (path+name of the file) 
+# arguments : complete path of a file (path+name of the file)
 # Returns just the filename without the path
 ################################################################################################
 sub extractName
 {
     my $bruteName=shift @_;	# get the complete path of the file
-    
+
     $bruteName=`basename $bruteName` or toolbox::exportLog("ERROR : $0 : toolbox::extractName cannot work on $bruteName name\n",0); # get just the name of the file after the last /
     chomp $bruteName;
 					    ##### REVUE CODE CD 18-09 : et s'il y a un autre point dans le nom de fichier??? ou pas de point
@@ -649,13 +649,13 @@ sub extractName
 sub run
 {
     use Capture::Tiny qw(capture);
-    
+
     my($command,$print)=@_;
     exportLog("INFOS: toolbox::run : $command\n",1) if (not defined $print);
-    
+
     ##Execute the command
     my ($result,$stderr)=capture {` $command `};
-    
+
     ##Log export according to the error
     if ($?==0)
     {
@@ -667,20 +667,20 @@ sub run
 	##DEBUG
 	exportLog("ERROR: toolbox::run : ".$result."\n--".$stderr."\n",0);
 	return 0;
-    }   
+    }
 
 		##########################################################################
 		## CD 18-09: ADD LOG
 		##########################################################################
-  
+
     # restore STDOUT and STDERR
     #open (STDOUT, '>&', $STDOUT_);
     #open (STDERR, '>&', $STDERR_);
-    
+
 }
 
 ################################################################################################
-# END sub toolbox::run 
+# END sub toolbox::run
 ################################################################################################
 
 
@@ -696,11 +696,11 @@ sub checkNumberLines
     my $nbLine=4000;
     #my $nbLine = `$nbLineCommand` or exportLog("ERROR: toolbox::checkNumberLines : Cannot run $nbLineCommand\n$!\n",0);	# execution of the command or if not possible, return an error message
     chomp $nbLine;
-    
+
     #Add a split to only keep the number of line without the file name
     my @splitLine = split (" ", $nbLine);
     $nbLine = $splitLine[0];
-    
+
     return $nbLine;  # return the number of line of file
 }
 
@@ -714,10 +714,10 @@ sub checkNumberLines
 
 sub checkFormatFastq
 {
-    
+
     my $notOk = 0;                  # counter of error(s)
     my ($fileToTest) = @_;          # recovery of file to test
- 
+
     #Checking the beginning and end structure
     my ($beginLines, $endLines);
     if ($fileToTest =~ m/gz$/)
@@ -738,26 +738,26 @@ sub checkFormatFastq
     {
 	toolbox::exportLog("ERROR: toolbox::checkFormatFastq : Number of lines is not a multiple of 4 in file $fileToTest, thus not a FASTQ file.\n",0);
     }
-    
-    
+
+
     open (my $inputHandle, $fileToTest) or toolbox::exportLog("ERROR: toolbox::checkFormatFastq : Cannot open the file $fileToTest\n$!\n",0); # open the file to test
-    
+
     my  @linesF1=();
     my $comp=0;
     my $countlines=0;
     my $stop=0;
-    
+
     #If $fileToTest is in gzip format
     if($fileToTest =~ m/\.gz$/)
     {
 	$inputHandle = new IO::Uncompress::Gunzip $inputHandle or toolbox::exportLog("ERROR: toolbox::checkFormatFastq : Cannot open the gz file $fileToTest: $GunzipError\n",0);
-    }	
-    
+    }
+
     while ((my $line = <$inputHandle>))                                           # scanning file and stocking in an array the four lines of a read.
     {
         chomp $line;
         $countlines++;
-        
+
         if ($comp<3)
         {
             $comp++;
@@ -767,11 +767,11 @@ sub checkFormatFastq
         {
             $stop++;
             push (@linesF1,$line);
-            
+
             my $i=0;
             while ( ($i<=$#linesF1) and ($notOk <=1))                 # treatment of a block containing four lines of file and stop if 20 errors found.
             {
-                
+
                 my $idLine=$linesF1[$i];
                 my $fastaLine=$linesF1[$i+1];
                 my $plusLine=$linesF1[$i+2];
@@ -780,13 +780,13 @@ sub checkFormatFastq
                 my $nbLineFasta=$countlines-2;
                 my $nbPlusLine=$countlines-1;
                 my $nbQualityLine=$countlines;
-                
+
                 if (($idLine=~m/^$/) and ($plusLine=~m/^$/))            # if the ID line and the "plus" line are not empty ...
                 {
                     toolbox::exportLog("ERROR: toolbox::checkFormatFastq : The file $fileToTest is not a FASTQ file => The ID infos line $nbIDLine is not present.\n",0);
                     $notOk++;                                           # one error occured, so count it
                 }
-                
+
                 elsif ( (($idLine=~m/^\@.*/) or ($idLine=~m/^\>.*/) ) and ($plusLine=~m/^\+/) )   # if ID ligne is not empty and it starts by "@" or ">" and the
                 # plus line has a "+", the block of four lines ($i to $i+3) is traited.
                 {
@@ -808,7 +808,7 @@ sub checkFormatFastq
                         $notOk++;
                     }
                 }
-                
+
                 else													#error if the ID line do not start with @ or >.
                 {
                     toolbox::exportLog("ERROR: toolbox::checkFormatFastq : ID line has to start with @ or > in line $nbIDLine of file $fileToTest.\n",0);
@@ -816,15 +816,15 @@ sub checkFormatFastq
                 }
                 $i=$i+4; 												# jumping to next read.
             }
-            
+
             last if ($stop==20000);                                    # stoping treatment if 50000 reads were analysed.
-            
+
             undef @linesF1;
             $comp=0;
         }
         next;
     }
-    
+
     if (($notOk == 0))                    						# if any error occured in the file, the format is right.
     {
         toolbox::exportLog("INFOS: toolbox::checkFormatFastq : The file $fileToTest is a FASTQ file.\n",1);
@@ -834,9 +834,9 @@ sub checkFormatFastq
     {
         toolbox::exportLog("ERROR: toolbox::checkFormatFastq : Invalid FASTQ requirements in file $fileToTest.\n",0);
     }
-    
+
     close $inputHandle;
-    
+
 }
 ################################################################################################
 # END sub checkFormatFastq
@@ -860,10 +860,10 @@ sub checkFormatFastq
 sub addInfoHeader
 {
     my ($bamFile,$textToAdd)=@_;
-    
+
     #Is the file sam of bam ?
     my $formatCheck=checkSamOrBamFormat($bamFile);
-    
+
     if ($formatCheck == 0)	#The file is not a BAM nor a SAM and cannot be treated here
     {
 	toolbox::exportLog("ERROR: toolbox::addInfoHeader : The file $bamFile is not a SAM/BAM file\n",0);
@@ -871,30 +871,30 @@ sub addInfoHeader
     }
     #Not sure it is requested, as checkSamOrBamFormat will already kill the job...
     #TODO: using a warning in the checkSamOrBamFormat and a die here, to make the differences in the logs ?
-    
+
     #Picking up current header
     my $headerCommand="$samtools view -H $bamFile > headerFile.txt"; #extract the header and put it in the headerFile.txt
     run($headerCommand);
-    
+
     #Adding the @CO field to the header
     my $addingCoLineCommand = "echo \"\@CO\t$textToAdd\" | cat - >> headerFile.txt";#Adding the text at the end of the file.
     run($addingCoLineCommand);
-    
+
     #reheading the sam/bam file
     my $reheadedFile = $bamFile.".reheaded.bam";
     my $reheaderCommand = "$samtools reheader headerFile.txt $bamFile > $reheadedFile";
     run($reheaderCommand);
-    
+
     #copy reheaded file to original bam file
     my $copyCommand = "cp $reheadedFile $bamFile";
     run($copyCommand);
-    
+
     #returning if OK
 		##########################################################################
     return 1    ### CD 18-09 : Return toujours 1
 }		##########################################################################
 ################################################################################################
-# END sub addInfoHeader 
+# END sub addInfoHeader
 ################################################################################################
 
 
@@ -910,11 +910,11 @@ sub addInfoHeader
 ################################################################################################
 sub checkSamOrBamFormat
 {
-    
+
     my ($samFile)=@_;
-    
+
     existsFile($samFile); # Will check if the submitted file exists
-       
+
     #Is the file sam of bam through the binary mode? Requested for the -S option in samtools view
     my ($inputOption,$binary);
     if (-B $samFile) #The file is a binary BAM file
@@ -930,7 +930,7 @@ sub checkSamOrBamFormat
     my $checkFormatCommand="$samtools view $inputOption $samFile -H > /dev/null";
     # The samtools view will ask only for the header to be outputted (-H option), and the STDOUT is redirected to nowher (>/dev/null);
     my $formatValidation=run($checkFormatCommand,"noprint");
-    
+
     if ($formatValidation == 1)                    # if no error occured in extracting header, ok
     {
         ##DEBUG toolbox::exportLog("INFOS: toolbox::checkSamOrBamFormat : The file $samFile is a SAM/BAM file\n",1);
@@ -944,7 +944,7 @@ sub checkSamOrBamFormat
     }
 }
 ################################################################################################
-# END checkSamOrBamFormat 
+# END checkSamOrBamFormat
 ################################################################################################
 
 
@@ -972,9 +972,9 @@ sub changeDirectoryArbo
     # 5  for /5_PICARDTOOLS/
     # 6  for /6_SAMTOOLS/
     # 7  for /7_GATK/
-    
+
     #TODO can be factorized using a HASH I think
-    
+
     my $finalDirectory;	# output directory returned by the fonction
 
     if ($numberOfDirectory == 0)		# if you want to move to 0_PAIRING_FILES/
@@ -1017,7 +1017,7 @@ sub changeDirectoryArbo
     return $finalDirectory;
 }
 ################################################################################################
-# END sub changeDirectoryArbo 
+# END sub changeDirectoryArbo
 ################################################################################################
 
 
@@ -1028,13 +1028,14 @@ sub changeDirectoryArbo
 ################################################################################################
 # arguments :
 #       - reference oh the hash that contains all softawre name and their parameters
-#       - software name 
+#       - software name
 # Returns the sub hash for the software name given as parameter
 ################################################################################################
 sub extractHashSoft
 {
     my ($optionref,$soft) = @_;
     my %optionsRef = %$optionref; #WHY ??? because $optionref is a ref but not a hash.
+
     my $softInfos;
     foreach my $option (keys %optionsRef)	# for each options in the options hash
     {
@@ -1053,7 +1054,7 @@ sub extractHashSoft
 
 
 ################################################################################################
-# END sub extractHashSoft 
+# END sub extractHashSoft
 ################################################################################################
 
 
@@ -1070,7 +1071,7 @@ sub extractHashSoft
 sub checkInitialDirContent
 {
     my ($initialDir) = @_;			# recovery of initial directory
- 
+
     toolbox::existsDir($initialDir);		# check the directory exists
     my $list = toolbox::readDir($initialDir);	# read directory
     my @list = @$list;				# recovery directory contents
@@ -1112,10 +1113,10 @@ sub checkInitialDirContent
 # Returns 1 if the file format is validated else 0 (error are managed by toolbox::exportLog)
 ################################################################################################
 sub checkVcfFormat
-{ 
+{
     #Inspired from The vcftools vcf-validator
     my ($file)=@_;
-    
+
     #Check if we can read the file
     my $rightToRead = readFile($file);
     if ($rightToRead == 0)
@@ -1123,12 +1124,12 @@ sub checkVcfFormat
 	exportLog("ERROR: toolbox::checkVcfFormat : The file $file is not readable\n",0);
 	return 0;
     }
-    
+
     #Parsing the file
     my @header;#List to gather the header
     my @listOfFields;
     open(my $inputHandle, "<",$file) or toolbox::exportLog("ERROR: toolbox::checkVcfFormat : Cannot open the file $file\n$!\n",0);
-    
+
     # if the input file is a gz file
     if($file =~ m/\.gz$/)
     {
@@ -1137,7 +1138,7 @@ sub checkVcfFormat
     while (my $line=<$inputHandle>)
     {
 	chomp $line;
-	
+
 	##DEBUG print $line."\n";
 	if ($line =~ m/^#/)
 	{
@@ -1145,16 +1146,16 @@ sub checkVcfFormat
 	}
 	else {@listOfFields = split /\t/, $line;}
     }
-    
+
     #Check if the first line of the header is including the version
     my $versionLine=defined $header[0]? $header[0]:undef;
-    exportLog("ERROR: toolbox::checkVcfFormat : There is no header of the file $file\n",0) unless (defined $versionLine); #Thrown an error if the $version cannot be obtained (misformatted line)	
+    exportLog("ERROR: toolbox::checkVcfFormat : There is no header of the file $file\n",0) unless (defined $versionLine); #Thrown an error if the $version cannot be obtained (misformatted line)
 
     my @version=split /VCFv/,$versionLine;
     exportLog("ERROR: toolbox::checkVcfFormat : Cannot evaluate the VCF version of the file $file file\n",0) if (scalar(@version)==0); #Thrown an error if the $version cannot be obtained (misformatted line)
-    ##DEBUG print "DEBUG: $0: vcf version $versionLine : ".scalar(@version)." : $version[1] \n"; 
+    ##DEBUG print "DEBUG: $0: vcf version $versionLine : ".scalar(@version)." : $version[1] \n";
     eval ($version[1] == $version[1]) or exportLog("ERROR: toolbox::checkVcfFormat : Cannot obtain the VCF version of $file\n",0); #Verifying if the value obtained is numerical.
-    
+
     # Check the first line format as recommanded
     #CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  Individual1
     #Chr1    228069  .       A       .       31.23   LowQual AN=2;DP=1;MQ=37.00;MQ0=0        GT:DP   0/0:1
@@ -1162,10 +1163,10 @@ sub checkVcfFormat
     {
 	exportLog("ERROR: toolbox::checkVcfFormat : The file $file is misformatted (less than 10 colums) ".Dumper(\@listOfFields)."\n",0);
     }
-    
+
     #Check if the second field (the position) is numerical
     eval ($listOfFields[1] == $listOfFields [1]) or exportLog("Cannot confirm that $file is a VCF.\nAborting.\n",0); #Verifying if numerical. Die if not
-   
+
     close $inputHandle;
 
     return 1; #Return correct if all check are Ok
@@ -1181,7 +1182,7 @@ sub checkVcfFormat
 ################################################################################################
 # arguments :
 # 	- the directory name that contains the data to transfer
-#	- the name of the server that contains the initial data 
+#	- the name of the server that contains the initial data
 # Returns the path of the directory created on the scratch space (local) and the node name that contains the data transfered
 ################################################################################################
 #sub transferDirectoryFromMasterToNode
@@ -1194,17 +1195,17 @@ sub checkVcfFormat
 #    my $SGE_User = `echo \$USER` or toolbox::exportLog("ERROR: toolbox::transferDirectoryFromMasterToNode : The SGE USER isn't defined\n",0);
 #    chomp($SGE_User);
 #    ##DEBUG exportLog("INFOS: toolbox::transferDirectoryFromMasterToNode : SGE USER $SGE_User\n",1);
-#    
+#
 #    # get the SGE node on what the script is running
 #    my $SGE_Node = `echo \$HOSTNAME` or toolbox::exportLog("ERROR: toolbox::transferDirectoryFromMasterToNode : The SGE node isn't defined\n",0);
 #    chomp($SGE_Node);
 #    ##DEBUG exportLog("INFOS: toolbox::transferDirectoryFromMasterToNode : SGE NODE $SGE_Node\n",1);
-#    
+#
 #    # get the SGE job id
 #    my $SGE_JobId = `echo \$JOB_ID` or toolbox::exportLog("ERROR: toolbox::transferDirectoryFromMasterToNode : The SGE id isn't defined\n",0);
 #    chomp($SGE_JobId);
 #    ##DEBUG exportLog("DEBUG INFOS: toolbox::transferDirectoryFromMasterToNode : SGE JOB ID $SGE_JobId\n",1);
-#    
+#
 #    # Creating local tmp folder according this convention : /scratch/$user-$jobid-$sge_task_id
 #    my $tmpDir = "/scratch/".$SGE_User."-".$SGE_JobId."/";
 #    toolbox::makeDir($tmpDir) if (not existsDir($tmpDir,0));      # Creation of the tempory directory
@@ -1213,7 +1214,7 @@ sub checkVcfFormat
 #    # Copy the data from the master server to the local scrtatch space
 #    my $cmd="scp -r $SGE_User\@$master:$localDir $tmpDir";
 #    toolbox::run($cmd);
-#    
+#
 #    # Extract the name of the directory and return the complete local directory name and the node name
 #    my ($file,$path)=toolbox::extractPath($localDir);
 #    return($tmpDir.$file,$SGE_Node);
@@ -1227,43 +1228,43 @@ sub checkVcfFormat
 
 
 ################################################################################################
-# sub transferDirectoryFromNodeToMaster =>  to transfer data from one local scratch space 
-#                                           of the node to a master server 
+# sub transferDirectoryFromNodeToMaster =>  to transfer data from one local scratch space
+#                                           of the node to a master server
 ################################################################################################
 # arguments :
-# 	- the path of the directory on the scratch space (local)  
+# 	- the path of the directory on the scratch space (local)
 #	- the node name that contains the data to transfer
-#	- the name of the server that contains the initial data 
+#	- the name of the server that contains the initial data
 #	- a boolean parameter to define if the data wil be removed from the local space after
 #         transferring from the local space to the master server. By default equal to 1 (Data removing)
-# No parameter returned 
+# No parameter returned
 ################################################################################################
 #sub transferDirectoryFromNodeToMaster
 #{
-#    
+#
 #    my ($localDir,$distantDir,$erase,$master) = @_;
 #								###########################################################################
 #    $master = 'nas2' if (not defined $master or $master eq ''); #######SUPPOSE QUE LES DONNEES SONT TOUJOURS DANS NAS2 (donc pas /teams) - AJOUTER DANS fichier configuration?
 #								###########################################################################
-#    
-#    $erase=1 if (not defined $erase);					
-#    
+#
+#    $erase=1 if (not defined $erase);
+#
 #     # get the SGE user name
 #    my $SGE_User = `echo \$USER` or toolbox::exportLog("ERROR: toolbox::transferDirectoryFromMasterToNode : The SGE USER isn't defined\n",0);
 #    chomp($SGE_User);
 #    ##DEBUG exportLog("INFOS: toolbox::transferDirectoryFromMasterToNode : SGE USER $SGE_User $erase $master\n",1);
-#    
+#
 #    # Data transferring from the local directory to the distant directory of the master
 #    my $cmd="scp -r $localDir $SGE_User\@$master:$distantDir";
 #    toolbox::run($cmd);
-#    
+#
 #    # Removing of the local data directory if $erase equal to 1
 #    $cmd="rm -rf $localDir";
-#    toolbox::run($cmd) if ($erase);   
-#    
+#    toolbox::run($cmd) if ($erase);
+#
 #}
 ################################################################################################
-# END sub transferDirectoryFromNodeToMaster 
+# END sub transferDirectoryFromNodeToMaster
 ################################################################################################
 
 
@@ -1287,10 +1288,10 @@ sub checkFormatFasta{
 	toolbox::exportLog("ERROR: toolbox::checkFormatFasta : The file $file is not readable\n",0);
 	return 0;
     }
-    
+
     #Opening file
     open(FILE, "<", $file) or toolbox::exportLog("ERROR: toolbox::checkFormatFasta : Cannot open the file $file\n$!\n",0);
-   
+
     #Reading file
     my $initiator = 0; #We need to scan the very first line, that begins with '>', but this is the only one beginning with that we need
     my %errors; # Will score all the error types
@@ -1310,7 +1311,7 @@ sub checkFormatFasta{
             #Will stop immediatly as the file is not correct at all
             last;
 	    }
-    #Other lines	    
+    #Other lines
 	next if $line =~ m/^$/;# Representing empty lines
 	if ($line =~ m/^>/) #A new sequence beginning
 	    {
@@ -1334,13 +1335,13 @@ sub checkFormatFasta{
           last;
           }
         next;
-    
+
         }
     close FILE;
-    
+
     #Checking if there are errors
     my $numberOfErrors = scalar(keys %errors);
-    
+
     #Sending the warning message, if any
     if ($numberOfErrors)#There are errors, we will send a warning to the system
 	{
@@ -1353,18 +1354,18 @@ sub checkFormatFasta{
 	    }
 	#Sending the warning
 	toolbox::exportLog($warningLog,2);
-	#returning for failure	
+	#returning for failure
 	return 0;
         }
-       
+
     #returning ok
     toolbox::exportLog("INFOS: toolbox::checkFormatFasta : The file $file is a FASTA file\n",1);
-    return 1;    
+    return 1;
     }
-   
-   
+
+
 ################################################################################################
-# END sub fastaFormatValidator 
+# END sub fastaFormatValidator
 ################################################################################################
 
 
@@ -1378,13 +1379,13 @@ sub checkFormatFasta{
 ################################################################################################
 sub relativeToAbsolutePath
 {
-    
+
     my ($relative)=@_;
- 
+
     return 0 if (not defined($relative));
- 
+
     my ($absolutePath,$log);
-    
+
     if ($relative !~ m/^\//) # The relative path is a relative path, ie do not starts with /
     {
 	my $com = "readlink -m $relative";
@@ -1401,15 +1402,43 @@ sub relativeToAbsolutePath
 
 }
 ################################################################################################
-# END sub relativeToAbsolutePath 
+# END sub relativeToAbsolutePath
 ################################################################################################
+
+
+################################################################################################
+# sub rmHashOrder => remove step in hashOrder if stepName if the first key
+# NOTE/WARNING: this function was developed to remove only the first step (for processRadstacks)
+################################################################################################
+# arguments :
+# 	- $hashOrder
+#	- $stepName
+# returns :
+#	- $hashOrder with step removed
+################################################################################################
+sub rmHashOrder
+{
+	toolbox::exportLog("ERROR: toolbox::rmHashOrder : should get at least one arguments\n",0) if (@_ < 1);
+	my ($hashOrder,$stepName)=@_;
+
+	my @firstKeys = sort {$a <=> $b} (keys(%{$hashOrder}));
+	if ($hashOrder->{$firstKeys[0]} eq $stepName)
+	{
+		delete $$hashOrder{$firstKeys[0]};
+	}
+	return $hashOrder;
+}
+################################################################################################
+# END sub rmHashOrder
+################################################################################################
+
 
 
 1;
 
 =head1 NAME
 
-package I<toolbox> 
+package I<toolbox>
 
 =head1 SYNOPSIS
 
@@ -1417,7 +1446,7 @@ package I<toolbox>
 
 	toolbox::exportLog("ERROR: $0 : The directory don't contain the right number of files\n",1);
 
-	
+
 =head1 DESCRIPTION
 
 This module aims to provide a set of functions related to check file format, to check/list the content of a directory etc.
@@ -1434,7 +1463,7 @@ This function aims to manage the  logs and the errors generated by others functi
 
 No parameters returned
 
-Example : 
+Example :
 C<toolbox::exportLog("ERROR: $0 : The directory don't contain the right number of files\n",1);>
 
 
@@ -1444,7 +1473,7 @@ This function checks if a file exists, is readable/writable, and isn't empty. On
 
 Returns 1 if the file exists, is readable and writable AND isn't empty.
 
-Example : 
+Example :
 C<toolbox::checkFile($fileToCheck);>
 
 
@@ -1454,7 +1483,7 @@ This function checks if a file is readable. One argument is required : the name 
 
 Returns 1 if the file is readable else return 0.
 
-Example : 
+Example :
 C<toolbox::readFile($fileToCheck);>
 
 
@@ -1464,7 +1493,7 @@ This function checks if a file is writable. One argument is required : the name 
 
 Returns 1 if the file is writable else return 0.
 
-Example : 
+Example :
 C<toolbox::writeFile($fileToCheck);>
 
 
@@ -1474,7 +1503,7 @@ This function checks if a file is empty or not. One argument is required : the n
 
 Returns 1 if the file isn't empty else return 0.
 
-Example : 
+Example :
 C<toolbox::sizeFile($fileToCheck);>
 
 
@@ -1486,7 +1515,7 @@ a boolean parameter to determine when the file exists, if it's a error or not.
 
 Returns 1 if the file exists else return 0.
 
-Example : 
+Example :
 C<toolbox::existFile($fileToCheck);>
 
 
@@ -1498,7 +1527,7 @@ a boolean parameter to determine when the directory exists, if it's a error or n
 
 Returns 1 if the directory exists else return 0.
 
-Example : 
+Example :
 C<toolbox::existsDir($dirToCheck);>
 
 
@@ -1510,28 +1539,28 @@ If the boolean parameter is equal to 1 and, the existing directory is removed be
 
 Returns 1 if the directory has been correctly created else return 0.
 
-Example : 
+Example :
 C<toolbox::makeDir($dirToCreate);>
 
 
 =head3 toolbox::readDir()
 
 This function lists the content of a directory and returns the list of files. One argument is required : the name of the directory.
-An other optional argument can be used that allows to filter on the end of a filename. 
+An other optional argument can be used that allows to filter on the end of a filename.
 
 Returns the list of files.
 
-Example : 
+Example :
 C<toolbox::readDir($dirToParse,'fastq');>
 
 =head3 toolbox::readDir2()
 
 This function lists the content of a directory and returns the list of files. One argument is required : the name of the directory.
-An other optional argument can be used that allows to filter on the beginning of a filename. 
+An other optional argument can be used that allows to filter on the beginning of a filename.
 
 Returns the list of files.
 
-Example : 
+Example :
 C<toolbox::readDir2($dirToParse,'RC');>
 
 
@@ -1541,7 +1570,7 @@ This function extract the filename and the path from a complete file path. One a
 
 Returns separately the filename and the path
 
-Example : 
+Example :
 C<toolbox::extractPath('/data/projet/chloro/RC1/RC1_1.fastq');>
 
 
@@ -1552,7 +1581,7 @@ One argument is required : the filename.
 
 Returns a hash of hashes
 
-Example : 
+Example :
 C<toolbox::readFileConf('/data/projet/chloro/software.config');>
 
 
@@ -1564,36 +1593,36 @@ The third (optional) value is the way to concatenate the different options toget
 
 Returns a string
 
-Example : 
+Example :
 C<my $optionLine=toolbox::extractOptions($configInfos->{"BWA aln"}," ", " ");>
 
 
 =head3 toolbox::extractName()
 
-This function returns the filename from a complete path given as argument. 
+This function returns the filename from a complete path given as argument.
 Returns a string
 
-Example : 
+Example :
 C<my $filename=toolbox::extractPath('/data/projects/oryza/RC1/RC1.fastq');>
 
 
 
 =head3 toolbox::run()
 
-This function executes the command you gave it and exports the log via toolbox::exportLog() function. 
+This function executes the command you gave it and exports the log via toolbox::exportLog() function.
 Returns  boolean (1 if the command has been correctly executed else 0)
 
-Example : 
+Example :
 C<toolbox::run("rm /data/projects/oryza/*.fastq"); >
 
 
 
 =head3 toolbox::checkFormatFastq()
 
-This function checks if a file is really a FASTQ file. 
+This function checks if a file is really a FASTQ file.
 Returns  boolean (1 if the format is fastq else 0)
 
-Example : 
+Example :
 C<toolbox::checkFormatFastq("/data/projects/oryza/RC1.fastq"); >
 
 
@@ -1602,7 +1631,7 @@ C<toolbox::checkFormatFastq("/data/projects/oryza/RC1.fastq"); >
 This function adds a information tag in a BAM file (@CO field). Two arguments are required : filename to analyze and text to add.
 Returns  boolean (1 if this function has been correctly running else 0)
 
-Example : 
+Example :
 C<toolbox::addInfoHeader($bamFile, 'RC1'); >
 
 
@@ -1612,7 +1641,7 @@ C<toolbox::addInfoHeader($bamFile, 'RC1'); >
 This function verifies the SAM/BAM format based on samtools view system. One argument is required : filename to analyze.
 Returns  boolean (1 if the fileformat is sam, 2 bam and 0 neither bam or sam)
 
-Example : 
+Example :
 C<toolbox::checkSamOrBamFormat($samFile); >
 
 
@@ -1620,19 +1649,19 @@ C<toolbox::checkSamOrBamFormat($samFile); >
 
 This function returns a directory name according to the number given as argument. Two arguments are required: directory that will contain all the directory created by the pipeline
 and a number to define what is the directory name that will be returned
-Returns the directory name that will be created 
+Returns the directory name that will be created
 
-Example : 
+Example :
 C<toolbox::changeDirectoryArbo($initialDir,1); >
 
 
 
 =head3 toolbox::extractHashSoft()
 
-This function returns the list of parameters for a software given. Two arguments are required: reference oh the hash that contains all softawre name (from toolbox::readFileConf) and the software name searched for. 
+This function returns the list of parameters for a software given. Two arguments are required: reference oh the hash that contains all softawre name (from toolbox::readFileConf) and the software name searched for.
 Returns the sub hash for the software name given as parameter with the list of parameters.
 
-Example : 
+Example :
 C<toolbox::extractHashSoft($optionref,"BWA index"); >
 
 
@@ -1641,7 +1670,7 @@ C<toolbox::extractHashSoft($optionref,"BWA index"); >
 
 This function analyzes a folder given as argument and returns 0 if the directory contains only files or the the list of folders contained.
 
-Example : 
+Example :
 C<toolbox::checkInitialDirContent($initialDir); >
 
 
@@ -1651,7 +1680,7 @@ C<toolbox::checkInitialDirContent($initialDir); >
 This function checks if the format of the given as argument is VCF.
 Returns 1  if the file format is validated else 0 (an error is maneged by toolbox::exportLog)
 
-Example : 
+Example :
 C<toolbox::checkVcfForm($file); >
 
 
@@ -1662,7 +1691,7 @@ This function copy data directory from a master server to one local scratch spac
 the directory name that contains the data to transfer. The second argument is the name of the server that contains the initial data.
 Returns the path of the directory created on the scratch space (local) and the node name that contains the data transfered
 
-Example : 
+Example :
 C<( $tmp_refFastaFile,$nodeFinal)=toolbox::transferDirectoryFromMasterToNode($refFastaFile,$nodeInitial); >
 
 
@@ -1672,10 +1701,10 @@ C<( $tmp_refFastaFile,$nodeFinal)=toolbox::transferDirectoryFromMasterToNode($re
 This function copy data from one local scratch space of the node into a distant directory of the master server.
 Three arguments are required: (1) the path of the directory on the scratch space (local), (2) the node name that contains the data to transfer,
  (3) the name of the master server that contains the initial data.
-One argument is optional : a boolean parameter to define if the data wil be removed from the local space after data transferring from the local space to the master server. 
+One argument is optional : a boolean parameter to define if the data wil be removed from the local space after data transferring from the local space to the master server.
 No parameter returned.
 
-Example : 
+Example :
 C<( toolbox::transferDirectoryFromNodeToMaster($initialDir."/*", $MasterDir, $nodeInitial,1);); >
 
 
@@ -1687,12 +1716,12 @@ Returns a 1 for success, and a 0 for failure. Will send a warning to the log in 
 Will return a maximum of 20 errors.
 Will stop immediatly if the first line is misformatted
 
-Example : 
+Example :
 C<( toolbox::checkFormatFasta($fastaFile);); >
 
 
 =head3 toolbox::checkFormatFastq()
- 
+
 This function checks if a given file is a FASTQ file.
 The only required argument is the filename.
 Returns a 1 for success, and a 0 for failure. Will send a warning to the log in case of failure.
@@ -1701,7 +1730,7 @@ Will stop immediatly if the first line is misformatted
 Use toolbox::checkNumberLines to count the number of lines and calculate if this number is a multiple of 4.
 Use a 4 lines block to avoid stocking in memory the whole of lines from file.
 Check the format of the first 50000 fastq reads.
- 
+
 Example :
 toolbox::checkFormatFasta($fastaFile);
 
@@ -1718,14 +1747,16 @@ Take note that if the relative is wrong, the absolute will be wrong too.
 The module will inform for transformation and will not modify already absolute paths (starting by '/')
 It takes only one argument, the relative path you want to change
 
+=head3 toolbox::rmHashOrder
+
+This function removes the step given in argument from $hashOrder.
+True only if this step is the first one defined in the configuration file
+
 =head1 AUTHORS
- 
+
 Cecile Monat, Ayite Kougbeadjo, Julie Orjuela-Bouniol, Marilyne Summo, Cedric Farcy, Mawusse Agbessi, Christine Tranchant and Francois Sabot
 
 L<http://www.southgreen.fr/>
 
 
 =cut
-
-
-

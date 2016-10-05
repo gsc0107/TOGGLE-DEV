@@ -39,6 +39,8 @@ use pairing;
 use toolbox;
 use onTheFly;
 use scheduler;
+use radseq;
+
 
 #For gz files
 use IO::Compress::Gzip qw(gzip $GzipError);
@@ -63,12 +65,12 @@ Mesg
   exit;
 }
 
-my %param = @ARGV;                     # get the parameters 
-if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined($param{'-r'}) or not defined ($param{'-o'}))
+my %param = @ARGV;                     # get the obligatory parameters
+if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined ($param{'-o'}))
 {
   print <<"Mesg";
 
-  ERROR: Parameters -d and -c and -r and -o are required.
+  ERROR: Parameters -d and -c and -o are required.
   perldoc $nomprog display the help
 
 Mesg
@@ -93,16 +95,19 @@ foreach my $inputParameters (keys %param)
   push @logPathInfos,$log;
 }
 
+#Recovery obligatory arguments 
 my $initialDir = $param{'-d'};        # recovery of the name of the directory to analyse
 my $fileConf = $param{'-c'};          # recovery of the name of the software.configuration.txt file
-my $refFastaFile = $param{'-r'};      # recovery of the reference file
 my $outputDir = $param{'-o'};         # recovery of the output folder
 
-my $gffFile;                          # recovery of the gff file used by topHat and rnaseq analysis
-$gffFile = $param{'-g'} if (defined $param{'-g'});
+#Recovery optional arguments 
+my $refFastaFile = $param{'-r'} if (defined $param{'-r'});      # recovery of the reference file
+my $gffFile = $param{'-g'} if (defined $param{'-g'});           # recovery of the gff file used by topHat and rnaseq analysis
+my $keyfile = $param{'-k'} if (defined $param{'-k'});           # recovery of the keyfile used by radseq
 
-
-
+#verify if -nocheckfastq arguments exist in params. The fastq format is verified par default.
+my $checkFastq = 1;
+$checkFastq = 0 if (defined $param{'-nocheckfastq'});
 
 
 ##########################################
@@ -165,7 +170,7 @@ while (my $line = <$fhConfig>)
   {
     $value =~ s/\"//g;
     $value =~ s/\w+ |\$|-//g unless $soft =~ m/java|toggle/i;
-    $value =~ s/^ //; 
+    $value =~ s/^ //;
   }
   else
   {
@@ -177,7 +182,6 @@ while (my $line = <$fhConfig>)
 toolbox::exportLog("\n#########################################\nINFOS: Data checking \n#########################################\n",1);
 toolbox::checkFile($fileConf);                              # check if this file exists
 toolbox::existsDir($initialDir);                            # check if this directory exists
-toolbox::checkFile($refFastaFile);                          #Retriving the configuration
 
 ##########################################
 # Charging config Infos and copying the software config file
@@ -196,7 +200,7 @@ toolbox::run($copyCommand,"noprint");
 ##DEBUG }
 
 #Verifying the correct ordering for the experiment, based on input output files and recovering the last step value
-my ($firstOrder,$lastOrder) = onTheFly::checkOrder($configInfo);
+my ($firstOrder,$lastOrder) = onTheFly::checkOrder($configInfo,%param);
 
 
 ##########################################
@@ -270,11 +274,33 @@ my $resultsDir = "output";
 my $workingDir = $outputDir."/$resultsDir";
 toolbox::makeDir($workingDir);
 
+
+#########################################
+# check if 1=processRadtags in $order
+#########################################
+my $hashOrder=toolbox::extractHashSoft($configInfo,"order");					#Picking up the options for the order of the pipeline
+
+my @values;
+for my $value ( values %{ $hashOrder } )
+{
+    push(@values,$value);
+}
+
+if ("processRadtags" ~~ @values)												# Check if processRadtags in step order
+{
+    $initialDirContent = radseq::checkOrder($outputDir,$fileConf,$initialDir,$checkFastq,%param);
+    $hashOrder = toolbox::rmHashOrder($hashOrder, "processRadtags")
+}
+#########################################
+# END check if 1=processRadtags in $order
+#########################################
+
+
 foreach my $file (@{$initialDirContent})
-{    
+{
     my ($shortName)=toolbox::extractPath($file);
     my $lnCommand = "ln -s $file $workingDir/$shortName";
-    toolbox::run($lnCommand,"noprint");      
+    toolbox::run($lnCommand,"noprint");
 }
 
 my $listOfFiles = toolbox::readDir($workingDir);                     # read it to recover files in it
@@ -284,11 +310,11 @@ if ($previousExtension eq "fastq")               # the data are all in FASTQ for
     #########################################
     # recognition of pairs of files and create a folder for each pair
     #########################################
-    my $pairsInfos = pairing::pairRecognition($workingDir);            # from files fasta recognition of paired files
+    my $pairsInfos = pairing::pairRecognition($workingDir,$checkFastq);            # from files fasta recognition of paired files
     pairing::createDirPerCouple($pairsInfos,$workingDir);              # from infos of pairs, construction of the pair folder
-    
+
     ##DEBUG toolbox::exportLog("INFOS: $0 : toolbox::readDir : $workingDir after create dir per couple: @$listOfFiles\n",1);
-    
+
 }
 
 #Other Data are not always treated singlely, but can work together => check if order hash steps higher than 1000 using the $lastStep value
@@ -306,7 +332,7 @@ elsif ($firstOrder<1000) #Other types of data requesting a single treatment
         {
             toolbox::exportLog("INFOS : $0 : Transferring $file to $dirName\n",1);
         }
-        
+
     }
 }
 
@@ -337,7 +363,7 @@ while (@listOfRefFiles)
   toolbox::run($refLsCommand,"noprint");
 }
 
-#Providing the good reference location 
+#Providing the good reference location
 $refFastaFile = $refDir."/".$shortRefFileName;
 ##DEBUG print $refFastaFile,"\n";
 
@@ -347,9 +373,9 @@ onTheFly::indexCreator($configInfo,$refFastaFile);
 my $scriptSingle = "$outputDir/toggleBzz.pl";
 my $scriptMultiple = "$outputDir/toggleMultiple.pl";
 
-my $hashOrder=toolbox::extractHashSoft($configInfo,"order"); #Picking up the options for the order of the pipeline
+
 my $hashCleaner=toolbox::extractHashSoft($configInfo,"cleaner"); #Picking up infos for steps to be cleaned / data to be removed all along the pipeline
-my $hashCompressor=toolbox::extractHashSoft($configInfo,"compress"); #Picking up infos for steps to be compress 
+my $hashCompressor=toolbox::extractHashSoft($configInfo,"compress"); #Picking up infos for steps to be compress
 
 my ($orderBefore1000,$orderAfter1000,$lastOrderBefore1000);
 
@@ -387,31 +413,31 @@ if ($orderBefore1000)
     #generate toggleBzzzz.pl
     onTheFly::generateScript($orderBefore1000,$scriptSingle,$hashCleaner,$hashCompressor);
     my $listSamples=toolbox::readDir($workingDir);
-    
+
     #CORRECTING $listSamples if only one individual, ie readDir will provide only the list of files...
     if (scalar @{$listSamples} < 3) #ex: Data/file_1.fastq, Data/file_2.fastq, or a single SAM/BAM/VCF individual
     {
       my @listPath = split /\//, $$listSamples[0];
       pop @listPath;
       my $trueDirName=join ("/",@listPath);
-      $trueDirName .= ":"; 
+      $trueDirName .= ":";
       my @tempList = ($trueDirName);
       $listSamples = \@tempList;
     }
     my $errorList="obiWanKenobi";
-    
+
     #we need those variable for Scheduler launching
     my $jobList="";
     my %jobHash;
-        
+
     foreach my $currentDir(@{$listSamples})
     {
         next unless $currentDir =~ m/:$/; # Will work only on folders
         $currentDir =~ s/:$//;
         my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf -r $refFastaFile";
         $launcherCommand.=" -g $gffFile" if (defined $gffFile);
-        
-        #Launching through the scheduler launching system  
+
+        #Launching through the scheduler launching system
         my $jobOutput = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
         ##DEBUG        toolbox::exportLog("WARNING: $0 : jobID = $jobOutput -- ",2);
         if ($jobOutput == 0)
@@ -428,16 +454,16 @@ if ($orderBefore1000)
           ##DEBUG          print "++$errorList++\n";
         }
         next unless ($jobOutput > 1); #1 means the job is Ok and is running in a normal linear way, ie no scheduling
-        
+
         ##DEBUG        toolbox::exportLog("INFOS: $0 : Parallel job",2);
-        
+
         $jobList = $jobList.$jobOutput."|";
         my $baseNameDir=`basename $currentDir` or toolbox::exportLog("\nERROR : $0 : Cannot pickup the basename for $currentDir: $!\n",0);
         chomp $baseNameDir;
         $jobHash{$baseNameDir}=$jobOutput;
     }
-    
-    
+
+
     #If parallel mode, we have to wait the end of jobs before populating
     chop $jobList if ($jobList =~ m/\|$/);
     if ($jobList ne "")
@@ -447,7 +473,7 @@ if ($orderBefore1000)
       if ($waitOutput != 1)
       {
         #Creating a chain with the list of individual with an error in the job...
-        $errorList=join ("\$\|",@{$waitOutput}); 
+        $errorList=join ("\$\|",@{$waitOutput});
       }
 
     }
@@ -460,7 +486,7 @@ if ($orderBefore1000)
         $outputErrors =~ s/\$\|/,/;
         toolbox::exportLog("\n>>>>>>>>>>>>>>>> WARNINGS: $0 : Some individuals are erroneous and not treated: $outputErrors\n",2);
       }
-    
+
     # Going through the individual tree
     #Transferring unmapped bam generated by tophat from tempory directory into tophat directory
     foreach my $currentDir (@{$listSamples})
@@ -470,7 +496,7 @@ if ($orderBefore1000)
       my $fileList = toolbox::readDir($currentDir);
       foreach my $file (@{$fileList}) #Copying intermediate data in the intermediate directory
       {
-         
+
         if ($file =~ "tophatTempory")
         {
           $file =~ s/://g;
@@ -478,16 +504,16 @@ if ($orderBefore1000)
           toolbox::run($mvCommand);
         }
       }
-        
+
     }
 
- 
+
     #Populationg the intermediate directory
     if ($orderAfter1000) #There is a global analysis afterward
     {
         #Creating intermediate directory
         toolbox::makeDir($intermediateDir);
-                
+
         # Going through the individual tree
         foreach my $currentDir (@{$listSamples})
         {
@@ -501,7 +527,7 @@ if ($orderBefore1000)
             {
                 my ($basicName)=toolbox::extractPath($file);
                 my $lnCommand="ln -s $file $intermediateDir/$basicName";
-                toolbox::run($lnCommand,"noprint")         
+                toolbox::run($lnCommand,"noprint")
             }
         }
     }
@@ -509,7 +535,7 @@ if ($orderBefore1000)
     {
         #Creating final directory
         toolbox::makeDir($finalDir);
-                
+
         # Going through the individual tree
         foreach my $currentDir (@{$listSamples})
         {
@@ -521,15 +547,15 @@ if ($orderBefore1000)
             my $lastDir = $currentDir."/".$lastOrderBefore1000."_".$$orderBefore1000{$lastOrderBefore1000};
             $lastDir =~ s/ //g;
             ##DEBUG toolbox::exportLog($lastDir,1);
-            
+
             my $fileList = toolbox::readDir($lastDir);
             foreach my $file (@{$fileList}) #Copying the final data in the final directory
             {
-                next if (not defined $file or $file =~ /^\s*$/);	
+                next if (not defined $file or $file =~ /^\s*$/);
 		$file =~s/://g;
 		my ($basicName)=toolbox::extractPath($file);
                 my $cpLnCommand="cp -rf $file $finalDir/$basicName && rm -rf $file && ln -s $finalDir/$basicName $file";
-                toolbox::run($cpLnCommand,"noprint")       
+                toolbox::run($cpLnCommand,"noprint")
             }
         }
     }
@@ -538,16 +564,16 @@ if ($orderBefore1000)
 
 if ($orderAfter1000)
 {
-  
+
     toolbox::exportLog("\n#########################################\n INFOS: Running multiple pipeline script \n#########################################\n",1);
 
     onTheFly::generateScript($orderAfter1000,$scriptMultiple,$hashCleaner,$hashCompressor);
-    
+
     $workingDir = $intermediateDir if ($orderBefore1000); # Changing the target directory if we have under 1000 steps before.
 
     my $launcherCommand="$scriptMultiple -d $workingDir -c $fileConf -r $refFastaFile";
     $launcherCommand.=" -g $gffFile" if (defined $gffFile);
-    
+
     my $jobList="";
     my %jobHash;
 
@@ -557,7 +583,7 @@ if ($orderAfter1000)
     {
       $jobList = $jobOutput;
       $jobHash{"global"}=$jobOutput;
-    
+
       #If qsub mode, we have to wait the end of jobs before populating
       chop $jobList if ($jobList =~ m/\|$/);
       if ($jobList ne "")
@@ -570,10 +596,10 @@ if ($orderAfter1000)
         }
       }
     }
-    
+
     #Creating final directory
     toolbox::makeDir($finalDir);
-            
+
     # Going through the individual tree
     my $lastDir = $workingDir."/".$lastOrder."_".$$orderAfter1000{$lastOrder};
     $lastDir =~ s/ //g;
@@ -584,9 +610,9 @@ if ($orderAfter1000)
         my ($basicName)=toolbox::extractPath($file);
         my $cpLnCommand="cp -rf $file $finalDir/$basicName && rm -rf $file && ln -s $finalDir/$basicName $file";
         ##DEBUG toolbox::exportLog($cpLnCommand,1);
-        toolbox::run($cpLnCommand,"noprint")       
+        toolbox::run($cpLnCommand,"noprint")
     }
-    
+
 }
 
 close F1;
@@ -599,7 +625,7 @@ toolbox::exportLog("\nThank you for using TOGGLE!
 #\tCécile Monat, Christine Tranchant-Dubreuil, Ayité Kougbeadjo, Cédric Farcy, Enrique Ortega-Abboud,
 #\tSouhila Amanzougarene,Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot.
 #\tBMC Bioinformatics 2015, 16:374
-###########################################################################################################################",1);  
+###########################################################################################################################",1);
 
 exit;
 
@@ -609,19 +635,19 @@ toggleGenerator.pl - Automatic pipeline generator
 
 =head1 Usage
 
+toggleGenerator.pl -d DIR -c FILE -o DIR [optional : -r FILE -g FILE -k FILE -noCheckFastq ]
+=head1 Required Obligatoy Arguments :
 
-toggleGenerator.pl -d DIR -c FILE -r FILE -o DIR -g FILE
-
-=head1 Required Arguments
-
-      -d DIR    The directory containing initial files
-      -c FILE   The configuration file
-      -r FILE   The reference sequence (fasta)
-      -o DIR    The directory containing output files
+      -d DIR    	The directory containing initial files
+      -c FILE   	The configuration file
+      -o DIR    	The directory containing output files
       
-=head1 For RNAseq analysis
-
-      -g FILE   The gff file containing reference annotations
+=head1 Optional Arguments :
+      
+      -r FILE   	The reference sequence (fasta)
+      -g FILE   	The gff file containing reference annotations (For RNAseq analysis per exemple)
+      -k FILE		The keyFile used to demultiplexing (For stacks analysis) 
+      -nocheckfastq 	No check format in every fastq file
 
 =head1  Authors
 

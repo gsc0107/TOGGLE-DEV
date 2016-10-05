@@ -46,7 +46,7 @@ use localConfig;
 sub softwareNomenclature # Will rewrite the correct name in the hash of configuration
 {
     my ($hash) = @_;
-    
+
     foreach my $currentSoft (keys %{$hash})
     {
         my $correctName;
@@ -58,7 +58,7 @@ sub softwareNomenclature # Will rewrite the correct name in the hash of configur
             {
                 $$hashOrder{$step}=correctName($$hashOrder{$step}); # will change in order accordingly
             }
-            
+
             next;
         }
         ##DEBUG print "---------------$currentSoft-->";
@@ -72,7 +72,7 @@ sub softwareNomenclature # Will rewrite the correct name in the hash of configur
             delete $$hash{$currentSoft};
             ##DEBUG print Dumper($hash);
         }
-        
+
     }
     return $hash;
 }
@@ -89,22 +89,22 @@ sub correctName
     {
 	#FOR cleaner
 	case ($name =~ m/^cleaner/i){$correctedName="cleaner";} #Correction for cleaner step
-	
+
 	#FOR compressor
 	case ($name =~ m/^compress/i){$correctedName="compress";} #correction for compressor step
-	
+
 	#FOR SGE
 	case ($name =~ m/^sge/i){$correctedName="sge";} #Correction for sge configuration
-	
+
 	#FOR SLURM
 	case ($name =~ m/^slurm/i){$correctedName="slurm";} #Correction for slurm configuration
-	
+
 	#FOR MPRUN
 	case ($name =~ m/^mprun/i){$correctedName="mprun";} #Correction for mprun configuration
 
 	#FOR LSF
 	case ($name =~ m/^lsf/i){$correctedName="lsf";} #Correction for lsf configuration
-	
+
         #FOR bwa.pm
         case ($name =~ m/^bwa[\s|\.|\-| \/|\\|\|]*aln/i){$correctedName="bwaAln"; } #Correction for bwaAln
         case ($name =~ m/^bwa[\s|\.|\-| \/|\\|\|]*sampe/i){$correctedName="bwaSampe"} # Correction for bwaSampe
@@ -112,7 +112,7 @@ sub correctName
         case ($name =~ m/^bwa[\s|\.|\-| \/|\\|\|]*index/i){$correctedName="bwaIndex"} # Correction for bwaIndex
         case ($name =~ m/^bwa[\s|\.|\-| \/|\\|\|]*mem/i){$correctedName="bwaMem"} # Correction for bwaMem
 
-        
+
         #FOR samTools.pm
         case ($name =~ m/^samtools[\s|\.|\-| \/|\\|\|]*faidx/i){$correctedName="samToolsFaidx"} # Correction for samToolsFaidx
         case ($name =~ m/^samtools[\s|\.|\-| \/|\\|\|]*index/i){$correctedName="samToolsIndex"} # Correction for samToolsIndex
@@ -134,7 +134,7 @@ sub correctName
 	case ($name =~ m/^picardtools[\s|\.|\-| \/|\\|\|]*sam[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*converter/i){$correctedName="picardToolsSamFormatConverter"} # Correction for picardToolsSamFormatConverter
 	case ($name =~ m/^picardtools[\s|\.|\-| \/|\\|\|]*add[\s|\.|\-| \/|\\|\|]*or[\s|\.|\-| \/|\\|\|]*replace[\s|\.|\-| \/|\\|\|]*group/i){$correctedName="picardToolsAddOrReplaceGroup"} # Correction for picardToolsAddOrReplaceGroup
 
-        
+
         #FOR gatk.pm
         case ($name =~ m/^gatk[\s|\.|\-| \/|\\|\|]*base[\s|\.|\-| \/|\\|\|]*recalibrator/i){$correctedName="gatkBaseRecalibrator"} # Correction for gatkBaseRecalibrator
         case ($name =~ m/^gatk[\s|\.|\-| \/|\\|\|]*print[\s|\.|\-| \/|\\|\|]*reads/i){$correctedName="gatkPrintReads"} # Correction for gatkPrintReads
@@ -145,14 +145,14 @@ sub correctName
         case ($name =~ m/^gatk[\s|\.|\-| \/|\\|\|]*variant[\s|\.|\-| \/|\\|\|]*filtration/i){$correctedName="gatkVariantFiltration"} # Correction for gatkVariantFiltration
         case ($name =~ m/^gatk[\s|\.|\-| \/|\\|\|]*unified[\s|\.|\-| \/|\\|\|]*genotyper/i){$correctedName="gatkUnifiedGenotyper"} # Correction for gatkUnifiedGenotyper
         case ($name =~ m/^gatk[\s|\.|\-| \/|\\|\|]*read[\s|\.|\-| \/|\\|\|]*backed[\s|\.|\-| \/|\\|\|]*phasing/i){$correctedName="gatkReadBackedPhasing"} # Correction for gatkReadBackedPhasing
-        
+
         #FOR fastqc
         case ($name =~ m/^fastqc/i){$correctedName="fastqc"} # Correction for fastqc
-        
+
         #FOR fastqUtils.pm
         case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*encode[\s|\.|\-| \/|\\|\|]*by[\s|\.|\-| \/|\\|\|]*ascii[\s|\.|\-| \/|\\|\|]*control/i){$correctedName="checkEncodeByASCIIcontrol"} # Correction for checkEncodeByASCIIcontrol
         case ($name =~ m/^change[\s|\.|\-| \/|\\|\|]*encode/i){$correctedName="changeEncode"} # Correction for changeEncode
-        
+
         #FOR fastxToolkit
         case ($name =~ m/^fastx[\s|\.|\-| \/|\\|\|]*trimmer/i){$correctedName="fastxTrimmer"} # Correction for fastxTrimmer
 
@@ -160,16 +160,18 @@ sub correctName
         case ($name =~ m/^bowtie[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="bowtieBuild"; } #Correction for bowtiebuild
 	case ($name =~ m/^bowtie2[\s|\.|\-| \/|\\|\|]*build/i){$correctedName="bowtie2Build"; } #Correction for bowtie2build
 	case ($name =~ m/^tophat[\s|\.|\-| \/|\\|\|]*2/i){$correctedName="tophat2"; } #Correction for tophat2
-	
+
         #FOR cufflinks.pm
-        
+
         #FOR HTSeq.pm
         case ($name =~ m/^htseq[\s|\.|\-| \/|\\|\|]*count/i){$correctedName="htseqCount"; } #Correction for htseq-count
-	
+
         #FOR snpeff.pm
         case ($name =~ m/^snpeff[\s|\.|\-| \/|\\|\|]*annotation/i){$correctedName="snpeffAnnotation"} # Correction for snpeffAnnotation
 
-        
+		#FOR processRadtags.pm
+        case ($name =~ m/process[\s|\.|\-| \/|\\|\|]*Radtags/i){$correctedName="processRadtags"} # Correction for processRadtags
+
         #FOR cutadapt functions
         case ($name =~ m/^cutadapt/i){$correctedName="cutadapt"} # Correction for cutadapt step
     
@@ -178,8 +180,7 @@ sub correctName
         
         #FOR trinity
         case ($name =~ m/^trinity/i){$correctedName="trinity"}  # pour chercher le nom du block
- 
-        
+
         else {toolbox::exportLog("ERROR : $0 : the $name function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
     }
     $correctedName .= " ".$order if ($order);
@@ -191,14 +192,14 @@ sub correctName
 
 =head1 NAME
 
-    Package I<namingConvention> 
+    Package I<namingConvention>
 
 =head1 SYNOPSIS
 
 	use namingConvention;
-    
+
 	namingConvention::softwareNomenclature ($hashSoftware);
-    
+
 	namingConvention::correctName ($softwareName);
 
 =head1 DESCRIPTION

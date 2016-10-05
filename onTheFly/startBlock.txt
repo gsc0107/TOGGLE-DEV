@@ -60,7 +60,7 @@ use tophat;
 use HTSeq;
 use tgicl;
 use trinity;
-
+use radseq;
 
 #TO BE COMPLETED
 
@@ -148,6 +148,12 @@ my $optionRef=toolbox::readFileConf($fileConf); # Picking up the global options
 
 my $hashOrder=toolbox::extractHashSoft($optionRef,"order"); #Picking up the options for the order of the pipeline
 
+#########################################
+# check if 1=processRadtags in $hashOrder
+#########################################
+$hashOrder = toolbox::rmHashOrder($hashOrder, "processRadtags");
+
+
 #Global variables declaration
 
 ##FASTA associated variables
@@ -214,6 +220,6 @@ foreach my $position (sort {$a <=>$b} keys %{$hashOrder})
     $directory =~ s/ /_/g; #Removing the spaces
     toolbox::makeDir($directory); # Create the folder associated with each steps
     push (@dirList,$directory); # Adding the newly created folder to the list of folders
-    
+
   }
 }

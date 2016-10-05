@@ -10,3 +10,8 @@
 * If adaptors are not informed in the software.config for cutadapt (-b options), it will drive to an error in *Cutadapt* step
 * Cleaner and compressor will drive to an error if a step is too early compressed , i.e. before the pipeline needs it.
 * *picardToolsValidateSamFile* will always stop the pipeline on an error if the SAM is not perfectly correct. thus, if you want to use this tool, use it as the last one in the pipeline, that will drive whatever to an error.
+
+
+*ERROR: toolbox::run : 
+--[E::hts_idx_push] unsorted positions
+samtools index: "/home/ravel/TOGGLE/DATA-TEST/pairedOneIndividuArcad-noSGE/output/arcad1/5_samToolsView/arcad1.SAMTOOLSVIEW.bam" is corrupted or unsorted

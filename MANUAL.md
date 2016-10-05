@@ -37,31 +37,38 @@ Please use only UTF-8 standard symbols, no weird characters or space, pipe, tild
 The current version is based on the **toggleGenerator.pl** script
 
 ````
-$toggleGenerator.pl -d initialDirectory -r referenceFile -c configurationFile -o outputFolder
+$toggleGenerator.pl -d initialDirectory -c configurationFile -o outputFolder [-r referenceFile -g gffFile -k keyFile -nocheckfastq]
 ````
 
-with
+with mandatory options:
+
 > -d initialDirectory: a folder with raw data to be treated (FASTQ, FASTQ.GZ, SAM, BAM, VCF)
-
-
-
-> -r referenceFile: the reference FASTA file to be used. If no index exists it will be created accordingly to the pipeline requested index. If the index exist, they will not be re-created UNLESS the pipeline order (see below) expressively requests it (updating the index e.g.)
 
 > -c configurationFile: generally it is the *software.config.txt* file but it can be any text file structured as shown below.
 
 > -o outputFolder: the current version of TOGGLE will not modify the initial data folder but will create an output directory with all analyses in.
 
-All the locations (reference, config file, folder in and out) can be provided as absolute (/home/mylogin/data/myRef.fasta) or in relative (../data/myRef.fasta).
+and  optional options:
 
-The *software.config.txt* file is an example of how to customize your pipeline.
+> -r referenceFile: the reference FASTA file to be used. If no index exists it will be created accordingly to the pipeline requested index. If the index exist, they will not be re-created UNLESS the pipeline order (see below) expressively requests it (updating the index e.g.)
+
+> -g gffFile: the GFF file to be used for some tools.
+
+> -k keyfileFile: the keyfile use for demultiplexing step.
+
+> -nocheckfastq: by default toggle checks if fastq format is correct in every file. This option allows to skip this step.
+
+All the the paths (files and folders) can be provided as absolute (/home/mylogin/data/myRef.fasta) or relative (../data/myRef.fasta).
+
+The *SNPdiscoveryPaired.config.txt* file is an example of how to customize your pipeline.
 
 Any software configuration will start as follows:
  ````
- $mySoftware
+ $First Software
  option1
  option2
 
- $mySecond soft
+ $Second Software
  option1
  option2
  ````

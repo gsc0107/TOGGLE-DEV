@@ -1,8 +1,10 @@
 package localConfig;
 
+
+
 ###################################################################################################################################
 #
-# Copyright 2014-2016 IRD-CIRAD-INRA-ADNid
+# Copyright 2014 IRD-CIRAD
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,10 +25,8 @@ package localConfig;
 # You should have received a copy of the CeCILL-C license with this program.
 #If not see <http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.txt>
 #
-# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
-# Version 1 written by Cecile Monat, Ayite Kougbeadjo, Christine Tranchant, Cedric Farcy, Mawusse Agbessi, Maryline Summo, and Francois Sabot
-# Version 2 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Enrique Ortega-Abboud, Julie Orjuela-Bouniol, Sebastien Ravel, Souhila Amanzougarene, and Francois Sabot
-# Version 3 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Maryline Summo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
+# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform
+# Written by Cecile Monat, Christine Tranchant, Ayite Kougbeadjo, Cedric Farcy, Mawusse Agbessi, Marilyne Summo, and Francois Sabot
 #
 ###################################################################################################################################
 
@@ -37,7 +37,9 @@ use warnings;
 use Exporter;
 
 our @ISA=qw(Exporter);
-our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity);
+
+our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks);
+
 
 #toggle path
 our $toggle="/path/to/toggleFolder";
@@ -81,5 +83,9 @@ our $tgicl = "/path/to/tgicl";
 
 #path for trinity
 our $trinity = "/path/to/trinity";
+
+#path for process_radtags
+our $stacks = "/path/to/process_radtags";
+
 
 1;
