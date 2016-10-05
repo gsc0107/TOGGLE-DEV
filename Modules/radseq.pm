@@ -72,10 +72,8 @@ sub executeDemultiplexing
 	}
 
 	radseq::processRadtags($keyFile, $initialDir, $workingDirRadseq, $optionsRadtags);	# run demultiplexing
-	# Reinitialise the initialDir with output of demultiplexing and add output for toggle
-	$initialDirContent=toolbox::readDir($workingDirRadseq);
 
-	#check if data files are not empty because sometime demultiplexing created empty file
+	#check if data files are not empty because some files can be empty after demultiplex step.
 	foreach my $file (@{$initialDirContent})
 	{
 	  if (toolbox::sizeFile($file) == 0)   #file empty
@@ -144,7 +142,8 @@ sub parseKeyFile
 # arguments :
 # 	- $keyFile : the keyFile to analyze
 #	- $initialDir : the directory that contains all the files fastq
-#	- $options : at least the options -e (enzyme) is necessary; use the option -P if paired-end or others options from process_radtags of stacks
+#   - $outDir : output directory with demultiplexed fastq files
+#	- $optionsHachees : at least the options -e (enzyme) is necessary; use the option -P if paired-end or others options from process_radtags of stacks
 ################################################################################################
 # return boolean :
 #	- 1 if processRadtags runned correctly
@@ -152,7 +151,7 @@ sub parseKeyFile
 ################################################################################################
 sub processRadtags
 {
-	toolbox::exportLog("ERROR: radseq::processRadtags : should get at least two arguments\n",0) if (@_ < 2);
+	toolbox::exportLog("ERROR: radseq::processRadtags : should get at least four arguments\n",0) if (@_ < 4);
 	my ($keyFile,$initialDir,$outDir,$optionsHachees)=@_;
 
 	my $options=toolbox::extractOptions($optionsHachees);		##Get given options
@@ -193,12 +192,13 @@ sub processRadtags
 ################################################################################################
 # arguments :
 # 	- $outputDir : outputDir pass to toggle
-#	- $param : arg pass to toggle
-#	- $hashOrder : order of step
+#	- $fileConf: toogle file config
 #	- $initialDir : initialDir
+#	- $checkFastq : arg value of toggle -nocheckFastq option
+#	- %param : hash of arg given to toggle
 ################################################################################################
 # return  :
-#	- $initialDirContent
+#	- $initialDirContent: udpate -d argument with path of demultiplexed files generate by stacks
 ################################################################################################
 
 sub checkOrder
@@ -211,7 +211,7 @@ sub checkOrder
 	my $optionsRadtags=toolbox::extractHashSoft($configInfo,"processRadtags"); 		# Picking up the options for radseq::processRadtags
 	my $hashOrder=toolbox::extractHashSoft($configInfo,"order");					#Picking up the options for the order of the pipeline
 
-	my $resultsDirRadseq = "demultiplexing";
+	my $resultsDirRadseq = "demultiplexedFiles";
 	my $workingDirRadseq = $outputDir."/$resultsDirRadseq";
 	my @firstKeys;
 	if ( defined $param{'-k'} )
@@ -235,6 +235,7 @@ sub checkOrder
 		toolbox::exportLog("ERROR  radseq::executeDemultiplexing : demultiplexing must been the first step and -k option is required\n",0);
 	}
 
+	# Reinitialise the initialDir with output of demultiplexing and add output for toggle
 	my $initialDirContent=toolbox::readDir($workingDirRadseq);
 
 	return $initialDirContent
@@ -266,11 +267,13 @@ package I<radseq>
 
 	use radseq;
 
-	radseq::executeDemultiplexing($keyFile,$initialDir,$workingDirRadseq,$optionsRadtags);
+	radseq::executeDemultiplexing($keyFile,$initialDir,$workingDirRadseq,$optionsRadtags,$checkFastq);
 
 	radseq::parseKeyFile($keyFile);
 
 	radseq::processRadtags($keyFile,$initialDir,$outDir,$optionsHachees);
+	
+	radseq::checkOrder($outputDir,$fileConf,$initialDir,$checkFastq,%param);
 
 
 #=head1 DESCRIPTION
@@ -283,7 +286,7 @@ This module is a set of functions related to radseq module of Stacks software,  
 
 =head3 processRadtags()
 
-This function execute the Stacks::process_radtags software to demultiplexing a directory that contains fastq files.
+This function execute the Stacks::process_radtags software to demultiplex a directory that contains fastq files.
 Four arguments are required : a key file, a input directory, a output directory, option of process_radtags.
 
 C<stacks::processRadtags($keyFile,$initialDir,$outDir,$optionsHachees);>
@@ -300,12 +303,21 @@ C<radseq::parseKeyFile($keyFile);>
 
 =head3 executeDemultiplexing()
 
-This function split the run demultiplexing with stacks::processRadtags
+This function run stacks::processRadtags and check if data files are not empty because some files can be empty after demultiplex step.
 
 Return 1 if radseq::executeDemultiplexing has ran correctly else 0.
 
 Example :
 C<radseq::executeDemultiplexing($keyFile,$initialDir,$workingDirRadseq,$optionsRadtags);>
+
+=head3 checkOrder()
+
+This function check if processRadtags is the first step.
+
+Return initialDirContent: udpate -d argument with path of demultiplexed files generate by stacks.
+
+Example :
+C<radseq::checkOrder($outputDir,$fileConf,$initialDir,$checkFastq,%param);>
 
 
 =head1 AUTHORS
