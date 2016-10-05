@@ -106,29 +106,29 @@ my @expectedOutput = ('individuSoft.txt','pindel_TEST_log.e','pindel_TEST_log.o'
 #
 
 is_deeply(\@observedOutput,\@expectedOutput,'pindel::pindelRun - output list');
+
 #
 ## expected content test
-exit;
-__END__
-
-
 $observedOutput = `wc -l *`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ("    2 individuSoft.txt","    0 pindel_TEST_log.e","    2 pindel_TEST_log.o","    0 referencePindelChr1.PINDEL_BP","    0 referencePindelChr1.PINDEL_CloseEndMapped","  139 referencePindelChr1.PINDEL_D","    0 referencePindelChr1.PINDEL_INT_final","   12 referencePindelChr1.PINDEL_INV","    0 referencePindelChr1.PINDEL_LI","    0 referencePindelChr1.PINDEL_RP","  105 referencePindelChr1.PINDEL_SI","    5 referencePindelChr1.PINDEL_TD","  265 total" );
+@expectedOutput = ("    2 individuSoft.txt","    0 pindel_TEST_log.e","    2 pindel_TEST_log.o","    0 referencePindelChr1.PINDEL_BP","    0 referencePindelChr1.PINDEL_CloseEndMapped","  130 referencePindelChr1.PINDEL_D","   0 referencePindelChr1.PINDEL_INT_final","  0 referencePindelChr1.PINDEL_INV","    0 referencePindelChr1.PINDEL_LI","    0 referencePindelChr1.PINDEL_RP","  105 referencePindelChr1.PINDEL_SI","    5 referencePindelChr1.PINDEL_TD","  265 total" );
 
-is_deeply(\@observedOutput,\@expectedOutput,'pindel::pindelRun - output number line liste');
+is_deeply(\@observedOutput,\@expectedOutput,'pindel::pindelRun - output number line list');
 
 
 
 my $cmd = 'grep "\@FCD0REEACXX:8:1204:12111:37630#GTTACTTG_32/2" '.$outputPindelPrefix.'_D';
 #print $cmd;
-my $expectedLastLine="                                                                    GAATCTGGGTCGTCCGATGCGAACGAGCACTCGGCGTCGGGTCGGAGGTGAGGTCTCGAAACCCTAGCTGCTCCG		-	30066	37	pindelBam	\@FCD0REEACXX:8:1204:12111:37630#GTTACTTG_32/2";  
+my $expectedLastLine="                                                                    GAATCTGGGTCGTCCGATGCGAACGAGCACTCGGCGTCGGGTCGGAGGTGAGGTCTCGAAACCCTAGCTGCTCCG		-	30066	37	.81	\@FCD0REEACXX:8:1204:12111:37630#GTTACTTG_32/2";  
 my $observedLastLine=`$cmd`;
 chomp($observedLastLine);
 #my @withoutName = split ("LN:", $observedLastLine); 
 #$observedLastLine = $withoutName[0];       # just to have the md5sum result
 is($observedLastLine,$expectedLastLine,'pindel::pindelRun- output content');
 
+
+exit;
+__END__
 
 ##########################################
 #pindelConfig test
