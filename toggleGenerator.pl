@@ -65,7 +65,7 @@ Mesg
   exit;
 }
 
-my %param = @ARGV;                     # get the parameters
+my %param = @ARGV;                     # get the obligatory parameters
 if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined ($param{'-o'}))
 {
   print <<"Mesg";
@@ -95,14 +95,17 @@ foreach my $inputParameters (keys %param)
   push @logPathInfos,$log;
 }
 
+#Recovery obligatory arguments 
 my $initialDir = $param{'-d'};        # recovery of the name of the directory to analyse
 my $fileConf = $param{'-c'};          # recovery of the name of the software.configuration.txt file
 my $outputDir = $param{'-o'};         # recovery of the output folder
 
+#Recovery optional arguments 
 my $refFastaFile = $param{'-r'} if (defined $param{'-r'});      # recovery of the reference file
 my $gffFile = $param{'-g'} if (defined $param{'-g'});           # recovery of the gff file used by topHat and rnaseq analysis
 my $keyfile = $param{'-k'} if (defined $param{'-k'});           # recovery of the keyfile used by radseq
 
+#verify if -nocheckfastq arguments exist in params. The fastq format is verified par default.
 my $checkFastq = 1;
 $checkFastq = 0 if (defined $param{'-nocheckfastq'});
 
@@ -632,19 +635,19 @@ toggleGenerator.pl - Automatic pipeline generator
 
 =head1 Usage
 
+toggleGenerator.pl -d DIR -c FILE -o DIR [optional : -r FILE -g FILE -k FILE -noCheckFastq ]
+=head1 Required Obligatoy Arguments :
 
-toggleGenerator.pl -d DIR -c FILE -r FILE -o DIR -g FILE
-
-=head1 Required Arguments
-
-      -d DIR    The directory containing initial files
-      -c FILE   The configuration file
-      -r FILE   The reference sequence (fasta)
-      -o DIR    The directory containing output files
-
-=head1 For RNAseq analysis
-
-      -g FILE   The gff file containing reference annotations
+      -d DIR    	The directory containing initial files
+      -c FILE   	The configuration file
+      -o DIR    	The directory containing output files
+      
+=head1 Optional Arguments :
+      
+      -r FILE   	The reference sequence (fasta)
+      -g FILE   	The gff file containing reference annotations (For RNAseq analysis per exemple)
+      -k FILE		The keyFile used to demultiplexing (For stacks analysis) 
+      -nocheckfastq 	No check format in every fastq file
 
 =head1  Authors
 
