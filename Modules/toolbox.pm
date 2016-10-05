@@ -1406,6 +1406,34 @@ sub relativeToAbsolutePath
 ################################################################################################
 
 
+################################################################################################
+# sub rmHashOrder => remove step in hashOrder if stepName if the first key
+# NOTE/WARNING: this function was developed to remove only the first step (for processRadstacks)
+################################################################################################
+# arguments :
+# 	- $hashOrder
+#	- $stepName
+# returns :
+#	- $hashOrder with step removed
+################################################################################################
+sub rmHashOrder
+{
+	toolbox::exportLog("ERROR: toolbox::rmHashOrder : should get at least one arguments\n",0) if (@_ < 1);
+	my ($hashOrder,$stepName)=@_;
+
+	my @firstKeys = sort {$a <=> $b} (keys(%{$hashOrder}));
+	if ($hashOrder->{$firstKeys[0]} eq $stepName)
+	{
+		delete $$hashOrder{$firstKeys[0]};
+	}
+	return $hashOrder;
+}
+################################################################################################
+# END sub rmHashOrder
+################################################################################################
+
+
+
 1;
 
 =head1 NAME

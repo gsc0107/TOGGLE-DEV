@@ -244,18 +244,7 @@ sub checkOrder
 # END sub radseq::checkOrder
 ################################################################################################
 
-sub rmHashOrder
-{
-	toolbox::exportLog("ERROR: radseq::rmHashOrder : should get at least one arguments\n",0) if (@_ < 1);
-	my ($hashOrder,$stepName)=@_;
 
-	my @firstKeys = sort {$a <=> $b} (keys(%{$hashOrder}));
-	if ($hashOrder->{$firstKeys[0]} eq $stepName)
-	{
-		delete $$hashOrder{$firstKeys[0]};
-	}
-	return $hashOrder;
-}
 1;
 
 
