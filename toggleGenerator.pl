@@ -289,7 +289,7 @@ for my $value ( values %{ $hashOrder } )
 if ("processRadtags" ~~ @values)												# Check if processRadtags in step order
 {
     $initialDirContent = radseq::checkOrder($outputDir,$fileConf,$initialDir,$checkFastq,%param);
-    $hashOrder = radseq::rmHashOrder($hashOrder, "processRadtags")
+    $hashOrder = toolbox::rmHashOrder($hashOrder, "processRadtags")
 }
 #########################################
 # END check if 1=processRadtags in $order
