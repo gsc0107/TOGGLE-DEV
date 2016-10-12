@@ -342,33 +342,35 @@ toolbox::exportLog("#########################################\nINFOS: Generating
 
 #Linking of the reference file and of already existing index in the output folder to avoid writing rights limitations
 ##DEBUG print $refFastaFile,"\n";
-my $referenceShortName = $refFastaFile;
-my $shortRefFileName = toolbox::extractName($refFastaFile); #We have only the reference name, not the full path
-$referenceShortName =~ s/\.\w+$//; #Ref can finish with .fa or .fasta, and we need also .dict file
-my $refLsCommand = " ls ".$referenceShortName.".*";
-my $refLsResults = `$refLsCommand` or toolbox::exportLog("ERROR : $0 : Cannot obtain the list of reference associated files with the command $refLsCommand: $!\n",0);
-chomp $refLsResults;
-#Creating a reference Folder in the $outputDir
-my $refDir = $outputDir."/referenceFiles";
-toolbox::makeDir($refDir);
-#Transforming in a list of files
-my @listOfRefFiles = split /\n/, $refLsResults;
-#Performin a ln command per file
-while (@listOfRefFiles)
+if (defined $param{'-r'})
 {
-  my $currentRefFile = shift @listOfRefFiles;
-  my $shortRefFileName = toolbox::extractName($currentRefFile);
-  my $refLsCommand = "cp $currentRefFile $refDir/$shortRefFileName";
-  ##DEBUG print $refLsCommand,"\n";
-  toolbox::run($refLsCommand,"noprint");
+    my $referenceShortName = $refFastaFile;
+    my $shortRefFileName = toolbox::extractName($refFastaFile); #We have only the reference name, not the full path
+    $referenceShortName =~ s/\.\w+$//; #Ref can finish with .fa or .fasta, and we need also .dict file
+    my $refLsCommand = " ls ".$referenceShortName.".*";
+    my $refLsResults = `$refLsCommand` or toolbox::exportLog("ERROR : $0 : Cannot obtain the list of reference associated files with the command $refLsCommand: $!\n",0);
+    chomp $refLsResults;
+    #Creating a reference Folder in the $outputDir
+    my $refDir = $outputDir."/referenceFiles";
+    toolbox::makeDir($refDir);
+    #Transforming in a list of files
+    my @listOfRefFiles = split /\n/, $refLsResults;
+    #Performin a ln command per file
+    while (@listOfRefFiles)
+    {
+      my $currentRefFile = shift @listOfRefFiles;
+      my $shortRefFileName = toolbox::extractName($currentRefFile);
+      my $refLsCommand = "cp $currentRefFile $refDir/$shortRefFileName";
+      ##DEBUG print $refLsCommand,"\n";
+      toolbox::run($refLsCommand,"noprint");
+    }
+    
+    #Providing the good reference location
+    $refFastaFile = $refDir."/".$shortRefFileName;
+    ##DEBUG print $refFastaFile,"\n";
+    
+    onTheFly::indexCreator($configInfo,$refFastaFile);  
 }
-
-#Providing the good reference location
-$refFastaFile = $refDir."/".$shortRefFileName;
-##DEBUG print $refFastaFile,"\n";
-
-onTheFly::indexCreator($configInfo,$refFastaFile);
-
 #Generate script
 my $scriptSingle = "$outputDir/toggleBzz.pl";
 my $scriptMultiple = "$outputDir/toggleMultiple.pl";
@@ -434,9 +436,10 @@ if ($orderBefore1000)
     {
         next unless $currentDir =~ m/:$/; # Will work only on folders
         $currentDir =~ s/:$//;
-        my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf -r $refFastaFile";
+        my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf ";
+        $launcherCommand.=" -r $refFastaFile" if (defined $param{'-r'});
         $launcherCommand.=" -g $gffFile" if (defined $gffFile);
-
+        
         #Launching through the scheduler launching system
         my $jobOutput = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
         ##DEBUG        toolbox::exportLog("WARNING: $0 : jobID = $jobOutput -- ",2);
@@ -571,7 +574,8 @@ if ($orderAfter1000)
 
     $workingDir = $intermediateDir if ($orderBefore1000); # Changing the target directory if we have under 1000 steps before.
 
-    my $launcherCommand="$scriptMultiple -d $workingDir -c $fileConf -r $refFastaFile";
+    my $launcherCommand="$scriptMultiple -d $workingDir -c $fileConf ";
+    $launcherCommand.=" -r $refFastaFile" if (defined $param{'-r'});
     $launcherCommand.=" -g $gffFile" if (defined $gffFile);
 
     my $jobList="";
