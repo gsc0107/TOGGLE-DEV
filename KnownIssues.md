@@ -11,7 +11,7 @@
 * Cleaner and compressor will drive to an error if a step is too early compressed , i.e. before the pipeline needs it.
 * *picardToolsValidateSamFile* will always stop the pipeline on an error if the SAM is not perfectly correct. thus, if you want to use this tool, use it as the last one in the pipeline, that will drive whatever to an error.
 * *Multiple times repeated software* Do not forget to put a space between the software name and the repeated time. Thus **samtoolsView 2** functions but not **samtoolsView2** !! This convention is requested because of software finishing by a number (e.g. *Tophat2*) that may be themselves repeated.
-
+* TOGGLE can generate error *Use of uninitialized value $namingConvention in numeric eq (==) at /home/ravel/gitmerge/master/Modules/pairing.pm line 107* with stacks::processRadtags if you not add option *--retain_header* on your file_config.txt
 
 *ERROR: toolbox::run :
 --[E::hts_idx_push] unsorted positions
