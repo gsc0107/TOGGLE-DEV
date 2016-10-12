@@ -72,7 +72,7 @@ my ($nomprog)=$0=~/([^\/]+)$/;
 unless ($#ARGV>=0)                                                                                          # if no argument given
 {
   print <<"Mesg";
-  Usage: toggleGenerator.pl -d dataFolder -r referenceFile -c configurationFile [-g gffFile]
+  Usage: toggleGenerator.pl -d dataFolder -c configurationFile [-g gffFile -r referenceFile ]
 
   perldoc $nomprog display the complete help
 Mesg
@@ -82,10 +82,10 @@ Mesg
 
 my %param = @ARGV;                                                                                          # get the parameters
 @param{ map { lc $_ } keys %param } = values %param;
-if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined($param{'-r'}))
+if (not defined($param{'-d'}) or not defined($param{'-c'}))
 {
   print <<"Mesg";
-  ERROR: Parameters -d, -r and -c are mandatory.
+  ERROR: Parameters -d, and -c are mandatory.
   the -g parameter is required for some analyses, such as for TopHat or snpEff.
 
   perldoc $nomprog display complete the help
@@ -97,11 +97,14 @@ Mesg
 ##########################################
 # recovery of initial informations/files
 ##########################################
-my $initialDir = $param{'-d'};               # recovery of the name of the directory to analyse
-my $fileConf = $param{'-c'};                 # recovery of the name of the software.configuration.txt file
-my $refFastaFile = $param{'-r'};             # recovery of the reference file
-my $gffFile;                                  # recovery of the gff file used by topHat and rnaseq analysis
-$gffFile = $param{'-g'} if (defined $param{'-g'});
+#Recovery obligatory arguments 
+my $initialDir = $param{'-d'};        # recovery of the name of the directory to analyse
+my $fileConf = $param{'-c'};          # recovery of the name of the software.configuration.txt file
+
+#Recovery optional arguments 
+my $refFastaFile = $param{'-r'} if (defined $param{'-r'});      # recovery of the reference file
+my $gffFile = $param{'-g'} if (defined $param{'-g'});           # recovery of the gff file used by topHat and rnaseq analysis
+
 
 toolbox::existsDir($initialDir);        # check if this directory exists
 
@@ -127,7 +130,7 @@ toolbox::exportLog("#########################################\nINFOS: TOGGLE ana
 toolbox::exportLog("INFOS: Initial command line : $cmd_line\n",1);
 
 toolbox::checkFile($fileConf);                                                                              # check if this file exists
-toolbox::checkFile($refFastaFile);                                                                          # check if the reference file exists
+toolbox::checkFile($refFastaFile) if (defined $param{'-r'});                                                                          # check if the reference file exists
 
 
 my $initialFileList = toolbox::readDir($initialDir);
