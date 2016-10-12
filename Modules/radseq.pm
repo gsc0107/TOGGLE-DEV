@@ -74,7 +74,7 @@ sub executeDemultiplexing
 	radseq::processRadtags($keyFile, $initialDir, $workingDirRadseq, $optionsRadtags);	# run demultiplexing
 
 	# Reinitialise the initialDir with output of demultiplexing and add output for toggle
-	my $initialDirContent=toolbox::readDir($workingDirRadseq);
+	$initialDirContent=toolbox::readDir($workingDirRadseq);
 
 	#check if data files are not empty because some files can be empty after demultiplex step.
 	foreach my $file (@{$initialDirContent})
