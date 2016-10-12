@@ -508,23 +508,23 @@ sub readFileConf
         next if $currentLine =~ m/^#/;#Commented line
 
         if ($currentLine =~ m/^\$/)		#New program to be configured, line starting by $
-	{
+        {
             $currentProgram=$currentLine;
             $currentProgram =~ s/\$//;#remove the "$" in front of the name
 
-	    if ($currentProgram =~ m/sge/i) #even if no options are provided, we must see the SGE key
-	    {
-		$configInfos->{$currentProgram}{' '}=' ';
-	    }
+            if ($currentProgram =~ m/sge/i) #even if no options are provided, we must see the SGE key
+            {
+                $configInfos->{$currentProgram}{' '}=' ';
+            }
 
         }
         else		#Config lines
-	{
-	    if($currentLine =~/^no_option$/)
-	    {
-		$configInfos->{$currentProgram}{' '}=' '; ## add a key for programme without options to be considered
-		next;
-	    }
+        {
+            if($currentLine =~/^no_option$/)
+            {
+            	$configInfos->{$currentProgram}{' '}=' '; ## add a key for programme without options to be considered
+            	next;
+            }
             my($optionName,$optionValue)=split /=/,$currentLine, 2;
             $optionValue = "NA" unless $optionValue; # For option without value, eg -v for verbose
             #Populating the hash

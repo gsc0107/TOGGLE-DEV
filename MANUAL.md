@@ -151,12 +151,14 @@ $order
 
 In the same time you have to provide the same informations in your configuration:
 ````
-$samtoolsView1
+$samtoolsView 1
 -Sb
 
 $samtools View 2
 -f 0x02
 ````
+**BE CAREFUL**: in such multiple times repeated software, you have to put a space between the software name and the step (ex samtoolsview 1 and samtoolsView 2) in the order as well as in the options !!
+
 
 ### <a name="commonstep"></a>Giving a common step to all individuals (multiple entry files)
 
