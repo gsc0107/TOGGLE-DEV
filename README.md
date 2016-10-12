@@ -82,7 +82,7 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 * [FastxToolkit](http://hannonlab.cshl.edu/fastx_toolkit/)
 * [Tophat](https://ccb.jhu.edu/software/tophat/index.shtml)
 * [Snpeff](http://snpeff.sourceforge.net/)
-* [Stacks v1.29](http://catchenlab.life.illinois.edu/stacks/)
+* [Stacks v1.43](http://catchenlab.life.illinois.edu/stacks/)
 
 #### Bioinformatics tools included
 
