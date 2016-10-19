@@ -140,9 +140,9 @@ is($observedMD5sum,$expectedMD5sum,'tophat::bowtieBuild - output content rev.2.e
 
 
 
-################################################################################################
-###tophat::bowtie2Build
-################################################################################################
+###############################################################################################
+##tophat::bowtie2Build
+###############################################################################################
 
 my %optionsHachees = ();                # Hash containing informations
 my $optionHachees = \%optionsHachees;   # Ref of the hash
@@ -199,9 +199,9 @@ is($observedMD5sum,$expectedMD5sum,'tophat::bowtie2Build - output content rev.2.
 
 
 
-################################################################################################
-###tophat::tophat2
-################################################################################################
+#################################################################################################
+####tophat::tophat2
+#################################################################################################
 
 #input file
 my $gffRef=$expectedData."/referenceRNASeq.gff3";
@@ -221,20 +221,23 @@ my $fastqFile2=$expectedData."/RNASeq_2.fastq";
                     "--microexon-search" => '');
 $optionHachees = \%optionsHachees;      # Ref of the hash
 
+my $tmpDir=`pwd`;
+chomp $tmpDir;
+$tmpDir.='/tophatOut';
+
 # execution test
-is(tophat::tophat2($testingDir, $fastaRef, $fastqFile1, $fastqFile2, $gffRef, $optionHachees),1,'tophat::tophat2');
+is(tophat::tophat2($tmpDir, $fastaRef, $fastqFile1, $fastqFile2, $gffRef, $optionHachees),1,'tophat::tophat2');
 
 # expected output test
-$observedOutput = `ls`;
+$observedOutput = `ls $tmpDir`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','referenceRNASeq.fa','referenceRNASeq.fa.1.bt2','referenceRNASeq.fa.1.ebwt','referenceRNASeq.fa.2.bt2','referenceRNASeq.fa.2.ebwt','referenceRNASeq.fa.3.bt2','referenceRNASeq.fa.3.ebwt','referenceRNASeq.fa.4.bt2','referenceRNASeq.fa.4.ebwt','referenceRNASeq.fa.rev.1.bt2','referenceRNASeq.fa.rev.1.ebwt','referenceRNASeq.fa.rev.2.bt2','referenceRNASeq.fa.rev.2.ebwt','tophat_TEST_log.e','tophat_TEST_log.o');
-print Dumper(\@observedOutput);
+@expectedOutput = ('RNASeq.accepted_hits.bam','RNASeq.align_summary.txt','RNASeq.deletions.bed','RNASeq.insertions.bed','RNASeq.junctions.bed','RNASeq.logs','RNASeq.prep_reads.info','RNASeq.unmapped.bam');
 is_deeply(\@observedOutput,\@expectedOutput,'tophat::tophat2 - output list');
 
 
 # expected output test
-$expectedMD5sum="6b940bcc30ca032a45b7451e8dbdbba9";
-$observedMD5sum=`md5sum RNASeq.accepted_hits.bam`;# structure of the test file
+$expectedMD5sum="d5a01979467649ccfec0aeb7c1f1716e";
+$observedMD5sum=`md5sum $tmpDir/RNASeq.accepted_hits.bam`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'tophat::tophat2- output content bam');
