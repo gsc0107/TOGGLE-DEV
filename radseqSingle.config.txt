@@ -12,6 +12,7 @@ $cleaner
 #-V
 
 
+
 $processRadtags
 -i fastq
 -e 'apeKI'
