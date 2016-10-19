@@ -128,7 +128,6 @@ SKIP:
     #
 
     is($observedAnswer,$expectedAnswer,'tgicl::tgiclRun- output content');
-
 }
  
 1;
