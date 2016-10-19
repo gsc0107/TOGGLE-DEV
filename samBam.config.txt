@@ -16,7 +16,6 @@ $cleaner
 #$sge
 #-q YOURQUEUE.q
 #-b Y
-#-V
 
 $samToolsView
 -h
