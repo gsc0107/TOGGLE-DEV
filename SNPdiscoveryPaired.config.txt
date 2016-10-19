@@ -23,7 +23,6 @@ $cleaner
 #$sge
 #-q YOURQUEUE.q
 #-b Y
-#-V
 
 $cutadapt
 -O=10
