@@ -68,10 +68,11 @@ fi
 # TEST IF SOFTWARES ARE INSTALLED, AND PRINT THEIR PATH
 
 echo "\n\n############################################"
-echo "##\t Searching for some required software being installed"
+echo "##\t Searching for some required softwares and libraries being installed"
 echo "############################################\n"
 
 
+#Checking for programs
 x=0
 for i in perl wget git tar
 
@@ -81,7 +82,14 @@ do
 #	x=$(( $x + 1 ));
 done
 
+#Checking for libraries
 
+
+for j in zlib1g-dev python-dev libncurses5-dev
+
+do
+    find /usr | grep -m 1 $j - 2>&1 && echo "$j is installed, Ok" || { echo >&2 "** TOGGLE requires $j but it is not installed.  Please install it or contact your administrator for installation..."; };
+done
 
 echo "\n\tYou have all required sotfwares already installed"
 
@@ -144,45 +152,46 @@ sleep 2
 echo "
 CutAdapt
 \tLicense: https://github.com/marcelm/cutadapt/blob/master/LICENSE
-\tTo cite: http://journal.embnet.org/index.php/embnetjournal/article/view/200
+\Citation: http://journal.embnet.org/index.php/embnetjournal/article/view/200
 
 bwa
 \tLicense: http://sourceforge.net/projects/bio-bwa/
-\tTo cite: http://www.ncbi.nlm.nih.gov/pubmed/19451168
+\tCitation: http://www.ncbi.nlm.nih.gov/pubmed/19451168
 
 SAMtools
 \tLicense: http://sourceforge.net/projects/samtools/
-\tTo cite: http://www.ncbi.nlm.nih.gov/pubmed/19505943
+\tCitation: http://www.ncbi.nlm.nih.gov/pubmed/19505943
 
 Picard-Tools
 \tLicense: No explicit License
-\tTo cite: Cite SAMtools paper and their site http://broadinstitute.github.io/picard/
+\tCitation: SAMtools paper and http://broadinstitute.github.io/picard/
 
 FastQC
 \tLicense: http://www.bioinformatics.babraham.ac.uk/projects/fastqc/
-\tTo cite: http://www.bioinformatics.bbsrc.ac.uk/projects/fastqc/
+\tCitation: http://www.bioinformatics.bbsrc.ac.uk/projects/fastqc/
 
 GATK
 \tLicense: https://github.com/broadgsa/gatk-protected/
-\tTo cite: http://www.ncbi.nlm.nih.gov/pubmed?term=20644199
-\tTo cite: http://www.ncbi.nlm.nih.gov/pubmed?term=21478889
-\tTo cite: http://onlinelibrary.wiley.com/doi/10.1002/0471250953.bi1110s43/abstract;jsessionid=D95C25686A6F9F397B710DE983CE10D8.f03t02
+\tCitation:
+\t\t http://www.ncbi.nlm.nih.gov/pubmed?term=20644199
+\t\t http://www.ncbi.nlm.nih.gov/pubmed?term=21478889
+\t\t http://onlinelibrary.wiley.com/doi/10.1002/0471250953.bi1110s43/abstract;jsessionid=D95C25686A6F9F397B710DE983CE10D8.f03t02
 
 TopHat
 \tLicense: https://github.com/infphilo/tophat/blob/master/LICENSE
-\tTo cite: http://bioinformatics.oxfordjournals.org/content/25/9/1105.abstract
+\tCitation: http://bioinformatics.oxfordjournals.org/content/25/9/1105.abstract
 
 Bowtie2
 \tLicense: http://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.2.5/
-\tTo cite: http://www.nature.com/nmeth/journal/v9/n4/full/nmeth.1923.html
+\tCitation: http://www.nature.com/nmeth/journal/v9/n4/full/nmeth.1923.html
 
 FASTX-Trimmer
 \tLicense: http://hannonlab.cshl.edu/fastx_toolkit/license.html
-\tTo cite: http://hannonlab.cshl.edu/fastx_toolkit/
+\tCitation: http://hannonlab.cshl.edu/fastx_toolkit/
 
 TOGGLE
 \tLicense: https://github.com/SouthGreenPlatform/TOGGLE/blob/master/LICENSE
-\tTo cite: Monat et al, TOGGLE: toolbox for generic NGS analyses, BMC Bioinformatics, 2015, 16:374
+\tTCitation: Monat et al, TOGGLE: toolbox for generic NGS analyses, BMC Bioinformatics, 2015, 16:374
 "
 
 sleep 5
@@ -199,7 +208,7 @@ sleep 2
 
 echo "\nINSTALLING TOGGLE\n";
 
-echo "\nPlease provide the installation path:"
+echo "\nPlease provide the installation path as ABSOLUTE (e.g. /home/myUserName/TOGGLE):"
 read INSTALLPATH
 
 #Transforming in an absolute PATH. Using -f option, all composants must exist but the last
@@ -332,7 +341,7 @@ sed -i "s|java7|$JAVASEVEN|g" $MODULES/localConfig.pm
 sed -i "s|bwabinary|$BINARIES/bwa/bwa|g" $MODULES/localConfig.pm
 sed -i "s|cutadaptbinary|$BINARIES/cutadapt/bin/cutadapt|g" $MODULES/localConfig.pm
 sed -i "s|samtoolsbinary|$BINARIES/samtools/samtools|g" $MODULES/localConfig.pm
-sed -i "s|picardbinary|$BINARIES/picard-tools|g" $MODULES/localConfig.pm
+sed -i "s|picardbinary|$BINARIES/picard-tools/picard.jar|g" $MODULES/localConfig.pm
 sed -i "s|fastqcbinary|$BINARIES/FastQC/fastqc|g" $MODULES/localConfig.pm
 sed -i "s|GATKbinary|$BINARIES/GenomeAnalysisTK/GenomeAnalysisTK.jar|g" $MODULES/localConfig.pm
 sed -i "s|tophat2binary|$BINARIES/tophat/tophat2|g" $MODULES/localConfig.pm
