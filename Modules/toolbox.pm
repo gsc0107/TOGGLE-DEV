@@ -1379,13 +1379,13 @@ sub checkFormatFasta{
 ################################################################################################
 sub relativeToAbsolutePath
 {
-    my ($relative)=@_;
-    return 0 if (not defined($relative));
+    
+    my ($relative, $print)=@_;
     my ($absolutePath,$log);
 
     if ($relative =~ m/None$/) {
         $log = "INFOS : $0 : toolbox::relativeToAbsolutePath : the path $relative is not a path.";
-        return ($relative, $log);
+        $absolutePath=$relative;
     }
     
     if ($relative !~ m/^\//) # The relative path is a relative path, ie do not starts with /
@@ -1400,7 +1400,18 @@ sub relativeToAbsolutePath
     	$log = "INFOS : $0 : toolbox::relativeToAbsolutePath : the path $relative is not a relative but an absolute. TOGGLE will not modify it \n";
     	$absolutePath = $relative;
     }
-    return ($absolutePath,$log);
+    
+    # return only absolutePath if boolean = 0  or both (absolutePath and log) if boolean = 1
+    if ($print==0)
+    {
+        return $absolutePath;
+    }
+    else
+    {
+        return ($absolutePath,$log);
+    }
+    
+    
 }
 ################################################################################################
 # END sub relativeToAbsolutePath
