@@ -139,14 +139,14 @@ my @argv= $parser->argv;
 
 
 #Recovery obligatory arguments
-my $initialDir = toolbox::relativeToAbsolutePath($parser->namespace->directory, 1);       # recovery of the name of the directory to analyse
-my $fileConf = toolbox::relativeToAbsolutePath($parser->namespace->config, 1);            # recovery of the name of the software.configuration.txt file
-my $outputDir = toolbox::relativeToAbsolutePath($parser->namespace->outputdir, 1);        # recovery of the output folder
+my $initialDir = toolbox::relativeToAbsolutePath($parser->namespace->directory, 0);       # recovery of the name of the directory to analyse
+my $fileConf = toolbox::relativeToAbsolutePath($parser->namespace->config, 0);            # recovery of the name of the software.configuration.txt file
+my $outputDir = toolbox::relativeToAbsolutePath($parser->namespace->outputdir, 0);        # recovery of the output folder
 
 #Recovery optional arguments
-my $refFastaFile = toolbox::relativeToAbsolutePath($parser->namespace->reference, 1);   # recovery of the reference file
-my $gffFile = toolbox::relativeToAbsolutePath($parser->namespace->gff, 1);              # recovery of the gff file used by topHat and rnaseq analysis
-my $keyfile = toolbox::relativeToAbsolutePath($parser->namespace->keyfile, 1);          # recovery of the keyfile used by radseq
+my $refFastaFile = toolbox::relativeToAbsolutePath($parser->namespace->reference, 0);   # recovery of the reference file
+my $gffFile = toolbox::relativeToAbsolutePath($parser->namespace->gff, 0);              # recovery of the gff file used by topHat and rnaseq analysis
+my $keyfile = toolbox::relativeToAbsolutePath($parser->namespace->keyfile, 0);          # recovery of the keyfile used by radseq
 
 my @listFilesMandatory=($initialDir, $fileConf); #stock mandatory files to test if they exist
 push (@listFilesMandatory,$refFastaFile) if $refFastaFile !~ m/None$/;
@@ -154,16 +154,17 @@ push (@listFilesMandatory,$gffFile) if $gffFile !~ m/None$/;
 push (@listFilesMandatory,$keyfile) if $keyfile !~ m/None$/;
 
 # Verify if file arguments exist
-foreach my $file (@listFilesMandatory)
-{
-  toolbox::checkFile($file); #check file 
-}
+#foreach my $file (@listFilesMandatory)
+#{
+#  toolbox::checkFile($file); #check file 
+#}
 
 #verify if -nocheckfastq arguments exist in args. The fastq format is verified par default if $checkFastq == 0.
 # WARNING with the parser : if nocheckfastq argument is add then $checkFastq == 1
 my $checkFastq = $parser->namespace->checkFastq;
 
 my $cmd_line=$0." @ARGV"; # for printing in log file
+
 
 
 ##########################################
@@ -208,6 +209,14 @@ print F1 "ANALYSIS_$date\n";
 toolbox::exportLog("#########################################\nINFOS: TOGGLE analysis starts \n#########################################\n",1);;
 toolbox::exportLog("INFOS: $0 : Command line : $cmd_line\n",1);
 toolbox::exportLog("INFOS: Your output folder is $outputDir\n",1);
+
+# Verify if file arguments exist
+foreach my $file (@listFilesMandatory)
+{
+  toolbox::checkFile($file); #check file 
+}
+
+__END__
 
 ##########################################
 # Printing software configurations
@@ -256,7 +265,7 @@ toolbox::run($copyCommand,"noprint");
 ##DEBUG }
 
 #Verifying the correct ordering for the experiment, based on input output files and recovering the last step value
-my ($firstOrder,$lastOrder) = onTheFly::checkOrder($configInfo,@listFilesMandatory);
+my ($firstOrder,$lastOrder) = onTheFly::checkOrder($configInfo,$refFastaFile,$gffFile,$keyfile);
 
 
 ##########################################
@@ -344,7 +353,7 @@ for my $value ( values %{ $hashOrder } )
 
 if ("processRadtags" ~~ @values)												# Check if processRadtags in step order
 {
-    $initialDirContent = radseq::checkOrder($outputDir,$fileConf,$initialDir,$checkFastq,%param);
+    $initialDirContent = radseq::checkOrder($outputDir,$fileConf,$initialDir,$checkFastq,$keyfile);
     $hashOrder = toolbox::rmHashOrder($hashOrder, "processRadtags")
 }
 #########################################
@@ -494,7 +503,7 @@ if ($orderBefore1000)
         $currentDir =~ s/:$//;
         my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf ";
         $launcherCommand.=" -r $refFastaFile" if ($refFastaFile ne 'None');
-        $launcherCommand.=" -g $gffFile" if (defined $gffFile);
+        $launcherCommand.=" -g $gffFile" if ($gffFile ne 'None');
         
         #Launching through the scheduler launching system
         my $jobOutput = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
@@ -632,7 +641,8 @@ if ($orderAfter1000)
 
     my $launcherCommand="$scriptMultiple -d $workingDir -c $fileConf ";
     $launcherCommand.=" -r $refFastaFile" if ($refFastaFile ne 'None');
-    $launcherCommand.=" -g $gffFile" if (defined $gffFile);
+    $launcherCommand.=" -g $gffFile" if ($gffFile ne 'None');
+
 
     my $jobList="";
     my %jobHash;
