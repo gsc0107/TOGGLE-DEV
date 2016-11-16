@@ -30,84 +30,128 @@
 #
 ###################################################################################################################################
 
+# Perl Modules
 use strict;
-use warnings;
-use localConfig;
+use warnings 'all';
+no warnings 'experimental';
 use Data::Dumper;
-
+use Getopt::ArgParse;
+# For gz files
+use IO::Compress::Gzip qw(gzip $GzipError);
+use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
+# TOGGLE Modules
+use localConfig;
 use pairing;
 use toolbox;
 use onTheFly;
 use scheduler;
 use radseq;
 
-
-#For gz files
-use IO::Compress::Gzip qw(gzip $GzipError);
-use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
-
-
-
 ##########################################
 # recovery of parameters/arguments given when the program is executed
 ##########################################
-my $cmd_line=$0." @ARGV";
-my ($nomprog)=$0=~/([^\/]+)$/;
-unless ($#ARGV>=0)                    # if no argument given
-{
 
-  print <<"Mesg";
-
-  perldoc $nomprog display the help
-
-Mesg
-
-  exit;
-}
-
-my %param = @ARGV;                     # get the obligatory parameters
-if (not defined($param{'-d'}) or not defined($param{'-c'}) or not defined ($param{'-o'}))
-{
-  print <<"Mesg";
-
-  ERROR: Parameters -d and -c and -o are required.
-  perldoc $nomprog display the help
-
-Mesg
-  exit;
-}
+my $parser = Getopt::ArgParse->new_parser(
+        prog            => "\n\ntoggleGenerator.pl",
+        description     => '',
+        epilog          => "
+##########################################################################
+# More information:
+#\thttps://github.com/SouthGreenPlatform/TOGGLE/blob/master/README.md
+#
+# Citation:
+#\tTOGGLE: Toolbox for generic NGS analyses. Cécile Monat & al..
+#\tBMC Bioinformatics 2015, 16:374
+###########################################################################\n",
+        help            => 'a framework to build quickly NGS pipelines',
+        error_prefix    => "\n\ttoggleGenerator.pl -h to display help \n\n\tERROR MSG: "
+);
 
 
+$parser->add_args(
+                    [
+                        '-o','--outputdir',
+                        required => 1,
+                        type     =>"Scalar",
+                        metavar  => "DIR",
+                        help     => 'Output folder name (it will be created)',
+                        dest     => 'outputdir'
+                    ],
+                    [
+                        '-c','--config',
+                        required => 1,
+                        type     =>"Scalar",
+                        metavar  => "FILE",
+                        help     => 'Software configuration file',
+                        dest     => 'config'
+                    ],
+                    [
+                        '-d','--directory',
+                        required => 1,
+                        type     => "Scalar",
+                        metavar  => "DIR",
+                        help     => 'Directory name with the files to analyse',
+                        dest     => 'directory'
+                    ],
+                    [
+                        '-nocheck','--nocheckFastq',
+                        required => 0,
+                        type     =>"Bool",
+                        help     => 'Use if you did not check fastq file',
+                        dest     => 'checkFastq'
+                    ],
+                    [
+                        '-g','--gff',
+                        required => 0,
+                        type     =>"Scalar",
+                        metavar  => "FILE",
+                        help     => 'gff file name used by topHat for example',
+                        dest     => 'gff',
+                        default  => "None"
+                    ],
+                    [
+                        '-k','--keyfile',
+                        required => 0,
+                        type     =>"Scalar",
+                        metavar  => "FILE",
+                        help     => 'keyfile file name used by radseq (demultiplexing step)',
+                        dest     => 'keyfile',
+                        default  => "None"
+                    ], 
+                    [
+                        '-r','--reference',
+                        required => 0,
+                        type     =>"Scalar",
+                        metavar  => "FILE",
+                        help     => 'Reference file name',
+                        dest     => 'reference',
+                        default  => "None"
+                    ]
+                    
+                );
+# for print usage "or die" in help
+#my $usage = $parser->format_usage();
+#my $help = join ("\n", @$usage);
 
+my $args = $parser->parse_args();
+#recovery supplementary arguments undefined by toggle 
+my @argv= $parser->argv;
 
-##########################################
-# recovery of initial informations/files
-##########################################
-##########################################
-# transforming relative path in absolute
-##########################################
-my @logPathInfos;
-foreach my $inputParameters (keys %param)
-{
-  my ($newPath,$log)=toolbox::relativeToAbsolutePath($param{$inputParameters});
-  toolbox::exportLog("ERROR: $0 : An empty parameter has been given!\n",0) if ($newPath eq 0);
-  $param{$inputParameters}=$newPath;
-  push @logPathInfos,$log;
-}
+#Recovery obligatory arguments
+my $initialDir = toolbox::relativeToAbsolutePath($parser->namespace->directory, 1);       # recovery of the name of the directory to analyse
+my $fileConf = toolbox::relativeToAbsolutePath($parser->namespace->config, 1);            # recovery of the name of the software.configuration.txt file
+my $outputDir = toolbox::relativeToAbsolutePath($parser->namespace->outputdir, 1);        # recovery of the output folder
 
-#Recovery obligatory arguments 
-my $initialDir = $param{'-d'};        # recovery of the name of the directory to analyse
-my $fileConf = $param{'-c'};          # recovery of the name of the software.configuration.txt file
-my $outputDir = $param{'-o'};         # recovery of the output folder
+#Recovery optional arguments
+my $refFastaFile = toolbox::relativeToAbsolutePath($parser->namespace->reference, 1);   # recovery of the reference file
+my $gffFile = toolbox::relativeToAbsolutePath($parser->namespace->gff, 1);              # recovery of the gff file used by topHat and rnaseq analysis
+my $keyfile = toolbox::relativeToAbsolutePath($parser->namespace->keyfile, 1);          # recovery of the keyfile used by radseq
 
-#Recovery optional arguments 
-my $refFastaFile = $param{'-r'} if (defined $param{'-r'});      # recovery of the reference file
-my $gffFile = $param{'-g'} if (defined $param{'-g'});           # recovery of the gff file used by topHat and rnaseq analysis
-my $keyfile = $param{'-k'} if (defined $param{'-k'});           # recovery of the keyfile used by radseq
+#verify if -nocheckfastq arguments exist in params. The fastq format is verified par default if $checkFastq == 0.
+# WARNING with the parser : if nocheckfastq argument is add then $checkFastq == 1
+my $checkFastq = $parser->namespace->checkFastq;
 
-#verify if -nocheckfastq arguments exist in params. The fastq format is verified par default.
-my $checkFastq = 1;
-$checkFastq = 0 if (defined $param{'-nocheckfastq'});
+my $cmd_line=$0." @ARGV"; # for printing in log file
 
 
 ##########################################
@@ -631,6 +675,7 @@ toolbox::exportLog("\nThank you for using TOGGLE!
 #\tBMC Bioinformatics 2015, 16:374
 ###########################################################################################################################",1);
 
+
 exit;
 
 =head1 Name
@@ -660,3 +705,4 @@ Cecile Monat, Christine Tranchant, Cedric Farcy, Maryline Summo, Julie Orjuela-B
 Copyright 2014-2015 IRD-CIRAD-INRA-ADNid
 
 =cut
+
