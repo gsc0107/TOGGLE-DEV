@@ -1379,8 +1379,8 @@ sub checkFormatFasta{
 ################################################################################################
 sub relativeToAbsolutePath
 {
-    
     my ($relative, $print)=@_;
+    $print = 1 if (not defined $print);
     my ($absolutePath,$log);
 
     if ($relative =~ m/None$/) {
