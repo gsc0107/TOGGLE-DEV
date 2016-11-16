@@ -30,14 +30,15 @@ package pairing;
 #
 ###################################################################################################################################
 
+#Perl Modules
 use strict;
 use warnings;
-use localConfig;
-use toolbox;
-
 #For gz files
 use IO::Compress::Gzip qw(gzip $GzipError);
 use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
+#TOGGLE Modules
+use localConfig;
+use toolbox;
 
 #########################################
 #pairRecognition
@@ -78,7 +79,7 @@ sub pairRecognition
 	
 	foreach my $currentFile (@listFiles)		# for each file
 	{  
-		if ($checkFastq == 1 )
+		if ($checkFastq == 0 )
 		{	
 			my $isFastq=toolbox::checkFormatFastq($currentFile);		# check the file is a fastq one
 			if ($isFastq == 0)		# If the file is not a Fastq File, we cannot consider it
@@ -177,7 +178,7 @@ sub repairing
     my $dirOut=defined($directory)?$directory.'/':'./';		#### ????????????????
 
     #Check Fastq format
-	if ($checkFastq == 1 )
+	if ($checkFastq == 0 )
 	{
 		toolbox::checkFormatFastq($forwardFile);		# check if forward file is a fastq one
 		toolbox::checkFormatFastq($reverseFile);		# check if reverse file is a fastq one
