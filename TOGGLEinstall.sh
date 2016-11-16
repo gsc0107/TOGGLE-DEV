@@ -263,6 +263,8 @@ tar xzvf bin.tar.gz
 
 rm -Rf bin.tar.gz
 
+mv binNEW bin
+
 cd $BINARIES
 
 ## compiling bwa
