@@ -137,6 +137,7 @@ my $args = $parser->parse_args();
 #recovery supplementary arguments undefined by toggle 
 my @argv= $parser->argv;
 
+
 #Recovery obligatory arguments
 my $initialDir = toolbox::relativeToAbsolutePath($parser->namespace->directory, 1);       # recovery of the name of the directory to analyse
 my $fileConf = toolbox::relativeToAbsolutePath($parser->namespace->config, 1);            # recovery of the name of the software.configuration.txt file
@@ -147,7 +148,18 @@ my $refFastaFile = toolbox::relativeToAbsolutePath($parser->namespace->reference
 my $gffFile = toolbox::relativeToAbsolutePath($parser->namespace->gff, 1);              # recovery of the gff file used by topHat and rnaseq analysis
 my $keyfile = toolbox::relativeToAbsolutePath($parser->namespace->keyfile, 1);          # recovery of the keyfile used by radseq
 
-#verify if -nocheckfastq arguments exist in params. The fastq format is verified par default if $checkFastq == 0.
+my @listFilesMandatory=($initialDir, $fileConf); #stock mandatory files to test if they exist
+push (@listFilesMandatory,$refFastaFile) if $refFastaFile !~ m/None$/;
+push (@listFilesMandatory,$gffFile) if $gffFile !~ m/None$/;
+push (@listFilesMandatory,$keyfile) if $keyfile !~ m/None$/;
+
+# Verify if file arguments exist
+foreach my $file (@listFilesMandatory)
+{
+  toolbox::checkFile($file); #check file 
+}
+
+#verify if -nocheckfastq arguments exist in args. The fastq format is verified par default if $checkFastq == 0.
 # WARNING with the parser : if nocheckfastq argument is add then $checkFastq == 1
 my $checkFastq = $parser->namespace->checkFastq;
 
@@ -244,7 +256,7 @@ toolbox::run($copyCommand,"noprint");
 ##DEBUG }
 
 #Verifying the correct ordering for the experiment, based on input output files and recovering the last step value
-my ($firstOrder,$lastOrder) = onTheFly::checkOrder($configInfo,%param);
+my ($firstOrder,$lastOrder) = onTheFly::checkOrder($configInfo,@listFilesMandatory);
 
 
 ##########################################
@@ -386,7 +398,7 @@ toolbox::exportLog("#########################################\nINFOS: Generating
 
 #Linking of the reference file and of already existing index in the output folder to avoid writing rights limitations
 ##DEBUG print $refFastaFile,"\n";
-if (defined $param{'-r'})
+if ($refFastaFile ne 'None')
 {
     my $referenceShortName = $refFastaFile;
     my $shortRefFileName = toolbox::extractName($refFastaFile); #We have only the reference name, not the full path
@@ -481,7 +493,7 @@ if ($orderBefore1000)
         next unless $currentDir =~ m/:$/; # Will work only on folders
         $currentDir =~ s/:$//;
         my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf ";
-        $launcherCommand.=" -r $refFastaFile" if (defined $param{'-r'});
+        $launcherCommand.=" -r $refFastaFile" if ($refFastaFile ne 'None');
         $launcherCommand.=" -g $gffFile" if (defined $gffFile);
         
         #Launching through the scheduler launching system
@@ -619,7 +631,7 @@ if ($orderAfter1000)
     $workingDir = $intermediateDir if ($orderBefore1000); # Changing the target directory if we have under 1000 steps before.
 
     my $launcherCommand="$scriptMultiple -d $workingDir -c $fileConf ";
-    $launcherCommand.=" -r $refFastaFile" if (defined $param{'-r'});
+    $launcherCommand.=" -r $refFastaFile" if ($refFastaFile ne 'None');
     $launcherCommand.=" -g $gffFile" if (defined $gffFile);
 
     my $jobList="";
