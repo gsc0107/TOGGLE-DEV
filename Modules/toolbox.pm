@@ -1387,8 +1387,7 @@ sub relativeToAbsolutePath
         $log = "INFOS : $0 : toolbox::relativeToAbsolutePath : the path $relative is not a path.";
         $absolutePath=$relative;
     }
-    
-    if ($relative !~ m/^\//) # The relative path is a relative path, ie do not starts with /
+    elsif ($relative !~ m/^\//) # The relative path is a relative path, ie do not starts with /
     {
         my $com = "readlink -m $relative";
         $absolutePath = `$com`;
@@ -1400,7 +1399,7 @@ sub relativeToAbsolutePath
     	$log = "INFOS : $0 : toolbox::relativeToAbsolutePath : the path $relative is not a relative but an absolute. TOGGLE will not modify it \n";
     	$absolutePath = $relative;
     }
-    
+
     # return only absolutePath if boolean = 0  or both (absolutePath and log) if boolean = 1
     if ($print==0)
     {
@@ -1410,8 +1409,8 @@ sub relativeToAbsolutePath
     {
         return ($absolutePath,$log);
     }
-    
-    
+
+
 }
 ################################################################################################
 # END sub relativeToAbsolutePath
