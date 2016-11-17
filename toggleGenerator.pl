@@ -129,7 +129,7 @@ $parser->add_args(
                     ]
 
                 );
-# for print usage "or die" in help
+# for usage if die print help
 my $usage = $parser->format_usage();
 my $help = join ("\n", @$usage);
 
