@@ -37,26 +37,24 @@ Please use only UTF-8 standard symbols, no weird characters or space, pipe, tild
 The current version is based on the **toggleGenerator.pl** script
 
 ````
-$toggleGenerator.pl -d initialDirectory -c configurationFile -o outputFolder [-r referenceFile -g gffFile -k keyFile -nocheckfastq]
+$toggleGenerator.pl -d|--directory DIR -c|--config FILE -o|--outputdir DIR [-r|--reference FILE] [-k|--keyfile FILE] [-g|--gff FILE] [-nocheck|--nocheckFastq] [--help|-h]
 ````
 
-with mandatory options:
+| Required named arguments:       |                                                                                                                                |
+| :------------------------------ | :----------------------------------------------------------------------------------------------------------------------------- |
+| -d / --directory DIR:           | a folder with raw data to be treated (FASTQ, FASTQ.GZ, SAM, BAM, VCF)                                                          |
+| -c / --config FILE:             | generally it is the *software.config.txt* file but it can be any text file structured as shown below.                          |
+| -o / --outputdir DIR:           | the current version of TOGGLE will not modify the initial data folder but will create an output directory with all analyses in.|
 
-> -d initialDirectory: a folder with raw data to be treated (FASTQ, FASTQ.GZ, SAM, BAM, VCF)
+| Optional named arguments:       |                                                                                                                                |
+| :------------------------------ | :----------------------------------------------------------------------------------------------------------------------------- |
+| -r / --reference FILE:          | the reference FASTA file to be used. (1)                                                                                           |
+| -g / -gff FILE:                 | the GFF file to be used for some tools.                                                                                        |
+| -k / --keyfile FILE:            | the keyfile use for demultiplexing step.                                                                                       |
+| -nocheck / --nocheckFastq:      | by default toggle checks if fastq format is correct in every file. This option allows to skip this step.                       |
+| -h / --help:                    | show help message and exit                                                                                                     |
 
-> -c configurationFile: generally it is the *software.config.txt* file but it can be any text file structured as shown below.
-
-> -o outputFolder: the current version of TOGGLE will not modify the initial data folder but will create an output directory with all analyses in.
-
-and  optional options:
-
-> -r referenceFile: the reference FASTA file to be used. If no index exists it will be created accordingly to the pipeline requested index. If the index exist, they will not be re-created UNLESS the pipeline order (see below) expressively requests it (updating the index e.g.)
-
-> -g gffFile: the GFF file to be used for some tools.
-
-> -k keyfileFile: the keyfile use for demultiplexing step.
-
-> -nocheckfastq: by default toggle checks if fastq format is correct in every file. This option allows to skip this step.
+(1): If no index exists it will be created accordingly to the pipeline requested index. If the index exist, they will not be re-created UNLESS the pipeline order (see below) expressively requests it (updating the index e.g.)
 
 All the the paths (files and folders) can be provided as absolute (/home/mylogin/data/myRef.fasta) or relative (../data/myRef.fasta).
 
