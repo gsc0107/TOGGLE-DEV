@@ -36,7 +36,7 @@
 #
 ###################################################################################################################################
 
-# Perl Modules 
+# Perl Modules
 use strict;
 use warnings 'all';
 no warnings 'experimental';
@@ -86,7 +86,7 @@ my $parser = Getopt::ArgParse->new_parser(
 $parser->add_args(
                     [
                         '-o','--outputdir',
-                        required => 1,
+                        required => 0,
                         type     =>"Scalar",
                         metavar  => "DIR",
                         help     => 'Output folder name (it will be created)',
@@ -132,7 +132,7 @@ $parser->add_args(
                         help     => 'keyfile file name used by radseq (demultiplexing step)',
                         dest     => 'keyfile',
                         default  => "None"
-                    ], 
+                    ],
                     [
                         '-r','--reference',
                         required => 0,
@@ -142,26 +142,28 @@ $parser->add_args(
                         dest     => 'reference',
                         default  => "None"
                     ]
-                    
+
                 );
 # for print usage "or die" in help
 #my $usage = $parser->format_usage();
 #my $help = join ("\n", @$usage);
 
 my $args = $parser->parse_args();
-#recovery supplementary arguments undefined by toggle 
+#recovery supplementary arguments undefined by toggle
 my @argv= $parser->argv;
+
+my $cmd_line=$0." @ARGV"; # for printing in log file
 
 
 #Recovery obligatory arguments
-my $initialDir = toolbox::relativeToAbsolutePath($parser->namespace->directory, 1);       # recovery of the name of the directory to analyse
-my $fileConf = toolbox::relativeToAbsolutePath($parser->namespace->config, 1);            # recovery of the name of the software.configuration.txt file
-my $outputDir = toolbox::relativeToAbsolutePath($parser->namespace->outputdir, 1);        # recovery of the output folder
+my $initialDir = toolbox::relativeToAbsolutePath($parser->namespace->directory, 0);       # recovery of the name of the directory to analyse
+my $fileConf = toolbox::relativeToAbsolutePath($parser->namespace->config, 0);            # recovery of the name of the software.configuration.txt file
+my $outputDir = toolbox::relativeToAbsolutePath($parser->namespace->outputdir, 0);        # recovery of the output folder
 
 #Recovery optional arguments
-my $refFastaFile = toolbox::relativeToAbsolutePath($parser->namespace->reference, 1);   # recovery of the reference file
-my $gffFile = toolbox::relativeToAbsolutePath($parser->namespace->gff, 1);              # recovery of the gff file used by topHat and rnaseq analysis
-my $keyfile = toolbox::relativeToAbsolutePath($parser->namespace->keyfile, 1);          # recovery of the keyfile used by radseq
+my $refFastaFile = toolbox::relativeToAbsolutePath($parser->namespace->reference, 0);   # recovery of the reference file
+my $gffFile = toolbox::relativeToAbsolutePath($parser->namespace->gff, 0);              # recovery of the gff file used by topHat and rnaseq analysis
+my $keyfile = toolbox::relativeToAbsolutePath($parser->namespace->keyfile, 0);          # recovery of the keyfile used by radseq
 
 my @listFilesMandatory=($initialDir, $fileConf); #stock mandatory files to test if they exist
 push (@listFilesMandatory,$refFastaFile) if $refFastaFile !~ m/None$/;
@@ -171,7 +173,7 @@ push (@listFilesMandatory,$keyfile) if $keyfile !~ m/None$/;
 # Verify if file arguments exist
 foreach my $file (@listFilesMandatory)
 {
-  toolbox::checkFile($file); #check file 
+  toolbox::checkFile($file); #check file
 }
 
 toolbox::existsDir($initialDir);        # check if this directory exists
