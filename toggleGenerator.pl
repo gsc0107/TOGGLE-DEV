@@ -64,7 +64,7 @@ my $parser = Getopt::ArgParse->new_parser(
 #\tBMC Bioinformatics 2015, 16:374
 ###########################################################################\n",
         help            => 'a framework to build quickly NGS pipelines',
-        error_prefix    => "\n\ttoggleGenerator.pl -h to display help \n\n\tERROR MSG: "
+        error_prefix    => "\n\e[31m\tERROR MSG: "
 );
 
 
@@ -117,7 +117,7 @@ $parser->add_args(
                         help     => 'keyfile file name used by radseq (demultiplexing step)',
                         dest     => 'keyfile',
                         default  => "None"
-                    ], 
+                    ],
                     [
                         '-r','--reference',
                         required => 0,
@@ -127,16 +127,17 @@ $parser->add_args(
                         dest     => 'reference',
                         default  => "None"
                     ]
-                    
+
                 );
 # for print usage "or die" in help
-#my $usage = $parser->format_usage();
-#my $help = join ("\n", @$usage);
+my $usage = $parser->format_usage();
+my $help = join ("\n", @$usage);
+
+$parser->{"error_prefix"} = $help."\n".$parser->{"error_prefix"};
 
 my $args = $parser->parse_args();
-#recovery supplementary arguments undefined by toggle 
+#recovery supplementary arguments undefined by toggle
 my @argv= $parser->argv;
-
 
 #Recovery obligatory arguments
 my $initialDir = toolbox::relativeToAbsolutePath($parser->namespace->directory, 0);       # recovery of the name of the directory to analyse
@@ -148,24 +149,17 @@ my $refFastaFile = toolbox::relativeToAbsolutePath($parser->namespace->reference
 my $gffFile = toolbox::relativeToAbsolutePath($parser->namespace->gff, 0);              # recovery of the gff file used by topHat and rnaseq analysis
 my $keyfile = toolbox::relativeToAbsolutePath($parser->namespace->keyfile, 0);          # recovery of the keyfile used by radseq
 
-my @listFilesMandatory=($initialDir, $fileConf); #stock mandatory files to test if they exist
-push (@listFilesMandatory,$refFastaFile) if $refFastaFile !~ m/None$/;
-push (@listFilesMandatory,$gffFile) if $gffFile !~ m/None$/;
-push (@listFilesMandatory,$keyfile) if $keyfile !~ m/None$/;
-
-# Verify if file arguments exist
-#foreach my $file (@listFilesMandatory)
-#{
-#  toolbox::checkFile($file); #check file 
-#}
-
 #verify if -nocheckfastq arguments exist in args. The fastq format is verified par default if $checkFastq == 0.
 # WARNING with the parser : if nocheckfastq argument is add then $checkFastq == 1
 my $checkFastq = $parser->namespace->checkFastq;
 
+#stock mandatory files to test if they exist
+my @listFilesMandatory=($initialDir, $fileConf);
+push (@listFilesMandatory,$refFastaFile) if $refFastaFile !~ m/None$/;
+push (@listFilesMandatory,$gffFile) if $gffFile !~ m/None$/;
+push (@listFilesMandatory,$keyfile) if $keyfile !~ m/None$/;
+
 my $cmd_line=$0." @ARGV"; # for printing in log file
-
-
 
 ##########################################
 # Creation of the output folder
@@ -213,10 +207,8 @@ toolbox::exportLog("INFOS: Your output folder is $outputDir\n",1);
 # Verify if file arguments exist
 foreach my $file (@listFilesMandatory)
 {
-  toolbox::checkFile($file); #check file 
+  toolbox::checkFile($file); #check file
 }
-
-__END__
 
 ##########################################
 # Printing software configurations
@@ -429,12 +421,12 @@ if ($refFastaFile ne 'None')
       ##DEBUG print $refLsCommand,"\n";
       toolbox::run($refLsCommand,"noprint");
     }
-    
+
     #Providing the good reference location
     $refFastaFile = $refDir."/".$shortRefFileName;
     ##DEBUG print $refFastaFile,"\n";
-    
-    onTheFly::indexCreator($configInfo,$refFastaFile);  
+
+    onTheFly::indexCreator($configInfo,$refFastaFile);
 }
 #Generate script
 my $scriptSingle = "$outputDir/toggleBzz.pl";
@@ -504,7 +496,7 @@ if ($orderBefore1000)
         my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf ";
         $launcherCommand.=" -r $refFastaFile" if ($refFastaFile ne 'None');
         $launcherCommand.=" -g $gffFile" if ($gffFile ne 'None');
-        
+
         #Launching through the scheduler launching system
         my $jobOutput = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
         ##DEBUG        toolbox::exportLog("WARNING: $0 : jobID = $jobOutput -- ",2);
@@ -712,12 +704,12 @@ toggleGenerator.pl -d DIR -c FILE -o DIR [optional : -r FILE -g FILE -k FILE -no
       -d DIR    	The directory containing initial files
       -c FILE   	The configuration file
       -o DIR    	The directory containing output files
-      
+
 =head1 Optional Arguments :
-      
+
       -r FILE   	The reference sequence (fasta)
       -g FILE   	The gff file containing reference annotations (For RNAseq analysis per exemple)
-      -k FILE		The keyFile used to demultiplexing (For stacks analysis) 
+      -k FILE		The keyFile used to demultiplexing (For stacks analysis)
       -nocheckfastq 	No check format in every fastq file
 
 =head1  Authors
@@ -727,4 +719,3 @@ Cecile Monat, Christine Tranchant, Cedric Farcy, Maryline Summo, Julie Orjuela-B
 Copyright 2014-2015 IRD-CIRAD-INRA-ADNid
 
 =cut
-
