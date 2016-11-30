@@ -51,8 +51,8 @@ use tophat;
 ################################################################################################
 sub checkOrder
 {
-	toolbox::exportLog("ERROR: onTheFly::checkOrder : should done at least two arguments\n",0) if (@_ < 2);
-    my ($hashConf,%param)=@_;
+	toolbox::exportLog("ERROR: onTheFly::checkOrder : should done at least four arguments\n",0) if (@_ < 4);
+    my ($hashConf, $refFastaFile,$gffFile,$keyfile)=@_;
     ##DEBUG print Dumper $hashConf;
     
     my $hashOrder=toolbox::extractHashSoft($hashConf,"order"); #Picking up the options for the order of the pipeline
@@ -61,7 +61,7 @@ sub checkOrder
     my $hashInOut=toolbox::readFileConf("$toggle/softwareFormats.txt");
 	
 	# checking MANDATORY file for each software ( defined in softwareFormats.txt)  
-	checkMandatory($hashOrder,$hashInOut,%param);
+	checkMandatory($hashOrder,$hashInOut,$refFastaFile,$gffFile,$keyfile);
     ##DEBUG print Dumper $hashInOut;
     
     #Verifying the coherence of input/output
@@ -126,14 +126,16 @@ sub checkOrder
 #                                           are Ok (ie processRadtags needs -k argument) 
 ################################################################################################
 # arguments :
-# ->- hash of parameters %param
 # 	- hash of IN, OUT and MANDATORY
 # ->- hash order
+#$refFastaFile
+#$gffFile,
+#$keyfile
 ################################################################################################
 sub checkMandatory
 {
-	toolbox::exportLog("ERROR: onTheFly::checkMandatory : should done at least three arguments\n",0) if (@_ < 3);
-	my ($hashOrder,$hashInOut,%param)=@_;
+	toolbox::exportLog("ERROR: onTheFly::checkMandatory : should done at least five arguments\n",0) if (@_ < 5);
+	my ($hashOrder,$hashInOut,$refFastaFile,$gffFile,$keyfile)=@_;
 	
 	foreach my $step (sort {$a<=> $b} keys %{$hashOrder})
 	{
@@ -145,33 +147,25 @@ sub checkMandatory
 			
 			if ($paramMandatory =~ m/reference/)
 			{
-				if (! defined($param{'-r'}))
+				if ($refFastaFile eq 'None')
 				{
 					toolbox::exportLog("ERROR: onTheFly::checkMandatory : $currentSoft needs a reference file. Use -r option in Toggle command line\nExiting...\n",0);
 				}
 			}
 			if ($paramMandatory =~ m/gff/)
 			{
-				if (! defined($param{'-g'}))
+				if ($gffFile eq 'None')
 				{
 					toolbox::exportLog("ERROR: onTheFly::checkMandatory : $currentSoft needs a gff file. Use -g option in Toggle command line\nExiting...\n",0);
 				}
 			}
 			if ($paramMandatory =~ m/keyfile/)
 			{
-				if (! defined($param{'-k'}))
+				if ($keyfile eq 'None')
 				{
 					toolbox::exportLog("ERROR: onTheFly::checkMandatory : $currentSoft needs a keyfile file . Use -k option in Toggle command line\nExiting...\n",0);
 				}
 			}
-		}
-	}
-	# if Mandatory check was ok, verify if file arguments exist
-	foreach my $key (keys %param)
-	{
-		if ($key ne ["-d"|"-o"|"-nocheckfastq"|"-c"])
-		{
-			toolbox::checkFile($param{$key});                          #Retriving the configuration
 		}
 	}
 }
@@ -181,7 +175,7 @@ sub checkMandatory
 ################################################################################################
 # arguments :
 # 	- hash of complete configuration
-#       - script name
+#   - script name
 ################################################################################################
 sub generateScript
 {

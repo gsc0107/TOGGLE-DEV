@@ -1379,26 +1379,37 @@ sub checkFormatFasta{
 ################################################################################################
 sub relativeToAbsolutePath
 {
-
-    my ($relative)=@_;
-
-    return 0 if (not defined($relative));
-
+    my ($relative, $print)=@_;
+    $print = 1 if (not defined $print);
     my ($absolutePath,$log);
 
-    if ($relative !~ m/^\//) # The relative path is a relative path, ie do not starts with /
+    if ($relative =~ m/None$/) {
+        $log = "INFOS : $0 : toolbox::relativeToAbsolutePath : the path $relative is not a path.";
+        $absolutePath=$relative;
+    }
+    elsif ($relative !~ m/^\//) # The relative path is a relative path, ie do not starts with /
     {
-	my $com = "readlink -m $relative";
-	$absolutePath = `$com`;
-	chomp $absolutePath;
-	$log = "INFOS : $0 : toolbox::relativeToAbsolutePath : the relative path $relative has been modified as an absolute path in $absolutePath \n";
+        my $com = "readlink -m $relative";
+        $absolutePath = `$com`;
+        chomp $absolutePath;
+        $log = "INFOS : $0 : toolbox::relativeToAbsolutePath : the relative path $relative has been modified as an absolute path in $absolutePath \n";
     }
     else #relative is in fact an absolute path, send a warning
     {
-	$log = "INFOS : $0 : toolbox::relativeToAbsolutePath : the path $relative is not a relative but an absolute. TOGGLE will not modify it \n";
-	$absolutePath = $relative;
+    	$log = "INFOS : $0 : toolbox::relativeToAbsolutePath : the path $relative is not a relative but an absolute. TOGGLE will not modify it \n";
+    	$absolutePath = $relative;
     }
-    return ($absolutePath,$log);
+
+    # return only absolutePath if boolean = 0  or both (absolutePath and log) if boolean = 1
+    if ($print==0)
+    {
+        return $absolutePath;
+    }
+    else
+    {
+        return ($absolutePath,$log);
+    }
+
 
 }
 ################################################################################################

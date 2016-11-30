@@ -198,7 +198,6 @@ sub processRadtags
 #	- $fileConf: toogle file config
 #	- $initialDir : initialDir
 #	- $checkFastq : arg value of toggle -nocheckFastq option
-#	- %param : hash of arg given to toggle
 ################################################################################################
 # return  :
 #	- $initialDirContent: udpate -d argument with path of demultiplexed files generate by stacks
@@ -207,8 +206,7 @@ sub processRadtags
 sub checkOrder
 {
 	toolbox::exportLog("ERROR: radseq::checkOrder : should get at least five arguments\n",0) if (@_ < 5);
-	my ($outputDir,$fileConf,$initialDir,$checkFastq,%param)=@_;
-
+	my ($outputDir,$fileConf,$initialDir,$checkFastq, $keyfile)=@_;
 
 	my $configInfo=toolbox::readFileConf($fileConf);
 	my $optionsRadtags=toolbox::extractHashSoft($configInfo,"processRadtags"); 		# Picking up the options for radseq::processRadtags
@@ -216,27 +214,18 @@ sub checkOrder
 
 	my $resultsDirRadseq = "demultiplexedFiles";
 	my $workingDirRadseq = $outputDir."/$resultsDirRadseq";
-	my @firstKeys;
-	if ( defined $param{'-k'} )
+	
+	my @firstKeys = sort {$a <=> $b} (keys(%{$hashOrder}));
+	if ($$hashOrder{$firstKeys[0]} ne "processRadtags")			#verify if processRadtags is the first step	(if not step 1 error)
 	{
-		my $keyFile = $param{'-k'};		# recovery of the keyFile file used by stacks demultiplexing
-
-		my @firstKeys = sort {$a <=> $b} (keys(%{$hashOrder}));
-		if ($$hashOrder{$firstKeys[0]} ne "processRadtags")									# if not step 1 error
-		{
-			toolbox::exportLog("ERROR  radseq::executeDemultiplexing : demultiplexing must been the first step,\n",0);
-		}
-		else
-		{
-			toolbox::makeDir($workingDirRadseq);
-
-			radseq::executeDemultiplexing($keyFile,$initialDir,$workingDirRadseq,$optionsRadtags,$checkFastq);
-	  }
+		toolbox::exportLog("ERROR  radseq::executeDemultiplexing : demultiplexing must been the first step,\n",0);
 	}
 	else
 	{
-		toolbox::exportLog("ERROR  radseq::executeDemultiplexing : demultiplexing must been the first step and -k option is required\n",0);
+		toolbox::makeDir($workingDirRadseq);
+		radseq::executeDemultiplexing($keyfile,$initialDir,$workingDirRadseq,$optionsRadtags,$checkFastq);
 	}
+
 
 	# Reinitialise the initialDir with output of demultiplexing and add output for toggle
 	my $initialDirContent=toolbox::readDir($workingDirRadseq);

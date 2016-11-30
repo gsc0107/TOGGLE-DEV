@@ -94,15 +94,16 @@ my $hashOrderOk =   {
                                         "3" => "samToolsSort"
                                     }
                     };
-my %param = (
-                        "-r" => "../../DATA/Bank/referenceIrigin.fasta"
-);
 
-my @output = onTheFly::checkOrder($hashOrderOk,%param);
+my $refFastaFile="../../DATA/Bank/referenceIrigin.fasta";
+my $gffFile="None";
+my $keyfile="None";
+
+my @output = onTheFly::checkOrder($hashOrderOk,$refFastaFile,$gffFile,$keyfile);
 my @expected=('1','3');
 is_deeply(\@output,\@expected,'onTheFly::checkOrder - normal order');
 
-#testi;ng the uncorrect rendering TEST Ok in dev, but die so cannot be tested...
+#testing the uncorrect rendering TEST Ok in dev, but die so cannot be tested...
 #Adding a configHash
 #my $hashOrderNotOk =   {
 #                        "order"=>   {
@@ -123,7 +124,7 @@ my $hashOrderNAOk =   {
                                     }
                     };
 
-@output = onTheFly::checkOrder($hashOrderNAOk,%param);
+@output = onTheFly::checkOrder($hashOrderNAOk,$refFastaFile,$gffFile,$keyfile);
 @expected=('1','4');
 is_deeply(\@output,\@expected,'onTheFly::checkOrder - dead-end beginning');
 
@@ -136,7 +137,7 @@ my $hashOrderNAOkBis =   {
                                         "4" => "samToolsSort"
                                     }
                     };
-@output = onTheFly::checkOrder($hashOrderNAOkBis,%param);
+@output = onTheFly::checkOrder($hashOrderNAOkBis,$refFastaFile,$gffFile,$keyfile);
 @expected=('1','4');
 is_deeply(\@output,\@expected,'onTheFly::checkOrder - dead-end intermediate');
 
@@ -146,7 +147,7 @@ my $hashOrderSingle =   {
                                         "3" => "bwaSampe"
                                     }
                     };
-@output = onTheFly::checkOrder($hashOrderSingle,%param);
+@output = onTheFly::checkOrder($hashOrderSingle,$refFastaFile,$gffFile,$keyfile);
 @expected=('3','3');
 is_deeply(\@output,\@expected,'onTheFly::checkOrder - Single software');
 
@@ -160,7 +161,7 @@ my $hashOrderMultiple =   {
                                         "4" => "samToolsView"
                                     }
                     };
-@output = onTheFly::checkOrder($hashOrderMultiple,%param);
+@output = onTheFly::checkOrder($hashOrderMultiple,$refFastaFile,$gffFile,$keyfile);
 @expected=('1','4');
 is_deeply(\@output,\@expected,'onTheFly::checkOrder - multiple calls of the same software');
 
@@ -190,7 +191,7 @@ is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::generateScript - output l
 
 # expected content test
 
-my $expectedMD5sum="6a9353df34a395fd57a2a4a424898103";
+my $expectedMD5sum="9fb23cfd1d4d20f8db0349d573870597";
 my $observedMD5sum=`md5sum $outputScript`;# structure of the test file
 my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
