@@ -139,7 +139,7 @@ my $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
 
-my $runCmd = "toggleGenerator.pl -c ".$fileAssemblyNoSGE." -d ".$dataFasta." -r ".$dataRefArcad." -o ".$testingDir;
+my $runCmd = "toggleGenerator.pl -c ".$fileAssemblyNoSGE." -d ".$dataFasta." -o ".$testingDir;
 
 print "\n### $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for TGICL-Pacaya";
@@ -177,7 +177,7 @@ $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
 
-$runCmd = "toggleGenerator.pl -c ".$fileAssemblyPairedNoSGE." -d ".$dataFastqpairedOneIndividuPacaya." -r ".$dataRefArcad." -o ".$testingDir;
+$runCmd = "toggleGenerator.pl -c ".$fileAssemblyPairedNoSGE." -d ".$dataFastqpairedOneIndividuPacaya." -o ".$testingDir;
 
 print "\n### $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuPacaya";
