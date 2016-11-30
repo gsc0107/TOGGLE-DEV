@@ -16,6 +16,7 @@ MANUAL for TOGGLEv0.3 using ONTHEFLY creation of PIPELINES
 * [SCHEDULER AND PARALLEL RUNS](#scheduling)
 * [OUTPUT AND ERROR LOGS](#logs)
 * [DRAWING THE PIPELINE](#drawing)
+* [PROCESS_RADSTACKS STEPS](#processradstacks)
 
 
 The TOGGLEv0.3 *onTheFly* version allows users to create their own customized pipelines.
@@ -265,3 +266,7 @@ Each level of TOGGLE will generate this pair of log:
 # <a name="drawing"></a>Drawing the pipeline
 If *Graphviz* is installed on the running server, the **toggleGenerator.pl** script will also generate a graphical view of the pipeline in the output folder.
 If *Graphviz* is not installed, a .dot file is nevertheless created, allowing the user to create a graphical view on another machine having *Graphviz*
+
+# <a name="processradstacks"></a>Process_Radstacks step
+If process_radstacks from stacks is used in your pipeline, you have to put it as the fist step else TOGGLE return you an error. 
+
