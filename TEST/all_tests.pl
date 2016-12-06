@@ -629,14 +629,14 @@ $expectedOutput="2290182	1013	.	A	G	42.74	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;Exces
 is($observedOutput,$expectedOutput, 'toggleGenerator - One Sam (no SGE) content ');
 
 #####################
-## TOGGLE samtools sortsam and other blocks
+## TOGGLE samtools sortsam
 #####################
 
 #Input data
 $dataOneBam = "../DATA/testData/samBam/oneBamUnsorted/";
 
 print "\n\n#################################################\n";
-print "#### TEST SAMtools sort and other blocks / no SGE mode\n";
+print "#### TEST SAMtools sort / no SGE mode\n";
 print "#################################################\n";
 
 
@@ -645,10 +645,13 @@ $testingDir="../DATA-TEST/oneBam-noSGE-otherBlocks";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
+#Creating config file for this test
+my $configCom = "echo -e \"\$order\n1=samtoolssort\n\n\$samtoolssort\n\" \| cat - >  blockTestConfig.txt";
+system("$configCom") and die "#### ERROR : Can't execute the following command: $configCom";
 
 $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for samtools sort and other blocks";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for samtools sort";
 
 # check final results
 print "\n### TEST Ouput list & content : $runCmd\n";
@@ -666,6 +669,46 @@ my @position = split /\n/, $observedOutput;
 $observedOutput= 0;
 $observedOutput = 1 if ($position[0] < $position[1]); # the first read is placed before the second one
 is($observedOutput,"1", 'toggleGenerator - One Bam (no SGE) sorting content ');
+
+
+#####################
+## TOGGLE picardtools ValidateSamFile
+#####################
+
+#Input data
+$dataOneBam = "../DATA/testData/samBam/oneBam/";
+
+print "\n\n#################################################\n";
+print "#### TEST picardtools ValidateSamFile\n";
+print "#################################################\n";
+
+
+# Remove files and directory created by previous test 
+$testingDir="../DATA-TEST/oneBam-noSGE-otherBlocks";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+$configCom = "echo -e \"\$order\n1=picardtoolsvalidatesamfile\n\n\$picardtoolsvalidatesamfile\n\" \| cat - >  blockTestConfig.txt";
+system("$configCom") and die "#### ERROR : Can't execute the following command: $configCom";
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for picardtoolsValidateSamFile";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('RC3-SAMTOOLSVIEW.PICARDTOOLSVALIDATESAMFILE.report');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) validatingSam list ');
+
+# expected output content
+$observedOutput=`wc -l $testingDir/RC3-SAMTOOLSVIEW.PICARDTOOLSVALIDATESAMFILE.report`; # We pick up only the position field
+chomp $observedOutput;
+is($observedOutput,"34", 'toggleGenerator - One Bam (no SGE) validatingSam content ');
 
 
 
