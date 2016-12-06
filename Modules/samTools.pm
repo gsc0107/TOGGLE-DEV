@@ -170,7 +170,12 @@ sub samToolsSort
           {
                $options=toolbox::extractOptions($optionsHachees);
           }
-          my $command=$samtools." sort ".$options." ".$bamFileIn." -o ".$bamFileOut;
+          
+          #The current samtools sort version requires the -T option, ie temp prefix
+          my $tempPrefix = $bamFileOut;
+          $tempPrefix =~ s/\.bam/_temp/;
+          
+          my $command=$samtools." sort ".$options." ".$bamFileIn." -o ".$bamFileOut." -T ".$tempPrefix;
           
           #Execute command
           if(toolbox::run($command)==1)
