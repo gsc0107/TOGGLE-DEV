@@ -175,7 +175,7 @@ sub samToolsSort
           my $tempPrefix = $bamFileOut;
           $tempPrefix =~ s/\.bam/_temp/;
           
-          my $command=$samtools." sort ".$options." ".$bamFileIn." -o ".$bamFileOut." -T ".$tempPrefix;
+          my $command=$samtools." sort ".$options." -o ".$bamFileOut." -T ".$tempPrefix." ".$bamFileIn;
           
           #Execute command
           if(toolbox::run($command)==1)
