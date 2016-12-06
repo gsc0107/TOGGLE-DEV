@@ -43,20 +43,20 @@ use lib qw(../Modules/);
 #Test of the use of snpeff modules
 ########################################
 use_ok('toolbox') or exit;
-use_ok('snpeff') or exit;
+use_ok('snpEff') or exit;
 
-can_ok('snpeff','dbCreator');
-can_ok('snpeff','snpeffAnnotation');
+can_ok('snpEff','dbCreator');
+can_ok('snpEff','snpEffAnnotation');
 
 use toolbox;
-use snpeff;
+use snpEff;
 
 my $expectedData="../../DATA/expectedData/";
 
 #########################################
 #Remove files and directory created by previous test
 #########################################
-my $testingDir="../DATA-TEST/snpeffTestDir";
+my $testingDir="../DATA-TEST/snpEffTestDir";
 my $creatingDirCom="rm -Rf $testingDir ; mkdir -p $testingDir";                                    #Allows to have a working directory for the tests
 system($creatingDirCom) and die ("ERROR: $0 : Cannot execute the command $creatingDirCom\n$!\n");
 
@@ -66,14 +66,14 @@ chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the
 #######################################
 #Creating the IndividuSoft.txt file
 #######################################
-my $creatingCommand="echo \"snpeff\nTEST\" > individuSoft.txt";
+my $creatingCommand="echo \"snpEff\nTEST\" > individuSoft.txt";
 system($creatingCommand) and die ("ERROR: $0: Cannot create the individuSoft.txt file with the command $creatingCommand \n$!\n");
 
 
 #######################################
 #Cleaning the logs for the test
 #######################################
-my $cleaningCommand="rm -Rf snpeff_TEST_log.*";
+my $cleaningCommand="rm -Rf snpEff_TEST_log.*";
 system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log files for this test with the command $cleaningCommand \n$!\n");
 
 
@@ -106,26 +106,26 @@ system($copyCommand) and die ("ERROR: $0 : Cannot copy the configFile file with 
 #######################################################################################################
 ##Test for running
 my $optionsHachees=$configInfos->{'snpEff annotator'};
-#
-#is(snpeff::snpeffAnnotation($nonAnnotatedVcf,$database,$outputVcf,$optionsHachees),'1','Test for snpeffAnnotation running');
-#
-####Verify if output are correct for snpeffAnnotation
-#my @expectedOutput=('../DATA-TEST/snpeffTestDir/genes.gff','../DATA-TEST/snpeffTestDir/output.vcf','../DATA-TEST/snpeffTestDir/sequences.fa');
-#my @outPut=toolbox::readDir($testingDir);
-#is_deeply(@outPut,\@expectedOutput,'Test for the output files produced by snpeffAnnotation');
-#
-#
-####Test for correct file value of snpeffAnnotation using a md5sum file control -  work through the different snpeff versions
-#my $diffResult=`diff $outputVcf $annotatedVcf`; #Differences between the tested output and the expected one ?
-#chomp $diffResult;
-#is($diffResult,"",'Test for the content of the snpeffAnnotation output');
+
+is(snpeff::snpeffAnnotation($nonAnnotatedVcf,$database,$outputVcf,$optionsHachees),'1','Test for snpeffAnnotation running');
+
+###Verify if output are correct for snpeffAnnotation
+my @expectedOutput=('../DATA-TEST/snpeffTestDir/genes.gff','../DATA-TEST/snpeffTestDir/output.vcf','../DATA-TEST/snpeffTestDir/sequences.fa');
+my @outPut=toolbox::readDir($testingDir);
+is_deeply(@outPut,\@expectedOutput,'Test for the output files produced by snpeffAnnotation');
+
+
+###Test for correct file value of snpeffAnnotation using a md5sum file control -  work through the different snpeff versions
+my $diffResult=`diff $outputVcf $annotatedVcf`; #Differences between the tested output and the expected one ?
+chomp $diffResult;
+is($diffResult,"",'Test for the content of the snpeffAnnotation output');
 
 #######################################################################################################
 ####Test for snpeff dbcreator running
 #######################################################################################################
 ##Test for running
-$optionsHachees=$configInfos->{'snpeff build'};
-is(snpeff::dbCreator($gff,$reference,$name,$optionsHachees),'1','Test for dbCreator running');
+#$optionsHachees=$configInfos->{'snpEff build'};
+#is(snpeff::dbCreator($gff,$reference,$name,$optionsHachees),'1','Test for dbCreator running');
 
 ###Verify if output are correct for snpeffAnnotation
 #@expectedOutput=('../DATA-TEST/snpeffTestDir/output.vcf');
