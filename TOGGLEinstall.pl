@@ -246,7 +246,7 @@ my $TOGGLEPATH=$INSTALLPATH;
 my $MODULES=$INSTALLPATH."/Modules";
 my $BINARIES=$INSTALLPATH."/bin";
 
-sleep 1
+sleep 1;
 
 #COMPILATION
 print "#######################################################
@@ -263,20 +263,20 @@ my @notCompiled;
 system ("cd bwa && make && cd $BINARIES");
 
 ##compiling samtools
-if ($requirements->{libraries}->{libncurses5-dev} && $requirements->{libraries}->{zlib1g-dev})
+if ($requirements->{"libraries"}->{"libncurses5-dev"} && $requirements->{"libraries"}->{"zlib1g-dev"})
     {
     system("cd samtools && ./configure && make && cd $BINARIES");
     }
 else
     {
     my $missing;
-    $missing = "libncurses5-dev " unless $requirements->{libraries}->{libncurses5-dev} ;
-    $missing .= "zlib1g-dev" unless $requirements->{libraries}->{zlib1g-dev};
+    $missing = "libncurses5-dev " unless $requirements->{"libraries"}->{"libncurses5-dev"} ;
+    $missing .= "zlib1g-dev" unless $requirements->{"libraries"}->{"zlib1g-dev"};
     print "\nCannot compile samtools as some libraries are missing: $missing\n";
     push @notCompiled, "samtools";
     }
 
-if ($requirements->{libraries}->{java})
+if ($requirements->{"libraries"}->{"java"})
     {
     print "\nJava is present. Please test if the current java version is ok for picard-tools and GATK\n";
     }
@@ -294,14 +294,14 @@ else
 #NO NEED, JAVA ARCHIVE AVAILABLE
 
 ##compiling cutadapt
-if ($requirements->{libraries}->{python-dev})
+if ($requirements->{"libraries"}->{"python-dev"})
     {
     system ("cd cutadapt && python setup.py build_ext -i && cd $BINARIES");
     }
 else
     {
     my $missing;
-    $missing = "python-dev " unless $requirements->{libraries}->{python-dev} ;
+    $missing = "python-dev " unless $requirements->{"libraries"}->{"python-dev"} ;
     print "\nCannot compile cutadapt as some libraries are missing: $missing\n";
     push @notCompiled, "cutadapt";
     }
@@ -325,46 +325,38 @@ if (scalar @notCompiled)
     print "@notCompiled","\n";
     }
 
-sleep 1
+sleep 1;
 
-echo "\tDecompressing Perl Modules"
+print "\tDecompressing Perl Modules\n";
 
-cd $INSTALLPATH
+system ("cd $INSTALLPATH && tar xvzf perlModules.tar.gz && rm -Rf perlModules.tar.gz && cp -R perlModules/* $MODULES/. && rm -Rf perlModules") and die("\nCannot decompress the perl Modules:\n$!\n");
 
-tar xvzf perlModules.tar.gz
 
-rm -Rf perlModules.tar.gz
+sleep 1;
 
-cp -R perlModules/* $MODULES/.
+print ("\nCONFIGURING YOUR PERSONAL localConfig.pm");
 
-rm -Rf perlModules
+my $JAVASEVEN =$requirements->{"libraries"}->{"java"};
 
-sleep 1
-
-echo "\nCONFIGURING YOUR PERSONAL localConfig.pm"
-
-cp BAK_localConfig.pm $MODULES/localConfig.pm
-sed -i "s|togglepath|$TOGGLEPATH|g" $MODULES/localConfig.pm
-sed -i "s|java7|$JAVASEVEN|g" $MODULES/localConfig.pm
-sed -i "s|bwabinary|$BINARIES/bwa/bwa|g" $MODULES/localConfig.pm
-sed -i "s|cutadaptbinary|$BINARIES/cutadapt/bin/cutadapt|g" $MODULES/localConfig.pm
-sed -i "s|samtoolsbinary|$BINARIES/samtools/samtools|g" $MODULES/localConfig.pm
-sed -i "s|picardbinary|$BINARIES/picard-tools/picard.jar|g" $MODULES/localConfig.pm
-sed -i "s|fastqcbinary|$BINARIES/FastQC/fastqc|g" $MODULES/localConfig.pm
-sed -i "s|GATKbinary|$BINARIES/GenomeAnalysisTK/GenomeAnalysisTK.jar|g" $MODULES/localConfig.pm
-sed -i "s|tophat2binary|$BINARIES/tophat/tophat2|g" $MODULES/localConfig.pm
-sed -i "s|bowtie2-buildbinary|$BINARIES/bowtie2/bowtie2-build|g" $MODULES/localConfig.pm
-sed -i "s|bowtie-buildbinary|$BINARIES/bowtie/bowtie-build|g" $MODULES/localConfig.pm
-sed -i "s|fastx_trimmerbinary|$BINARIES/fastx_toolkit/fastx_trimmer|g" $MODULES/localConfig.pm
+system ("cp BAK_localConfig.pm $MODULES/localConfig.pm
+sed -i \"s|togglepath|$TOGGLEPATH|g\" $MODULES/localConfig.pm
+sed -i \"s|java7|$JAVASEVEN|g\" $MODULES/localConfig.pm
+sed -i \"s|bwabinary|$BINARIES/bwa/bwa|g\" $MODULES/localConfig.pm
+sed -i \"s|cutadaptbinary|$BINARIES/cutadapt/bin/cutadapt|g\" $MODULES/localConfig.pm
+sed -i \"s|samtoolsbinary|$BINARIES/samtools/samtools|g\" $MODULES/localConfig.pm
+sed -i \"s|picardbinary|$BINARIES/picard-tools/picard.jar|g\" $MODULES/localConfig.pm
+sed -i \"s|fastqcbinary|$BINARIES/FastQC/fastqc|g\" $MODULES/localConfig.pm
+sed -i \"s|GATKbinary|$BINARIES/GenomeAnalysisTK/GenomeAnalysisTK.jar|g\" $MODULES/localConfig.pm
+sed -i \"s|tophat2binary|$BINARIES/tophat/tophat2|g\" $MODULES/localConfig.pm
+sed -i \"s|bowtie2-buildbinary|$BINARIES/bowtie2/bowtie2-build|g\" $MODULES/localConfig.pm
+sed -i \"s|bowtie-buildbinary|$BINARIES/bowtie/bowtie-build|g\" $MODULES/localConfig.pm
+sed -i \"s|fastx_trimmerbinary|$BINARIES/fastx_toolkit/fastx_trimmer|g\" $MODULES/localConfig.pm") and die ("\nCannot configuring:\n$!\n");
 
 #Adding toggle in the user PERL5LIB path
-sleep 1
+sleep 1;
 
-echo "\nPERL5LIB=$PERL5LIB:$MODULES\n" | cat - > ~/.bashrc
-echo "\nPATH=$PATH:$TOGGLEPATH\n" | cat - > ~/.bashrc
+system ("echo \"\nPERL5LIB=\$PERL5LIB:$MODULES\n\" | cat - > ~/.bashrc && echo \"\nPATH=\$PATH:$TOGGLEPATH\n\" | cat - > ~/.bashr && source ~/.bashrc") and die("\nCannot add paths:\n$BINARIES!\n");
 
-source ~/.bashrc
+print "\n The automatic configuration is finished!\n\nPlease use first the test data as recommended on the GitHub https://github.com/SouthGreenPlatform/TOGGLE.\n\nThanks for using TOGGLE\n";
 
-echo "\nHOORAY !! Configuration finished!\n\nPlease use first the test data as recommanded on the GitHub https://github.com/SouthGreenPlatform/TOGGLE.\n\nThanks for using TOGGLE\n"
-
-exit 0;
+exit;
