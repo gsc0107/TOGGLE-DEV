@@ -159,7 +159,7 @@ OUT=bam
 
 $picardToolsValidateSamFile
 IN=sam,bam
-OUT=sam,bam
+OUT=NA
 
 $picardToolsCleanSam
 IN=sam,bam
