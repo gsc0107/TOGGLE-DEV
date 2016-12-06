@@ -703,13 +703,44 @@ $observedOutput = `ls $testingDir/finalResults`;
 @expectedOutput = ('RC3-SAMTOOLSVIEW.PICARDTOOLSVALIDATESAMFILE.report');
 
 # expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) validatingSam list ');
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) validatingSam file list');
 
 # expected output content
 $observedOutput=`wc -l $testingDir/RC3-SAMTOOLSVIEW.PICARDTOOLSVALIDATESAMFILE.report`; # We pick up only the position field
 chomp $observedOutput;
-is($observedOutput,"34", 'toggleGenerator - One Bam (no SGE) validatingSam content ');
+is($observedOutput,"34", 'toggleGenerator - One Bam (no SGE) validatingSam content');
 
+print "\n\n#################################################\n";
+print "#### TEST picardtools AddOrReplaceReadGroups\n";
+print "#################################################\n";
+
+
+# Remove files and directory created by previous test 
+$testingDir="../DATA-TEST/oneBam-noSGE-otherBlocks";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+$configCom = "echo -e \"\$order\n1=picardtoolsaddorreplacereadgroups\n\n\$picardtoolsaddorreplacereadgroups\nID=toto\nLB=tutu\nPL=Illumina\nPU=irigin\nSM=TOTO\nVALIDATION_STRINGENCY=SILENT\n\" \| cat - >  blockTestConfig.txt";
+system("$configCom") and die "#### ERROR : Can't execute the following command: $configCom";
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for picardtoolsAddOrReplaceReadGroups";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('RC3-SAMTOOLSVIEW.PICARDTOOLSADDORREPLACEREADGROUPS.bam');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) AddOrReplaceReadGroups file list ');
+
+# expected output content
+$observedOutput=`samtools view -H $testingDir/RC3-SAMTOOLSVIEW.PICARDTOOLSADDORREPLACEREADGROUPS.bam| grep \@RG`; # We pick up only the position field
+chomp $observedOutput;
+is($observedOutput,"\@RG	ID:toto	LB:tutu	PL:Illumina	SM:TOTO	PU:irigin", 'toggleGenerator - One Bam (no SGE) AddOrReplaceReadGroups content');
 
 
 # *** VCF ***
