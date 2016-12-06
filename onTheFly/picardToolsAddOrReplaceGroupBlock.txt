@@ -1,6 +1,6 @@
 
 ##########################################
-# picardToolsAddOrReplaceGroup
+# picardToolsAddOrReplaceReadGroup
 ##########################################
 
 #Correct variable populating
@@ -24,6 +24,6 @@ if ($bamFileIn eq "NA") #No BAM file found in the previous folder
     toolbox::exportLog("ERROR : $0 : No BAM file found in $previousDir at step $stepName.\n",0);
 }
 
-$bamFileOut = $newDir."/"."$readGroup".".PICARDTOOLSADDORREPLACEGROUP.bam";                              # name for the output file of picardtools CleanSam
-$softParameters = toolbox::extractHashSoft($optionRef,"picardToolsAddOrReplaceGroup");                           # recovery of specific parameters of picard AddOrReplaceGroup
-picardTools::picardToolsAddOrReplaceGroup($bamFileIn,$bamFileOut,$softParameters); 
+$bamFileOut = $newDir."/"."$readGroup".".PICARDTOOLSADDORREPLACEREADGROUPS.bam";                              # name for the output file of picardtools CleanSam
+$softParameters = toolbox::extractHashSoft($optionRef,"picardToolsAddOrReplaceReadGroups");                           # recovery of specific parameters of picard AddOrReplaceReadGroups
+picardTools::picardToolsAddOrReplaceReadGroups($bamFileIn,$bamFileOut,$softParameters); 

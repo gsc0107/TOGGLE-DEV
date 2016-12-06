@@ -207,7 +207,7 @@ sub picardToolsSamFormatConverter
 #PicardToolsAddOrReplaceGroup
 ######################################
 # This module changes the ReadGroup
-sub picardToolsAddOrReplaceGroup
+sub picardToolsAddOrReplaceReadGroups
 {
     my($samFileIn,$bamFileOut,$optionsHachees)= @_;       # recovery of informations
     if ((toolbox::checkSamOrBamFormat($samFileIn)) && (toolbox::sizeFile($samFileIn)==1))        # check if the file to sort is a ".sam" one and is not empty
@@ -225,7 +225,7 @@ sub picardToolsAddOrReplaceGroup
     }
     else        # if the file is not a ".bam" one or is empty don't run the module ...
     {
-        toolbox::exportLog("ERROR: picardTools::picardToolsAddOrReplaceGroup : The file $samFileIn is incorrect\n",0);       # ... and return an error message
+        toolbox::exportLog("ERROR: picardTools::picardToolsAddOrReplaceReadGroups : The file $samFileIn is incorrect\n",0);       # ... and return an error message
         return 0;
     }
 }

@@ -169,7 +169,7 @@ $picardToolsSamFormatConverter
 IN=sam,bam
 OUT=sam,bam
 
-$picardToolsAddOrReplaceGroup
+$picardToolsAddOrReplaceReadGroups
 IN=sam,bam
 OUT=sam,bam
 
