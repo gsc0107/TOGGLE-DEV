@@ -4,20 +4,28 @@
 
 #Correct variable populating
 
-foreach my $file (@{$fileList})
+foreach my $file (@{$fileList}) #Checking the type of files that must be VCF
 {
-    next if ($file =~ m/bai$/);# The index file
-    push (@{$listOfBam},$file); # Picking up the bam files only
-    
-    my $shortName = toolbox::extractName($file);
-    if (!-e $shortName.".bai" && !-e $shortName.".bam.bai") #The BAM is not indexed, required
+    if ($file =~ m/\.vcf$/) # the file type is normally bam
     {
-        samTools::samToolsIndex($file);
+        if ($vcfFileIn ne "NA") # Already a bam recognized, but more than one in the previous folder
+        {
+            toolbox::exportLog("ERROR : $0 : there are more than one single VCF file at $stepName step.\n",0);
+        }
+        else
+        {
+            $vcfFileIn = $file;
+        }
     }
-    
 }
 
-$vcfFileOut = $newDir."/".$readGroup.".SNPEFFANNOTATION.vcf";                                         # name of the first VCF file
-$softParameters = toolbox::extractHashSoft($optionRef, "snpEffAnnotation");                         # recovery of specific parameters of gatk UnifiedGenotyper
+if ($vcfFileIn eq "NA") #No VCF file found in the previous folder
+{
+    toolbox::exportLog("ERROR : $0 : No VCF file found in $previousDir at step $stepName.\n",0);
+}
 
-snpEff::snpEffAnnotation($refFastaFile, $listOfBam, $vcfFileOut, $softParameters);
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);                     # recovery of specific parameters of snpEffAnnotation
+
+$vcfFileOut = "$newDir"."/"."$readGroup".".SNPEFFANNOTATION.vcf";
+
+snpEff::snpEffAnnotation($vcfFileIn, $vcfFileOut, $softParameters);
