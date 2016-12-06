@@ -166,8 +166,8 @@ sub correctName
         #FOR HTSeq.pm
         case ($name =~ m/^htseq[\s|\.|\-| \/|\\|\|]*count/i){$correctedName="htseqCount"; } #Correction for htseq-count
 
-        #FOR snpeff.pm
-        case ($name =~ m/^snpeff[\s|\.|\-| \/|\\|\|]*annotation/i){$correctedName="snpeffAnnotation"} # Correction for snpeffAnnotation
+        #FOR snpEff.pm
+        case ($name =~ m/^snp[\s|\.|\-| \/|\\|\|]*Eff[\s|\.|\-| \/|\\|\|]*annotation/i){$correctedName="snpEffAnnotation"} # Correction for snpEffAnnotation
 
 		#FOR processRadtags.pm
         case ($name =~ m/process[\s|\.|\-| \/|\\|\|]*Radtags/i){$correctedName="processRadtags"} # Correction for processRadtags

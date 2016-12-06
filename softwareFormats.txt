@@ -135,10 +135,10 @@ MANDATORY=reference
 #IN=fastq
 #OUT=fastq
 
-#$snpeffAnnotation
-#IN=vcf,gff
-#OUT=vcf
-MANDATORY=gff
+$snpEffAnnotation
+IN=vcf
+OUT=vcf
+MANDATORY=vcf
 
 $cutadapt
 IN=fastq
