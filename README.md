@@ -70,7 +70,7 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 
 #### Bioinformatics software (minimal version)
 
-<table border="2">
+<table border="1" cellpadding="5" cellspacing="1">
 <thead>
 <tr>
 	<th> Category        </th>
@@ -82,27 +82,27 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 <tbody>
 <tr>
 	<td rowspan="2"> <b>System<b>   </td>
-	<td> <a href="https://www.java.com">Java</a> Please use non open JDK version</td>
-	<td>1.7</td>
+	<td> <a href="https://www.java.com">Java</a></td>
+	<td>1.7 non open JDK</td>
 	<td></td>
 </tr>
 <tr>
-	<td> [Perl](https://www.perl.org/)                 </td>
+	<td> <a href="https://www.perl.org/">Perl</a></td>
 	<td>5.16</td>
-	<td>                                  </td>
+	<td></td>
 </tr>
 <tr>
-	<td rowspan="7"> <b>Mapping<b>  </td>
-	<td> [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml)</td>
+	<td rowspan="7"> <b>Mapping<b> </td>
+	<td> <a href="http://bowtie-bio.sourceforge.net/bowtie2/index.shtml">Bowtie2</a></td>
 	<td>2.2.9</td>
 	<td></td>
 </tr>
 <tr>
-	<td> [BWA](http://bio-bwa.sourceforge.net/)                          </td>
+	<td> <a href="http://bio-bwa.sourceforge.net/">BWA</a></td>
 	<td>0.7.2</td>
-	<td> bwaAln</br>bwaSampe</br>bwaSamse</br>bwaMem</br>bwaIndex</br></td>
+	<td> bwaAln </br> bwaSampe </br> bwaSamse </br> bwaMem </br> bwaIndex</td>
 </tr>
-	<td> [Tophat](https://ccb.jhu.edu/software/tophat/index.shtml)       </td>
+	<td> <a href="https://ccb.jhu.edu/software/tophat/index.shtml">Tophat</a></td>
 	<td>2.1.1</td>
 	<td></td>
 </tr>
