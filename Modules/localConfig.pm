@@ -38,7 +38,7 @@ use Exporter;
 
 our @ISA=qw(Exporter);
 
-our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks);
+our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff);
 
 
 #toggle path
@@ -86,6 +86,9 @@ our $trinity = "/path/to/trinity";
 
 #path for process_radtags
 our $stacks = "/path/to/process_radtags";
+
+#path to snpEff
+our $snpEff = "/path/to/snpEff/snpEff.jar";
 
 
 1;
