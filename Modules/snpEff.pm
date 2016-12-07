@@ -78,7 +78,7 @@ sub snpEffAnnotation
 	
 =head1 DESCRIPTION
 
-    Package SNPeff (***, http:// ) is a software package for refining SNP/Indel information based on annotation.
+    Package SNPeff (Cingolani et al, 2012, http://http://snpeff.sourceforge.net/ ) is a software package for refining SNP/Indel information based on annotation.
 
 =head2 FUNCTIONS
 
