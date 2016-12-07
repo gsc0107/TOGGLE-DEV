@@ -81,35 +81,37 @@ my $requirements = {"software"=>{   "git" => 0,
 #Software validation MANDATORY
 
 foreach my $softs (keys %{$requirements->{"software"}})
-    {
-    my $controlCommand = "which $softs";
+{
+    my $controlCommand = "which $softs 2>/dev/null";
     my $controlRes = `$controlCommand`;
     chomp $controlRes;
     #print "\n$softs --> $controlRes\n";
     die ("The $softs software is not installed and is mandatory for continuing the installation of TOGGLE.\n\n Please contact your administrator for installing it.\n") unless $controlRes;
     $requirements->{"software"}->{$softs} = $controlRes;
-    }
+}
+
+#Test perl version higher than 5.22
     
-print "\nAll required sotwares (perl, git, wget and tar) are installed.\n";
+print "\nAll required softwares (perl, git, wget and tar) are installed.\n";
 
 #lib validation NOT MANDATORY
 
 foreach my $libs (keys %{$requirements->{"libraries"}})
-    {
-    my $controlCommand = "find /usr | grep -m 1 $libs";
+{
+    my $controlCommand = "find / | grep -m 1 $libs";
     my $controlRes = `$controlCommand`;
     chomp $controlRes;
     if ($controlRes)
-        {
+    {
         #The lib is present
         $requirements->{"libraries"}->{$libs} = 1;
-        }
+    }
     else
-        {
+    {
         #The lib is absent
         warn("\nThe $libs library is absent and may block some posterior installations.\n")
-        }
     }
+}
 
 #print Dumper($requirements);
 
@@ -171,6 +173,8 @@ TOGGLE
 \tLicense: https://github.com/SouthGreenPlatform/TOGGLE/blob/master/LICENSE
 \tCitation: Monat et al, TOGGLE: toolbox for generic NGS analyses, BMC Bioinformatics, 2015, 16:374\n
 ";
+#Installer Trinity, TGICL, BreakDancer, Pindel
+
 
 sleep 2;
 
@@ -211,8 +215,9 @@ while (1)
         next;
         }
     }
+#Regarder si le path est absolu...
 
-mkdir $INSTALLPATH;
+mkdir $INSTALLPATH and die ("\nCannot create installation directory $INSTALLPATH:\n$!\n\nAborting installation...\n");
 
 #Cloning current version of TOGGLE
 
@@ -260,7 +265,7 @@ system ("cd $BINARIES");
 my @notCompiled;
 
 ## compiling bwa
-system ("cd bwa && make && cd $BINARIES");
+system ("cd bwa && make && cd $BINARIES") and die("Error compiling bwa:$!\n");
 
 ##compiling samtools
 if ($requirements->{"libraries"}->{"libncurses5-dev"} && $requirements->{"libraries"}->{"zlib1g-dev"})
@@ -355,7 +360,7 @@ sed -i \"s|fastx_trimmerbinary|$BINARIES/fastx_toolkit/fastx_trimmer|g\" $MODULE
 #Adding toggle in the user PERL5LIB path
 sleep 1;
 
-system ("echo \"\nPERL5LIB=\$PERL5LIB:$MODULES\n\" | cat - > ~/.bashrc && echo \"\nPATH=\$PATH:$TOGGLEPATH\n\" | cat - > ~/.bashr && source ~/.bashrc") and die("\nCannot add paths:\n$BINARIES!\n");
+system ("echo \"\nPERL5LIB=\$PERL5LIB:$MODULES\n\" | cat - >> ~/.bashrc && echo \"\nPATH=\$PATH:$BINARIES:$TOGGLEPATH\n\" | cat - >> ~/.bashrc && source ~/.bashrc") and die("\nCannot add paths:\n$BINARIES!\n");
 
 print "\n The automatic configuration is finished!\n\nPlease use first the test data as recommended on the GitHub https://github.com/SouthGreenPlatform/TOGGLE.\n\nThanks for using TOGGLE\n";
 
