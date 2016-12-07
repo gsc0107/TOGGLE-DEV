@@ -1,7 +1,7 @@
 TOGGLE : Toolbox for generic NGS analyses
 ===========
 
-![TOGGLE Logo](toggleLogo.png)
+![TOGGLE Logo](./docs/images/toggleLogo.png)
 
 Dear Biologist, have you ever dream of using the whole power of those numerous NGS tools that your bioinformatician colleagues use through this awful list of command line ?
 
@@ -167,4 +167,3 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 [manualLink]:https://github.com/SouthGreenPlatform/TOGGLE/blob/master/MANUAL.md
 [knownIssues]:https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/master/KnownIssues.md
 [releaseLink]:https://github.com/SouthGreenPlatform/TOGGLE/blob/master/ReleaseNotes.md
-
