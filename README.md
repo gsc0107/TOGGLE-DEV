@@ -70,7 +70,7 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 
 #### Bioinformatics software (minimal version)
 
-<table border="1">
+<table border="2">
 <thead>
 <tr>
 	<th> Category        </th>
@@ -81,8 +81,8 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 </thead>
 <tbody>
 <tr>
-	<td rowspan="2"> **System**   </td>
-	<td> [Java](https://www.java.com) Please use non open JDK version</td>
+	<td rowspan="2"> <b>System<b>   </td>
+	<td> <a href="https://www.java.com">Java</a> Please use non open JDK version</td>
 	<td>1.7</td>
 	<td></td>
 </tr>
@@ -92,7 +92,7 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 	<td>                                  </td>
 </tr>
 <tr>
-	<td rowspan="7"> **Mapping**  </td>
+	<td rowspan="7"> <b>Mapping<b>  </td>
 	<td> [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml)</td>
 	<td>2.2.9</td>
 	<td></td>
