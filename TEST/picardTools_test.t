@@ -48,7 +48,7 @@ use_ok('picardTools') or exit;
 can_ok( 'picardTools','picardToolsMarkDuplicates');
 can_ok( 'picardTools','picardToolsCreateSequenceDictionary');
 can_ok( 'picardTools','picardToolsSortSam');
-can_ok( 'picardTools','picardToolsAddOrReplaceGroup');
+can_ok( 'picardTools','picardToolsAddOrReplaceReadGroups');
 can_ok( 'picardTools','picardToolsCleanSam');
 can_ok( 'picardTools','picardToolsSamFormatConverter');
 can_ok( 'picardTools','picardToolsValidateSamFile');
