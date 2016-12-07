@@ -30,8 +30,8 @@ The system is able to detect parallel/scheduling launching and to manage large a
 
 For bug tracking purpose you can use the GitHub or questions about TOGGLE, you can contact the mainteners using the following email addresses:
 
-* christine.tranchant_at_ird.fr
-* francois.sabot_at_ird.fr
+* christine.tranchant@ird.fr
+* francois.sabot@ird.fr
 
 ##  Citation
 **TOGGLE: Toolbox for generic NGS analyses**. Cécile Monat, Christine Tranchant-Dubreuil, Ayité Kougbeadjo, Cédric Farcy, Enrique
@@ -59,40 +59,73 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 
 #### Perl
 
-
+* [Capture::Tiny](http://search.cpan.org/~dagolden/Capture-Tiny-0.30/lib/Capture/Tiny.pm)
 * [Data::Translate](http://search.cpan.org/~davieira/Data_Translate-0.3/Translate.pm)
 * [Data::Dumper](http://search.cpan.org/~smueller/Data-Dumper-2.154/Dumper.pm)
-* [Test::More](http://search.cpan.org/~exodist/Test-Simple-1.001014/lib/Test/More.pm)
-* [Test::Deep](http://search.cpan.org/~rjbs/Test-Deep-0.119/lib/Test/Deep.pm)
-* [Capture::Tiny](http://search.cpan.org/~dagolden/Capture-Tiny-0.30/lib/Capture/Tiny.pm)
+* [Getopt::ArgParse](http://search.cpan.org/~mytram/Getopt-ArgParse-1.0.2/lib/Getopt/ArgParse.pm)
 * [List::Compare](http://search.cpan.org/~jkeenan/List-Compare-0.53/lib/List/Compare.pm)
 * [Switch](https://metacpan.org/pod/Switch)
-
+* [Test::More](http://search.cpan.org/~exodist/Test-Simple-1.001014/lib/Test/More.pm)
+* [Test::Deep](http://search.cpan.org/~rjbs/Test-Deep-0.119/lib/Test/Deep.pm)
 
 #### Bioinformatics software (minimal version)
 
-* [Perl 5.16](https://www.perl.org/)
-* [java 1.7](https://www.java.com/fr/)
-* [BWA 0.7.2](http://bio-bwa.sourceforge.net/)
-* [SAMtools 0.1.18](http://samtools.sourceforge.net/)
-* [picardTools 1.63](http://broadinstitute.github.io/picard/)
-* [gatk 3.3](https://www.broadinstitute.org/gatk/)
-* [fastQC v0.10.1](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
-* [cutadapt 1.2.1](https://pypi.python.org/pypi/cutadapt)
-* [FastxToolkit](http://hannonlab.cshl.edu/fastx_toolkit/)
-* [Tophat](https://ccb.jhu.edu/software/tophat/index.shtml)
-* [Snpeff](http://snpeff.sourceforge.net/)
-* [Stacks v1.43](http://catchenlab.life.illinois.edu/stacks/)
+<table border="1">
+<thead>
+<tr>
+	<th> Category        </th>
+	<th> Software        </th>
+	<th> Minimal version </th>
+	<th> Tools included  </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td rowspan="2"> **System**   </td>
+	<td> [Java](https://www.java.com) Please use non open JDK version</td>
+	<td>1.7</td>
+	<td></td>
+</tr>
+<tr>
+	<td> [Perl](https://www.perl.org/)                 </td>
+	<td>5.16</td>
+	<td>                                  </td>
+</tr>
+<tr>
+	<td rowspan="7"> **Mapping**  </td>
+	<td> [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml)</td>
+	<td>2.2.9</td>
+	<td></td>
+</tr>
+<tr>
+	<td> [BWA](http://bio-bwa.sourceforge.net/)                          </td>
+	<td>0.7.2</td>
+	<td> bwaAln</br>bwaSampe</br>bwaSamse</br>bwaMem</br>bwaIndex</br></td>
+</tr>
+	<td> [Tophat](https://ccb.jhu.edu/software/tophat/index.shtml)       </td>
+	<td>2.1.1</td>
+	<td></td>
+</tr>
+</tbody>
+</table>
 
+
+* [SAMtools 0.1.18](http://samtools.sourceforge.net/)
+* [PicardTools 1.63](http://broadinstitute.github.io/picard/)
+* [GATK 3.3](https://www.broadinstitute.org/gatk/)
+* [FastQC 0.10.1](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+* [Cutadapt 1.2.1](https://pypi.python.org/pypi/cutadapt)
+* [FastxToolkit 0.0.13](http://hannonlab.cshl.edu/fastx_toolkit/)
+
+* [Snpeff 4.2](http://snpeff.sourceforge.net/)
+* [Stacks 1.43](http://catchenlab.life.illinois.edu/stacks/)
+* [HTSeq-Count](http://www-huber.embl.de/HTSeq/doc/count.html)
+* [Trinity 2.2.0](https://github.com/trinityrnaseq/trinityrnaseq/wiki)
+* [TGICL](https://sourceforge.net/projects/tgicl/files/)
+* [Pindel 0.2.4](http://gmt.genome.wustl.edu/packages/pindel/)
+* [Breakdancer 1.4.5](http://breakdancer.sourceforge.net/)
 #### Bioinformatics tools included
 
-##### BWA (http://bio-bwa.sourceforge.net/)
-
-- bwaAln
-- bwaSampe
-- bwaSamse
-- bwaIndex
-- bwaMem
 
 ##### SamTools (http://samtools.sourceforge.net/)
 
@@ -163,7 +196,7 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 
 
 [paperLink]:http://www.biomedcentral.com/1471-2105/16/374
-[installLink]:https://github.com/SouthGreenPlatform/TOGGLE/blob/master/INSTALL.md
-[manualLink]:https://github.com/SouthGreenPlatform/TOGGLE/blob/master/MANUAL.md
-[knownIssues]:https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/master/KnownIssues.md
-[releaseLink]:https://github.com/SouthGreenPlatform/TOGGLE/blob/master/ReleaseNotes.md
+[installLink]:https://github.com/SouthGreenPlatform/TOGGLE/blob/master/docs/INSTALL.md
+[manualLink]:https://github.com/SouthGreenPlatform/TOGGLE/blob/master/docs/MANUAL.md
+[knownIssues]:https://github.com/SouthGreenPlatform/TOGGLE-DEV/blob/master/docs/KnownIssues.md
+[releaseLink]:https://github.com/SouthGreenPlatform/TOGGLE/blob/master/docs/ReleaseNotes.md
