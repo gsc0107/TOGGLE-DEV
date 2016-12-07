@@ -92,7 +92,7 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 	<td></td>
 </tr>
 <tr>
-	<td rowspan="7"> <b>Mapping<b> </td>
+	<td rowspan="3"> <b>Mapping<b> </td>
 	<td> <a href="http://bowtie-bio.sourceforge.net/bowtie2/index.shtml">Bowtie2</a></td>
 	<td>2.2.9</td>
 	<td></td>
