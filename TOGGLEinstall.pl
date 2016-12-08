@@ -173,7 +173,7 @@ while (my $line = <$fhConfig>)
 {
     chomp $line;
     next unless $line =~ m/^our \$/;
-    my @fieldsType = split /\s/, $line;
+    my @fieldsType = split /\s|=/, $line;
     my $softwareType = $fieldsType[1];
     $softwareType =~ s/\$//;
     my @fieldsName = split /\//, $line;
@@ -246,9 +246,16 @@ while (my $line = <$fhConfig2>)
         my $localPath=$requirements->{"software"}->{$softwareType};
         
         #If the software is unknwon.
-        next if $localPath !~ m/\//;
-        
-        if ($softwareType eq "java")
+        if ($localPath !~ m/\//)
+        {
+        #do not change the line, do nothing
+        print "Cannot provide path for $softwareType, leave undefined\n\n";
+        }
+        elsif ($softwareType =~ m/toggle/i)
+        {
+            $line = "our \$toggle = $INSTALLPATH\n";
+        }
+        elsif ($softwareType eq "java")
         {
             $line = "our \$java = ".$localPath." -Xmx12g -jar";
         }
@@ -281,7 +288,7 @@ my $MODULES=$INSTALLPATH."/Modules";
 
 print "\tDecompressing Perl Modules\n";
 
-system ("cd $INSTALLPATH && tar xvzf perlModules.tar.gz && rm -Rf perlModules.tar.gz && cp -R perlModules/* $MODULES/. && rm -Rf perlModules") and die ("\nCannot decompress the perl Modules:\n$!\n");
+system ("cd $INSTALLPATH && tar xzf perlModules.tar.gz && rm -Rf perlModules.tar.gz && cp -R perlModules/* $MODULES/. && rm -Rf perlModules") and die ("\nCannot decompress the perl Modules:\n$!\n");
 
 #Adding toggle in the user PERL5LIB path
 
