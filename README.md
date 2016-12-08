@@ -1,7 +1,7 @@
 TOGGLE : Toolbox for generic NGS analyses
 ===========
 
-![TOGGLE Logo](./docs/images/toggleLogo.png)
+![TOGGLE Logo](docs/images/toggleLogo.png)
 
 Dear Biologist, have you ever dream of using the whole power of those numerous NGS tools that your bioinformatician colleagues use through this awful list of command line ?
 
@@ -70,7 +70,7 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 
 #### Bioinformatics software (minimal version)
 
-<table border="1" cellpadding="5" cellspacing="1">
+<table border="1" cellpadding="5" cellspacing="1" >
 <thead>
 <tr>
 	<th> Category        </th>
@@ -81,117 +81,113 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 </thead>
 <tbody>
 <tr>
-	<td rowspan="2"> <b>System<b>   </td>
+	<td align="center" rowspan="2" color="#B9F0FB"> <b>System<b>   </td>
 	<td> <a href="https://www.java.com">Java</a></td>
-	<td>1.7 non open JDK</td>
+	<td> 1.7 non open JDK </td>
 	<td></td>
 </tr>
 <tr>
 	<td> <a href="https://www.perl.org/">Perl</a></td>
-	<td>5.16</td>
-	<td></td>
+	<td> 5.16 </td>
+	<td>  </td>
 </tr>
 <tr>
-	<td rowspan="3"> <b>Mapping<b> </td>
+	<td align="center" rowspan="3"> <b> Mapping <b> </td>
 	<td> <a href="http://bowtie-bio.sourceforge.net/bowtie2/index.shtml">Bowtie2</a></td>
-	<td>2.2.9</td>
-	<td></td>
+	<td> 2.2.9 </td>
+	<td> bowtie2build </td>
 </tr>
 <tr>
 	<td> <a href="http://bio-bwa.sourceforge.net/">BWA</a></td>
-	<td>0.7.2</td>
+	<td> 0.7.2 </td>
 	<td> bwaAln </br> bwaSampe </br> bwaSamse </br> bwaMem </br> bwaIndex</td>
 </tr>
 	<td> <a href="https://ccb.jhu.edu/software/tophat/index.shtml">Tophat</a></td>
-	<td>2.1.1</td>
-	<td></td>
+	<td> 2.1.1 </td>
+	<td> bowtiebuild </br> tophat2 </td>
+</tr>
+</tr>
+	<td align="center" rowspan="6"> <b> Fastq/BAM/SAM </br> tools <b> </td>
+	<td> <a href="https://www.broadinstitute.org/gatk/">GATK</a></td>
+	<td> 3.3 </td>
+	<td> gatkBaseRecalibrator </br> gatkRealignerTargetCreator </br> gatkIndelRealigner </br> gatkHaplotypeCaller </br> gatkSelectVariants </br> gatkVariantFiltration </br> gatkReadBackedPhasing </br> gatkUnifiedGenotyper </br> gatkBaseRecalibrator </br> gatkPrintReads
+ </td>
+</tr>
+</tr>
+	<td> <a href="http://samtools.sourceforge.net/">SAMtools</a></td>
+	<td> 0.1.18 </td>
+	<td> samToolsFaidx </br> samToolsIndex </br> samToolsView </br> samToolsSort </br> mergeHeader </br> samToolsMerge </br> samToolsIdxstats </br> samToolsDepth </br> samToolsFlagstat </br> samToolsMpileUp
+</td>
+</tr>
+</tr>
+	<td> <a href="http://broadinstitute.github.io/picard/">PicardTools</a></td>
+	<td> 1.63 </td>
+	<td> picardToolsMarkDuplicates </br> picardToolsCreateSequenceDictionary </br> picardToolsSortSam </br> picardToolsAddOrReplaceReadGroup </br> picardToolsValidateSamFile </br> picardToolsCleanSam </br> picardToolsSamFormatConverter
+ </td>
+</tr>
+</tr>
+	<td> <a href="http://www.bioinformatics.babraham.ac.uk/projects/fastqc/">FastQC</a></td>
+	<td> 0.10.1 </td>
+	<td> fastqc </td>
+</tr>
+</tr>
+	<td> <a href="https://pypi.python.org/pypi/cutadapt">Cutadapt</a></td>
+	<td> 1.2.1 </td>
+	<td> cutadapt </td>
+</tr>
+</tr>
+	<td> <a href="http://hannonlab.cshl.edu/fastx_toolkit/">FastxToolkit</a></td>
+	<td> 0.0.13 </td>
+	<td> fastxTrimmer </td>
+</tr>
+</tr>
+	<td align="center"> <b> Demultiplexing <b> </td>
+	<td> <a href="http://catchenlab.life.illinois.edu/stacks/">Stacks</a></td>
+	<td> 1.43 </td>
+	<td> process_radtags </td>
+</tr>
+</tr>
+	<td align="center" > <b> VCF <b> </td>
+	<td> <a href="http://snpeff.sourceforge.net/">Snpeff</a></td>
+	<td> 4.2 </td>
+	<td> snpeffAnnotation </td>
+</tr>
+</tr>
+	<td align="center" rowspan="2"> <b> RNA Seq <b> </td>
+	<td> <a href="http://www-huber.embl.de/HTSeq/doc/count.html">HTSeq-Count</a></td>
+	<td>  </td>
+	<td>  </td>
+</tr>
+</tr>
+	<td> <a href="https://github.com/trinityrnaseq/trinityrnaseq/wiki">Trinity</a></td>
+	<td> 2.2.0 </td>
+	<td>  </td>
+</tr>
+</tr>
+	<td align="center" rowspan="2"> <b> Assembly <b> </td>
+	<td> <a href="https://sourceforge.net/projects/tgicl/files/">TGICL</a></td>
+	<td> 2.2.0 </td>
+	<td>  </td>
+</tr>
+</tr>
+	<td> <a href="http://gmt.genome.wustl.edu/packages/pindel/">Pindel</a></td>
+	<td> 0.2.4 </td>
+	<td>  </td>
+</tr>
+</tr>
+	<td align="center" rowspan="1"> <b> Structural Variants <b> </td>
+	<td> <a href="http://breakdancer.sourceforge.net/">Breakdancer</a></td>
+	<td> 1.4.5 </td>
+	<td>  </td>
+</tr>
+</tr>
+	<td align="center" rowspan="1"> <b> Optional <b> </td>
+	<td> <a href="http://www.graphviz.org/">Graphviz</a></td>
+	<td> v2.xx </td>
+	<td>  </td>
 </tr>
 </tbody>
 </table>
-
-
-* [SAMtools 0.1.18](http://samtools.sourceforge.net/)
-* [PicardTools 1.63](http://broadinstitute.github.io/picard/)
-* [GATK 3.3](https://www.broadinstitute.org/gatk/)
-* [FastQC 0.10.1](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
-* [Cutadapt 1.2.1](https://pypi.python.org/pypi/cutadapt)
-* [FastxToolkit 0.0.13](http://hannonlab.cshl.edu/fastx_toolkit/)
-
-* [Snpeff 4.2](http://snpeff.sourceforge.net/)
-* [Stacks 1.43](http://catchenlab.life.illinois.edu/stacks/)
-* [HTSeq-Count](http://www-huber.embl.de/HTSeq/doc/count.html)
-* [Trinity 2.2.0](https://github.com/trinityrnaseq/trinityrnaseq/wiki)
-* [TGICL](https://sourceforge.net/projects/tgicl/files/)
-* [Pindel 0.2.4](http://gmt.genome.wustl.edu/packages/pindel/)
-* [Breakdancer 1.4.5](http://breakdancer.sourceforge.net/)
-#### Bioinformatics tools included
-
-
-##### SamTools (http://samtools.sourceforge.net/)
-
-- samToolsFaidx
-- samToolsIndex
-- samToolsView
-- samToolsSort
-- mergeHeader
-- samToolsMerge
-- samToolsIdxstats
-- samToolsDepth
-- samToolsFlagstat
-- samToolsMpileUp
-
-##### PicardTools (http://broadinstitute.github.io/picard/)
-
-- picardToolsMarkDuplicates
-- picardToolsCreateSequenceDictionary
-- picardToolsSortSam
-- picardToolsAddOrReplaceReadGroup
-- picardToolsValidateSamFile
-- picardToolsCleanSam
-- picardToolsSamFormatConverter
-
-
-##### GATK (https://www.broadinstitute.org/gatk/)
-
-- gatkBaseRecalibrator
-- gatkRealignerTargetCreator
-- gatkIndelRealigner
-- gatkHaplotypeCaller
-- gatkSelectVariants
-- gatkVariantFiltration
-- gatkReadBackedPhasing
-- gatkUnifiedGenotyper
-- gatkBaseRecalibrator
-- gatkPrintReads
-
-##### Fastqc (http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
-
-- fastqc
-
-##### FastxToolkit (http://hannonlab.cshl.edu/fastx_toolkit/)
-
-- fastxTrimmer
-
-##### Tophat (https://ccb.jhu.edu/software/tophat/index.shtml)
-
-- bowtiebuild
-- bowtie2build
-- tophat2
-
-##### Snpeff (http://snpeff.sourceforge.net/)
-
-- snpeffAnnotation
-
-##### Cutadapt (https://pypi.python.org/pypi/cutadapt)
-
-- cutadapt
-
-##### Stacks (http://catchenlab.life.illinois.edu/stacks/)
-
-- process_radtags
-
-#### OPTIONAL
-- Graphviz v2.xx (http://www.graphviz.org/)
 
 
 
