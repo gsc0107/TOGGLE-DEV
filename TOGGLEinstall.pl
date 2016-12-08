@@ -110,7 +110,7 @@ print "#######################################################
 #######################################################";
 
 my $INSTALLPATH;
-print "\nPlease provide the installation path as ABSOLUTE (e.g. /home/myUserName/TOGGLE):";
+print "\nPlease provide the installation path as ABSOLUTE (e.g. /home/myUserName/TOGGLE):\n";
 $INSTALLPATH = <STDIN>;
 chomp $INSTALLPATH;
 
@@ -119,26 +119,26 @@ while (1)
 {  
     if ($INSTALLPATH !~ m/^\//) #Absolute Path ?
     {
-        print "This path is not an absolute one (not starting from '/').\nPlease provide an absolute Path:\n";
+        print "\nThis path is not an absolute one (not starting from '/').\nPlease provide an absolute Path:\n";
         $INSTALLPATH = <STDIN>;
         chomp $INSTALLPATH;
         next;
     }
     
     #Asking for the path to be Ok
-    print "IS THIS THE CORRECT INSTALL PATH: $INSTALLPATH ? [Y|N]: \n";
+    print "\nIs the correct Install Path is: $INSTALLPATH ? [Y|N]: \n";
     my $yn;
     $yn = <STDIN>;
     chomp $yn;
 
     if ($yn =~ m/^Y|^y/)
     {
-        print"Install path is: '$INSTALLPATH'\n ";
+        print"\nTOGGLE will be installed in '$INSTALLPATH'\n ";
         last;
     }
     elsif ($yn =~ m/^N|^n/ )
     {
-        print "Please, provide the correct installation path:";
+        print "\nPlease, provide the correct installation path:";
         $INSTALLPATH = <STDIN>;
         chomp $INSTALLPATH;
         next;
@@ -160,10 +160,8 @@ print "\nCloning the current Git Master Version";
 my $gitCommand = "git clone https://github.com/SouthGreenPlatform/TOGGLE.git $INSTALLPATH";
 system("$gitCommand") and die ("\nCannot clone the current version of TOGGLE: $!\n");
 
-#Need to sleep for the system to be sure to finish the clone...
-sleep 1;
 
-system ("cd $INSTALLPATH") and die ("\nCannot go to $INSTALLPATH : $!\n");
+chdir $INSTALLPATH or die ("\nCannot go to $INSTALLPATH : $!\nTOGGLE is cloned but not configured\n");
 
 #Parsing automatically the localConfig.pm file for softwares
 
@@ -192,7 +190,7 @@ foreach my $soft (keys %{$requirements->{"software"}})
     if ($name =~ m/\.jar$/)
     {
         #This soft must be launched using the java -jar command, we will use the find command
-        $controlCommand = "find / | grep -m 1 $name";
+        $controlCommand = "find / 2> /dev/null | grep -m 1 $name ";
     }
     elsif ($soft eq "java")
     {
@@ -246,6 +244,10 @@ while (my $line = <$fhConfig2>)
         my $softwareType = $fieldsType[1];
         $softwareType =~ s/\$//;
         my $localPath=$requirements->{"software"}->{$softwareType};
+        
+        #If the software is unknwon.
+        next if $localPath !~ m/\//;
+        
         if ($softwareType eq "java")
         {
             $line = "our \$java = ".$localPath." -Xmx12g -jar";
@@ -265,6 +267,9 @@ while (my $line = <$fhConfig2>)
 }
 close $fhConfig2;
 close $fhOut;
+
+my $cpCommand ="mv $configOk $localConfigFile";
+system($cpCommand) and die ("\nCannot copy correct config file as localConfig.pm:\n$!\nTOGGLE is cloned but not configured\n");
 
 print "\nDownloading the various Perl modules";
 
