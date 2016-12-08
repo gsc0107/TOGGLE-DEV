@@ -72,7 +72,7 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 
 <table border="1" cellpadding="5" cellspacing="1" >
 <thead>
-<tr>
+<tr bgcolor="#68AFDF">
 	<th> Category        </th>
 	<th> Software        </th>
 	<th> Minimal version </th>
@@ -80,107 +80,108 @@ Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie 
 </tr>
 </thead>
 <tbody>
-<tr>
-	<td align="center" rowspan="2" color="#B9F0FB"> <b>System<b>   </td>
+<tr bgcolor="#B9F0FB" >
+	<td align="center" rowspan="2" > <b>System<b>   </td>
 	<td> <a href="https://www.java.com">Java</a></td>
 	<td> 1.7 non open JDK </td>
 	<td></td>
 </tr>
-<tr>
+<tr bgcolor="#B9F0FB">
 	<td> <a href="https://www.perl.org/">Perl</a></td>
 	<td> 5.16 </td>
 	<td>  </td>
 </tr>
-<tr>
+<tr bgcolor="#54D1C0">
 	<td align="center" rowspan="3"> <b> Mapping <b> </td>
 	<td> <a href="http://bowtie-bio.sourceforge.net/bowtie2/index.shtml">Bowtie2</a></td>
 	<td> 2.2.9 </td>
 	<td> bowtie2build </td>
 </tr>
-<tr>
+<tr bgcolor="#54D1C0">
 	<td> <a href="http://bio-bwa.sourceforge.net/">BWA</a></td>
 	<td> 0.7.2 </td>
 	<td> bwaAln </br> bwaSampe </br> bwaSamse </br> bwaMem </br> bwaIndex</td>
 </tr>
+<tr bgcolor="#54D1C0">
 	<td> <a href="https://ccb.jhu.edu/software/tophat/index.shtml">Tophat</a></td>
 	<td> 2.1.1 </td>
 	<td> bowtiebuild </br> tophat2 </td>
 </tr>
-</tr>
+<tr bgcolor="#B9F0FB">
 	<td align="center" rowspan="6"> <b> Fastq/BAM/SAM </br> tools <b> </td>
 	<td> <a href="https://www.broadinstitute.org/gatk/">GATK</a></td>
 	<td> 3.3 </td>
 	<td> gatkBaseRecalibrator </br> gatkRealignerTargetCreator </br> gatkIndelRealigner </br> gatkHaplotypeCaller </br> gatkSelectVariants </br> gatkVariantFiltration </br> gatkReadBackedPhasing </br> gatkUnifiedGenotyper </br> gatkBaseRecalibrator </br> gatkPrintReads
  </td>
 </tr>
-</tr>
+<tr bgcolor="#B9F0FB">
 	<td> <a href="http://samtools.sourceforge.net/">SAMtools</a></td>
 	<td> 0.1.18 </td>
 	<td> samToolsFaidx </br> samToolsIndex </br> samToolsView </br> samToolsSort </br> mergeHeader </br> samToolsMerge </br> samToolsIdxstats </br> samToolsDepth </br> samToolsFlagstat </br> samToolsMpileUp
 </td>
 </tr>
-</tr>
+<tr bgcolor="#B9F0FB">
 	<td> <a href="http://broadinstitute.github.io/picard/">PicardTools</a></td>
 	<td> 1.63 </td>
 	<td> picardToolsMarkDuplicates </br> picardToolsCreateSequenceDictionary </br> picardToolsSortSam </br> picardToolsAddOrReplaceReadGroup </br> picardToolsValidateSamFile </br> picardToolsCleanSam </br> picardToolsSamFormatConverter
  </td>
 </tr>
-</tr>
+<tr bgcolor="#B9F0FB">
 	<td> <a href="http://www.bioinformatics.babraham.ac.uk/projects/fastqc/">FastQC</a></td>
 	<td> 0.10.1 </td>
 	<td> fastqc </td>
 </tr>
-</tr>
+<tr bgcolor="#B9F0FB">
 	<td> <a href="https://pypi.python.org/pypi/cutadapt">Cutadapt</a></td>
 	<td> 1.2.1 </td>
 	<td> cutadapt </td>
 </tr>
-</tr>
+<tr bgcolor="#B9F0FB">
 	<td> <a href="http://hannonlab.cshl.edu/fastx_toolkit/">FastxToolkit</a></td>
 	<td> 0.0.13 </td>
 	<td> fastxTrimmer </td>
 </tr>
-</tr>
+<tr bgcolor="#54D1C0">
 	<td align="center"> <b> Demultiplexing <b> </td>
 	<td> <a href="http://catchenlab.life.illinois.edu/stacks/">Stacks</a></td>
 	<td> 1.43 </td>
 	<td> process_radtags </td>
 </tr>
-</tr>
+<tr bgcolor="#B9F0FB">
 	<td align="center" > <b> VCF <b> </td>
 	<td> <a href="http://snpeff.sourceforge.net/">Snpeff</a></td>
 	<td> 4.2 </td>
 	<td> snpeffAnnotation </td>
 </tr>
-</tr>
+<tr bgcolor="#54D1C0">
 	<td align="center" rowspan="2"> <b> RNA Seq <b> </td>
 	<td> <a href="http://www-huber.embl.de/HTSeq/doc/count.html">HTSeq-Count</a></td>
 	<td>  </td>
 	<td>  </td>
 </tr>
-</tr>
+<tr bgcolor="#54D1C0">
 	<td> <a href="https://github.com/trinityrnaseq/trinityrnaseq/wiki">Trinity</a></td>
 	<td> 2.2.0 </td>
 	<td>  </td>
 </tr>
-</tr>
+<tr bgcolor="#B9F0FB">
 	<td align="center" rowspan="2"> <b> Assembly <b> </td>
 	<td> <a href="https://sourceforge.net/projects/tgicl/files/">TGICL</a></td>
 	<td> 2.2.0 </td>
 	<td>  </td>
 </tr>
-</tr>
+<tr bgcolor="#B9F0FB">
 	<td> <a href="http://gmt.genome.wustl.edu/packages/pindel/">Pindel</a></td>
 	<td> 0.2.4 </td>
 	<td>  </td>
 </tr>
-</tr>
+<tr bgcolor="#54D1C0">
 	<td align="center" rowspan="1"> <b> Structural Variants <b> </td>
 	<td> <a href="http://breakdancer.sourceforge.net/">Breakdancer</a></td>
 	<td> 1.4.5 </td>
 	<td>  </td>
 </tr>
-</tr>
+<tr bgcolor="#B9F0FB">
 	<td align="center" rowspan="1"> <b> Optional <b> </td>
 	<td> <a href="http://www.graphviz.org/">Graphviz</a></td>
 	<td> v2.xx </td>
