@@ -246,18 +246,18 @@ while (my $line = <$fhConfig2>)
         my $localPath=$requirements->{"software"}->{$softwareType};
         
         #If the software is unknwon.
-        if ($localPath !~ m/\//)
+        if ($localPath !~ m/\// && $softwareType !~ m/toggle/i)
         {
         #do not change the line, do nothing
         print "Cannot provide path for $softwareType, leave undefined\n\n";
         }
         elsif ($softwareType =~ m/toggle/i)
         {
-            $line = "our \$toggle = $INSTALLPATH\n";
+            $line = "our \$toggle = \"$INSTALLPATH\"\n";
         }
         elsif ($softwareType eq "java")
         {
-            $line = "our \$java = ".$localPath." -Xmx12g -jar";
+            $line = "our \$java = \"".$localPath."\" -Xmx12g -jar";
         }
         else
         {
