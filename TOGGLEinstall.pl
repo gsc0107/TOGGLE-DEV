@@ -221,7 +221,7 @@ foreach my $soft (keys %{$requirements->{"software"}})
     else
     {
         #The lib is absent
-        warn("\nThe $soft software is absent or not in the current PATH. TOGGLE cannot run pipeline using this tool in your current configuration.\n")
+        warn("\nThe $soft software is absent or not in the current PATH. TOGGLE cannot run pipeline using this tool in your current configuration.\n") unless $soft =~ m/toggle/i;
     }
 }
 
@@ -249,7 +249,7 @@ while (my $line = <$fhConfig2>)
         if ($localPath !~ m/\// && $softwareType !~ m/toggle/i)
         {
         #do not change the line, do nothing
-        print "Cannot provide path for $softwareType, leave undefined\n\n";
+        #print "Cannot provide path for $softwareType, leave undefined\n\n";
         }
         elsif ($softwareType =~ m/toggle/i)
         {
@@ -257,7 +257,7 @@ while (my $line = <$fhConfig2>)
         }
         elsif ($softwareType eq "java")
         {
-            $line = "our \$java = \"".$localPath."\" -Xmx12g -jar";
+            $line = "our \$java = \"".$localPath." -Xmx12g -jar\"";
         }
         else
         {
