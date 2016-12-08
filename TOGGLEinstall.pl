@@ -160,7 +160,10 @@ print "\nCloning the current Git Master Version";
 my $gitCommand = "git clone https://github.com/SouthGreenPlatform/TOGGLE.git $INSTALLPATH";
 system("$gitCommand") and die ("\nCannot clone the current version of TOGGLE: $!\n");
 
-system ("cd $INSTALLPATH") and die ("\nCannot go to $INSTALLPATH : $!\n");;
+#Need to sleep for the system to be sure to finish the clone...
+sleep 1;
+
+system ("cd $INSTALLPATH") and die ("\nCannot go to $INSTALLPATH : $!\n");
 
 #Parsing automatically the localConfig.pm file for softwares
 
