@@ -1,0 +1,274 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js ie6 oldie" lang="ja"><![endif]-->
+<!--[if IE 7]>   <html class="no-js ie7 oldie" lang="ja"><![endif]-->
+<!--[if IE 8]>   <html class="no-js ie8 oldie" lang="ja"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="ja"><!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title>Readme</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/monokai.css">
+
+	<script src="js/libs/modernizr-2.0.6.min.js"></script>
+</head>
+
+<body>
+<div id="header-container">
+	<header class="wrapper clearfix">
+		<h1 id="title"><a href="http://localhost:4000">TOGGLE web site</a></h1>
+		<nav>
+			<ul>
+				<li><a href="http://localhost:4000">Home</a></li>
+				<li><a href="http://localhost:4000/README.html">README</a></li>
+				<li><a href="http://localhost:4000documents.html">Documents</a></li>
+			</ul>
+		</nav>
+	</header>
+</div>
+
+<div id="main-container">
+	<div id="main" class="wrapper clearfix">
+		<article>
+<h1 id="toggle--toolbox-for-generic-ngs-analyses">TOGGLE : Toolbox for generic NGS analyses</h1>
+
+<p><img src="/images/toggleLogo.png" alt="TOGGLE Logo" /></p>
+
+<p>Dear Biologist, have you ever dream of using the whole power of those numerous NGS tools that your bioinformatician colleagues use through this awful list of command line ?</p>
+
+<p>Dear Bioinformatician, have you ever guess how to design really fastly a new NGS pipeline without having to retype again dozens of code lines to readapt your scripts or starting from scratch ?</p>
+
+<p><strong>So, be Happy ! TOGGLE is for you !!</strong></p>
+
+<p>TOGGLE (TOolbox for Generic nGs anaLysEs) is a suite of 19 packages and more than 110 modules able to manage a large set of NGS softwares
+and utilities to easily design pipelines able to handle hundreds of samples. Moreover, TOGGLE offers an easy way to manipulate the various
+options of the different softwares through the pipelines in using a single basic configuration file, that can be changed for each assay without
+having to change the code itself.</p>
+
+<p>Users can also create their own pipeline through an easy and user-friendly approach. The pipelines can start from Fastq (plain or gzipped), SAM, BAM or VCF (plain or gzipped) files, with parallel and global analyses. Samples pipelines are provided for SNP discovery and RNAseq counts.</p>
+
+<p>The system is able to detect parallel/scheduling launching and to manage large amount of samples on large cluster machines.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">show</span>
+  <span class="vi">@widget</span> <span class="o">=</span> <span class="no">Widget</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:id</span><span class="p">])</span>
+  <span class="n">respond_to</span> <span class="k">do</span> <span class="o">|</span><span class="nb">format</span><span class="o">|</span>
+    <span class="nb">format</span><span class="p">.</span><span class="nf">html</span> <span class="c1"># show.html.erb</span>
+    <span class="nb">format</span><span class="p">.</span><span class="nf">json</span> <span class="p">{</span> <span class="n">render</span> <span class="ss">json: </span><span class="vi">@widget</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span></code></pre></figure>
+
+<h2 id="contributing">Contributing</h2>
+
+<ul>
+  <li>Licencied under CeCill-C (http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html) and GPLv3</li>
+  <li>Intellectual property belongs to IRD, CIRAD, ADNid and SouthGreen development platform</li>
+  <li>Written by Cecile Monat, Christine Tranchant, Ayite Kougbeadjo, Cedric Farcy, Mawusse Agbessi, Enrique Ortega-Abboud, Sébastien Ravel, Julie Orjuela-Bouniol, Souhila Amanzougarene, Gauthier Sarah, Marilyne Summo, and Francois Sabot</li>
+  <li>Copyright 2014-2016</li>
+</ul>
+
+<h2 id="contact">Contact</h2>
+
+<p>For bug tracking purpose you can use the GitHub or questions about TOGGLE, you can contact the mainteners using the following email addresses:</p>
+
+<ul>
+  <li>christine.tranchant@ird.fr</li>
+  <li>francois.sabot@ird.fr</li>
+</ul>
+
+<h2 id="citation">Citation</h2>
+<p><strong>TOGGLE: Toolbox for generic NGS analyses</strong>. Cécile Monat, Christine Tranchant-Dubreuil, Ayité Kougbeadjo, Cédric Farcy, Enrique
+Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot.</p>
+
+<p>[<em>BMC Bioinformatics</em> 2015, 16:374  doi:10.1186/s12859-015-0795-6][paperLink]</p>
+
+<h2 id="installation">INSTALLATION</h2>
+
+<p>[Follow the INSTALLATION instructions][installLink]</p>
+
+<h2 id="manual">MANUAL</h2>
+
+<p>[You can find a detailed MANUAL here][manualLink]</p>
+
+<h2 id="known-issues">KNOWN ISSUES</h2>
+
+<p>[You can find detailed known issues][knownIssues]</p>
+
+<h2 id="release-notes">Release Notes</h2>
+
+<p>[Current Release Notes][releaseLink]</p>
+
+<h2 id="requirements">REQUIREMENTS</h2>
+
+<h4 id="perl">Perl</h4>
+
+<ul>
+  <li><a href="http://search.cpan.org/~dagolden/Capture-Tiny-0.30/lib/Capture/Tiny.pm">Capture::Tiny</a></li>
+  <li><a href="http://search.cpan.org/~davieira/Data_Translate-0.3/Translate.pm">Data::Translate</a></li>
+  <li><a href="http://search.cpan.org/~smueller/Data-Dumper-2.154/Dumper.pm">Data::Dumper</a></li>
+  <li><a href="http://search.cpan.org/~mytram/Getopt-ArgParse-1.0.2/lib/Getopt/ArgParse.pm">Getopt::ArgParse</a></li>
+  <li><a href="http://search.cpan.org/~jkeenan/List-Compare-0.53/lib/List/Compare.pm">List::Compare</a></li>
+  <li><a href="https://metacpan.org/pod/Switch">Switch</a></li>
+  <li><a href="http://search.cpan.org/~exodist/Test-Simple-1.001014/lib/Test/More.pm">Test::More</a></li>
+  <li><a href="http://search.cpan.org/~rjbs/Test-Deep-0.119/lib/Test/Deep.pm">Test::Deep</a></li>
+</ul>
+
+<h4 id="bioinformatics-software-minimal-version">Bioinformatics software (minimal version)</h4>
+
+<table border="1" cellpadding="5" cellspacing="1">
+<thead>
+<tr bgcolor="#68AFDF">
+	<th> Category        </th>
+	<th> Software        </th>
+	<th> Minimal version </th>
+	<th> Tools included  </th>
+</tr>
+</thead>
+<tbody>
+<tr bgcolor="#B9F0FB">
+	<td align="center" rowspan="2"> <b>System<b>   &lt;/td&gt;
+	<td> <a href="https://www.java.com">Java</a></td>
+	<td> 1.7 non open JDK </td>
+	<td></td>
+&lt;/tr&gt;
+<tr bgcolor="#B9F0FB">
+	<td> <a href="https://www.perl.org/">Perl</a></td>
+	<td> 5.16 </td>
+	<td>  </td>
+</tr>
+<tr bgcolor="#54D1C0">
+	<td align="center" rowspan="3"> <b> Mapping <b> &lt;/td&gt;
+	<td> <a href="http://bowtie-bio.sourceforge.net/bowtie2/index.shtml">Bowtie2</a></td>
+	<td> 2.2.9 </td>
+	<td> bowtie2build </td>
+&lt;/tr&gt;
+<tr bgcolor="#54D1C0">
+	<td> <a href="http://bio-bwa.sourceforge.net/">BWA</a></td>
+	<td> 0.7.2 </td>
+	<td> bwaAln &lt;/br&gt; bwaSampe &lt;/br&gt; bwaSamse &lt;/br&gt; bwaMem &lt;/br&gt; bwaIndex</td>
+</tr>
+<tr bgcolor="#54D1C0">
+	<td> <a href="https://ccb.jhu.edu/software/tophat/index.shtml">Tophat</a></td>
+	<td> 2.1.1 </td>
+	<td> bowtiebuild &lt;/br&gt; tophat2 </td>
+</tr>
+<tr bgcolor="#B9F0FB">
+	<td align="center" rowspan="6"> <b> Fastq/BAM/SAM &lt;/br&gt; tools <b> &lt;/td&gt;
+	<td> <a href="https://www.broadinstitute.org/gatk/">GATK</a></td>
+	<td> 3.3 </td>
+	<td> gatkBaseRecalibrator &lt;/br&gt; gatkRealignerTargetCreator &lt;/br&gt; gatkIndelRealigner &lt;/br&gt; gatkHaplotypeCaller &lt;/br&gt; gatkSelectVariants &lt;/br&gt; gatkVariantFiltration &lt;/br&gt; gatkReadBackedPhasing &lt;/br&gt; gatkUnifiedGenotyper &lt;/br&gt; gatkBaseRecalibrator &lt;/br&gt; gatkPrintReads
+ </td>
+&lt;/tr&gt;
+<tr bgcolor="#B9F0FB">
+	<td> <a href="http://samtools.sourceforge.net/">SAMtools</a></td>
+	<td> 0.1.18 </td>
+	<td> samToolsFaidx &lt;/br&gt; samToolsIndex &lt;/br&gt; samToolsView &lt;/br&gt; samToolsSort &lt;/br&gt; mergeHeader &lt;/br&gt; samToolsMerge &lt;/br&gt; samToolsIdxstats &lt;/br&gt; samToolsDepth &lt;/br&gt; samToolsFlagstat &lt;/br&gt; samToolsMpileUp
+</td>
+</tr>
+<tr bgcolor="#B9F0FB">
+	<td> <a href="http://broadinstitute.github.io/picard/">PicardTools</a></td>
+	<td> 1.63 </td>
+	<td> picardToolsMarkDuplicates &lt;/br&gt; picardToolsCreateSequenceDictionary &lt;/br&gt; picardToolsSortSam &lt;/br&gt; picardToolsAddOrReplaceReadGroup &lt;/br&gt; picardToolsValidateSamFile &lt;/br&gt; picardToolsCleanSam &lt;/br&gt; picardToolsSamFormatConverter
+ </td>
+</tr>
+<tr bgcolor="#B9F0FB">
+	<td> <a href="http://www.bioinformatics.babraham.ac.uk/projects/fastqc/">FastQC</a></td>
+	<td> 0.10.1 </td>
+	<td> fastqc </td>
+</tr>
+<tr bgcolor="#B9F0FB">
+	<td> <a href="https://pypi.python.org/pypi/cutadapt">Cutadapt</a></td>
+	<td> 1.2.1 </td>
+	<td> cutadapt </td>
+</tr>
+<tr bgcolor="#B9F0FB">
+	<td> <a href="http://hannonlab.cshl.edu/fastx_toolkit/">FastxToolkit</a></td>
+	<td> 0.0.13 </td>
+	<td> fastxTrimmer </td>
+</tr>
+<tr bgcolor="#54D1C0">
+	<td align="center"> <b> Demultiplexing <b> &lt;/td&gt;
+	<td> <a href="http://catchenlab.life.illinois.edu/stacks/">Stacks</a></td>
+	<td> 1.43 </td>
+	<td> process_radtags </td>
+&lt;/tr&gt;
+<tr bgcolor="#B9F0FB">
+	<td align="center"> <b> VCF <b> &lt;/td&gt;
+	<td> <a href="http://snpeff.sourceforge.net/">Snpeff</a></td>
+	<td> 4.2 </td>
+	<td> snpeffAnnotation </td>
+&lt;/tr&gt;
+<tr bgcolor="#54D1C0">
+	<td align="center" rowspan="2"> <b> RNA Seq <b> &lt;/td&gt;
+	<td> <a href="http://www-huber.embl.de/HTSeq/doc/count.html">HTSeq-Count</a></td>
+	<td>  </td>
+	<td>  </td>
+&lt;/tr&gt;
+<tr bgcolor="#54D1C0">
+	<td> <a href="https://github.com/trinityrnaseq/trinityrnaseq/wiki">Trinity</a></td>
+	<td> 2.2.0 </td>
+	<td>  </td>
+</tr>
+<tr bgcolor="#B9F0FB">
+	<td align="center" rowspan="2"> <b> Assembly <b> &lt;/td&gt;
+	<td> <a href="https://sourceforge.net/projects/tgicl/files/">TGICL</a></td>
+	<td> 2.2.0 </td>
+	<td>  </td>
+&lt;/tr&gt;
+<tr bgcolor="#B9F0FB">
+	<td> <a href="http://gmt.genome.wustl.edu/packages/pindel/">Pindel</a></td>
+	<td> 0.2.4 </td>
+	<td>  </td>
+</tr>
+<tr bgcolor="#54D1C0">
+	<td align="center" rowspan="1"> <b> Structural Variants <b> &lt;/td&gt;
+	<td> <a href="http://breakdancer.sourceforge.net/">Breakdancer</a></td>
+	<td> 1.4.5 </td>
+	<td>  </td>
+&lt;/tr&gt;
+<tr bgcolor="#B9F0FB">
+	<td align="center" rowspan="1"> <b> Optional <b> &lt;/td&gt;
+	<td> <a href="http://www.graphviz.org/">Graphviz</a></td>
+	<td> v2.xx </td>
+	<td>  </td>
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+</b></b></td></tr></b></b></td></tr></b></b></td></tr></b></b></td></tr></b></b></td></tr></b></b></td></tr></b></b></td></tr></b></b></td></tr></b></b></td></tr></tbody></table>
+
+		</article>
+<!--
+<aside>
+	<h3>aside</h3>
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices.</p>
+</aside>-->
+
+	</div> <!-- #main -->
+</div> <!-- #main-container -->
+<div id="footer-container">
+	<footer class="wrapper">
+		<h3>footer</h3>
+	</footer>
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
+
+<script src="js/script.js"></script>
+<script>
+	var _gaq=[['_setAccount','UA-20543951-2'],['_trackPageview']];
+	(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
+	g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+	s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+<!--[if lt IE 7 ]>
+	<script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.2/CFInstall.min.js"></script>
+	<script>window.attachEvent("onload",function(){CFInstall.check({mode:"overlay"})})</script>
+<![endif]-->
+</body>
+</html>

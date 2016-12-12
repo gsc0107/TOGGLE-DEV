@@ -1,0 +1,379 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js ie6 oldie" lang="ja"><![endif]-->
+<!--[if IE 7]>   <html class="no-js ie7 oldie" lang="ja"><![endif]-->
+<!--[if IE 8]>   <html class="no-js ie8 oldie" lang="ja"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="ja"><!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title>SUMMARY</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/monokai.css">
+
+	<script src="js/libs/modernizr-2.0.6.min.js"></script>
+</head>
+
+<body>
+<div id="header-container">
+	<header class="wrapper clearfix">
+		<h1 id="title"><a href="http://localhost:4000">TOGGLE web site</a></h1>
+		<nav>
+			<ul>
+				<li><a href="http://localhost:4000">Home</a></li>
+				<li><a href="http://localhost:4000/README.html">README</a></li>
+				<li><a href="http://localhost:4000documents.html">Documents</a></li>
+			</ul>
+		</nav>
+	</header>
+</div>
+
+<div id="main-container">
+	<div id="main" class="wrapper clearfix">
+		<article>
+<h1 id="manual-for-togglev03-using-onthefly-creation-of-pipelines">MANUAL for TOGGLEv0.3 using ONTHEFLY creation of PIPELINES</h1>
+<p># SUMMARY</p>
+
+<ul>
+  <li><a href="#prerequisites">PRE REQUISITES</a></li>
+  <li><a href="#launching">LAUNCHING AN ANALYSIS</a></li>
+  <li><a href="#finalFolder">RESULTING FOLDER</a></li>
+  <li><a href="#sendingOptions">SENDING OPTIONS</a></li>
+  <li><a href="#creatingPipeline">CREATING A PIPELINE</a></li>
+  <li><a href="#order">PROVIDING AN ORDER</a></li>
+  <li><a href="#samesoftmultiple">SAME SOFTWARE REPEATED MULTIPLE TIMES</a></li>
+  <li><a href="#commonstep">GIVING A COMMON STEP TO ALL INDIVIDUALS</a></li>
+  <li><a href="#commononly">STARTING ONLY A COMMON TREATMENT</a></li>
+  <li><a href="#cleaning">CLEANING STEPS</a></li>
+  <li><a href="#compressing">COMPRESSING STEPS</a></li>
+  <li><a href="#scheduling">SCHEDULER AND PARALLEL RUNS</a></li>
+  <li><a href="#logs">OUTPUT AND ERROR LOGS</a></li>
+  <li><a href="#drawing">DRAWING THE PIPELINE</a></li>
+  <li><a href="#processradstacks">PROCESS_RADSTACKS STEPS</a></li>
+</ul>
+
+<p>The TOGGLEv0.3 <em>onTheFly</em> version allows users to create their own customized pipelines.
+You can modify not only the different options for each software but also define specific organization for your analysis.</p>
+
+<p>You can therefore remove some steps compared to the previous version, starting from SAM/BAM or VCF files instead of FASTQ only, asking for individual treatments only, individual then common (such as mapping followed by common calling), or even only common treatment.</p>
+
+<h1 id="a-nameprerequisitesapre-requisites"><a name="prerequisites"></a>PRE REQUISITES</h1>
+
+<p>THE FILE NAMES MUST BE UNDER THE FORM <strong>individual1_1.fastq</strong>, <strong>mapping1.sam</strong>, <strong>myVcf.vcf</strong></p>
+
+<p>THE ONLY DOT (‘.’) ALLOWED IN NAMES IS FOR THE EXTENSION. The text before the dot will be used as individual names.</p>
+
+<p>For <em>Fastq</em> files, only one underscore (‘_’) is authorized, before the direction of sequences ( _1, _2 or _R1, _R2), just before the extension (<em>.fastq</em>).</p>
+
+<p>Please use only UTF-8 standard symbols, no weird characters or space, pipe, tilde or any type of commas.</p>
+
+<h1 id="a-namelaunchingalaunching-an-analysis"><a name="launching"></a>Launching an analysis</h1>
+<p>The current version is based on the <strong>toggleGenerator.pl</strong> script</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$toggleGenerator.pl -d|--directory DIR -c|--config FILE -o|--outputdir DIR [-r|--reference FILE] [-k|--keyfile FILE] [-g|--gff FILE] [-nocheck|--nocheckFastq] [--help|-h]
+</code></pre>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Required named arguments:</th>
+      <th style="text-align: left"> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">-d / –directory DIR:</td>
+      <td style="text-align: left">a folder with raw data to be treated (FASTQ, FASTQ.GZ, SAM, BAM, VCF)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">-c / –config FILE:</td>
+      <td style="text-align: left">generally it is the <em>software.config.txt</em> file but it can be any text file structured as shown below.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">-o / –outputdir DIR:</td>
+      <td style="text-align: left">the current version of TOGGLE will not modify the initial data folder but will create an output directory with all analyses in.</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Optional named arguments:</th>
+      <th style="text-align: left"> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">-r / –reference FILE:</td>
+      <td style="text-align: left">the reference FASTA file to be used. (1)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">-g / -gff FILE:</td>
+      <td style="text-align: left">the GFF file to be used for some tools.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">-k / –keyfile FILE:</td>
+      <td style="text-align: left">the keyfile use for demultiplexing step.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">-nocheck / –nocheckFastq:</td>
+      <td style="text-align: left">by default toggle checks if fastq format is correct in every file. This option allows to skip this step.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">-h / –help:</td>
+      <td style="text-align: left">show help message and exit</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>(1): If no index exists it will be created accordingly to the pipeline requested index. If the index exist, they will not be re-created UNLESS the pipeline order (see below) expressively requests it (updating the index e.g.)</p>
+
+<p>All the the paths (files and folders) can be provided as absolute (/home/mylogin/data/myRef.fasta) or relative (../data/myRef.fasta).</p>
+
+<p>The <em>SNPdiscoveryPaired.config.txt</em> file is an example of how to customize your pipeline.</p>
+
+<p>Any software configuration will start as follows:
+ ````
+ $First Software
+ option1
+ option2</p>
+
+<p>$Second Software
+ option1
+ option2
+ ````</p>
+
+<p># <a name="finalFolder"></a>What will you have in results ?</p>
+
+<p>TOGGLE will generate an output folder containing different files and subfolders, as follows:</p>
+
+<p><img src="toggleOutputFolder.png" alt="TOGGLE Final Folder" /></p>
+
+<p>The final results are contained in the <strong>finalResults</strong> folder.
+ TOGGLE will also copy the <em>software config</em> file corresponding to the analysis, in order users can recover their options.
+ The <strong>output</strong> folder contains all sub analyses, i.e. the individual analyses or intermediate data.</p>
+
+<h1 id="a-namesendingoptionsasending-options"><a name="sendingOptions"></a>Sending options</h1>
+<p>As for the previous version, you can address any option to any given software (as soon as the given option exists for the given software ^^) as follows:
+<code class="highlighter-rouge">
+$bwaAln
+-e=1
+-n=5
+</code></p>
+
+<p>You can also write as follows
+<code class="highlighter-rouge">
+$BWA ALN
+-e=1
+-n=5
+</code></p>
+
+<p>The software name is not case sensitive and the subprogram can be “glued” to the name (bwaALN is recognized, as well as bwa aln).</p>
+
+<p>If your option has an equal symbol within, such as <strong>-l hostname=MyNode</strong>, you have to write the option as follows:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>-l hostname=MyNode
+</code></pre>
+</div>
+
+<h1 id="a-namecreatingpipelineacreating-a-pipeline"><a name="creatingPipeline"></a>Creating a pipeline</h1>
+
+<p>The <strong>toggleGenerator.pl</strong> script will use the configuration file informations (generally named as <em>software.config.txt</em> file, but not mandatory) to create specific pipeline scripts in the output folder called <strong>toggleBzz.pl</strong> for individual treatments (individual mapping e.g.) and <strong>toggleMultiple.pl</strong> for global treatment (global SNP calling e.g.).</p>
+
+<p>The order will be verified before creating the scripts, by checking if the output files from the step n-1 will be accepted as input for the step n.</p>
+
+<p><img src="TogglePipeline.png" alt="TOGGLE pipeline" /></p>
+
+<h3 id="a-nameorderaproviding-an-order"><a name="order"></a>Providing an order</h3>
+<p>The order of a specific pipeline is provided in the <em>software.config.txt</em> as the software <em>order</em></p>
+
+<p>Thus, if you provide option such as:
+<code class="highlighter-rouge">
+$order
+1=bwa aln
+2=BWASAMPE
+3=samtools view
+</code>
+You will obtain a pipeline taking fastq files (plain text of gzipped), aligning them upon a given reference using bwa aln/sampe, and finally cleaning the resulting sam and providing a BAM file (if samtools view option are as such).</p>
+
+<p>Note that the way you write the name of the step is not really important, e.g. it is not case-sensitive, and can have space between the different words. A dedicated module will adjust everything.</p>
+
+<p>You can start from any type of format recognized by TOGGLE at any block from TOGGLE. Thus, if you have a raw VCF file you can start from this one at step one and clean it (<strong>even if your VCF contains informations for multiple individuals</strong>):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$order
+1=gatkVariantFiltrator
+2=gatkSelectVariants
+</code></pre>
+</div>
+<p><strong>BE CAREFUL</strong>: You can comment any step using a ‘#’ symbol before it (ex <em>#3=bwaAln</em>) to avoid to retype all numbers. However, such a comment will provoke anomalies in cleaning and compressing steps. The best approach is to provide a list of following numbers (e.g. 1, 2, 3, 4 and not 1, 3, 4). This is also true for steps higher than 1000.</p>
+
+<h3 id="a-namesamesoftmultipleasame-software-repeated-multiple-times"><a name="samesoftmultiple"></a>Same software repeated multiple times</h3>
+
+<p>If you want to adress multiple times the same step BUT with different configurations (e.g. a first samtools view to obtain a BAM then a second samtools view to clean this BAM using the -f option), you have to indicate as follows
+<code class="highlighter-rouge">
+$order
+1=bwa aln
+2=BWASAMPE
+3=samtools view 1
+4= samtools view 2
+</code></p>
+
+<p>In the same time you have to provide the same informations in your configuration:
+````
+$samtoolsView 1
+-Sb</p>
+
+<p>$samtools View 2
+-f 0x02
+````
+<strong>BE CAREFUL</strong>: in such multiple times repeated software, you have to put a space between the software name and the step (ex samtoolsview 1 and samtoolsView 2) in the order as well as in the options !!</p>
+
+<h3 id="a-namecommonstepagiving-a-common-step-to-all-individuals-multiple-entry-files"><a name="commonstep"></a>Giving a common step to all individuals (multiple entry files)</h3>
+
+<p>If you want for instance to map all individuals (multiple files) separately then perform a common SNP calling, please add a step number higher than 999.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$order
+1= bwaAln
+2=bwaSampe
+3=picardTools SortSam
+1000=gatkUnifiedGenotyper
+</code></pre>
+</div>
+<p>This pipeline will map FASTQ then sort per coordinates the SAM for each individuals, and then will launch a common step for all as a global SNP calling. You can add after this calling other steps (1001=gatkVariantFiltrator for example).</p>
+
+<p><strong>Warnings</strong>: if you want to map and call SNP from only one file, you do not need to call a 1000+ step (here <em>gatkUnifiedGenotyper</em> would be then the 4th step).</p>
+
+<h3 id="a-namecommononlyastarting-only-as-a-common-treatment"><a name="commononly"></a>Starting only as a common treatment</h3>
+<p>If you want only a global treatment <strong>for multiple files</strong> (you may have all your formatted BAM and you want to perform the calling and subsequent steps), you can create the following pipeline:
+<code class="highlighter-rouge">
+$order
+1000=gatk UnifiedGenotyper
+1001=gatk VariantFiltrator
+1002=gatkSelectVariants
+</code></p>
+
+<p>The pipeline will treat the data as a global pipeline in this case, without separating the individual files.</p>
+
+<h1 id="a-namecleaningacleaning-steps"><a name="cleaning"></a>Cleaning steps</h1>
+<p>In order to gain hard drive space, you may want to remove some steps from your complete analysis.</p>
+
+<p>In this case, you can specify in the configuration file which step must be REMOVED along the pipeline (as soon as the step following them has been correctly completed), using the key <em>cleaner</em>.</p>
+
+<p>As an example
+````
+$order
+1=bwaAln
+2=bwaSampe
+3=samtools sort</p>
+
+<p>$cleaner
+1
+2
+````</p>
+
+<p>There only the last step result (samtools sort) will be conserved. The folders and logs of the cleaned steps are conserved, but not the resulting files.</p>
+
+<p><strong>NOTE</strong>: the last step will never be cleaned. This is true for single analyses (steps lower than 999 - <em>toggleBzz.pl</em> script) as well as for common steps (higher than 1000 - <em>toggleMultiple.pl</em> script)</p>
+
+<h1 id="a-namecompressingacompressing-steps"><a name="compressing"></a>Compressing steps</h1>
+<p>In order to gain hard drive space but conserving data, you may want to compress some steps from your complete analysis.</p>
+
+<p>In this case, you can specify in the configuration file which step must be COMPRESSED in tar.gz along the pipeline (as soon as the step following them has been correctly completed), using the key <em>compress</em>.</p>
+
+<p>As an example
+````
+$order
+1=bwaAln
+2=bwaSampe
+3=samtools sort</p>
+
+<p>$compress
+1
+2
+````</p>
+
+<p>There only the last step result (samtools sort) will be conserved, the other being compressed in their respective tar.gz archive. The folders and logs of the compressed steps are conserved, but not the resulting files.</p>
+
+<p><strong>NOTE</strong>: as for the cleaner system, the last step will never be compressed. This is true for single analyses (steps lower than 999 - <em>toggleBzz.pl</em> script) as well as for common steps (higher than 1000 - <em>toggleMultiple.pl</em> script).</p>
+
+<p>BE CAREFUL: CLEANING IS OF HIGHER ORDER THAN COMPRESS. If the same step is required to be cleaned AND compressed, it will be only cleaned!</p>
+
+<h1 id="a-nameschedulingascheduler-and-parallel-runs"><a name="scheduling"></a>Scheduler and parallel runs</h1>
+<p>The current version is scheduler-aware (<strong>SGE</strong>, <strong>MPRUN</strong>, <strong>Slurm</strong> and <strong>LSF</strong> on v0.3+), and is able to decide by itself to launch on such a system.
+The jobs will be launched in parallel however only if the <em>software.config</em> file contains informations for scheduling, <em>i.e.</em> the queue name, number of core/threads per jobs, etc…</p>
+
+<p>As an example for <strong>SGE</strong>:
+````
+$sge
+-q myqueue.q
+-pe ompi 2
+-b Y
+-cwd
+-V</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+If the *software.config* file contains those **SGE/Slurm/MPRUN/LSF** informations AND the machine is **SGE/Slurm/MPRUN/LSF** capable, the *toggleBzz.pl* and the *toggleMultiple.pl* scripts will be launched as parallel jobs.
+
+Moreover, in parallel as in linear mode, an error in one individual will not stop the whole process. This individual will be marked as error in the error log, but the others will continue.
+
+**NOTE**: If you need to provide specific ENVIRONMENT variables in your jobs (e.g. *export* or else), you can provide the $env key in your software.config file
+
+</code></pre>
+</div>
+<p>$env
+export PATH=$PATH:/my/other/PATH
+export PERL5LIB=$PERL5LIB/my/new/path
+````</p>
+
+<h1 id="a-namelogsaoutput-and-error-logs"><a name="logs"></a>Output and Error Logs</h1>
+
+<p>TOGGLE will generate two main types of logs, the <em>.o</em> for normal output and the <em>.e</em> for the errors and warnings (these last ones are normally empty files).
+Each level of TOGGLE will generate this pair of log:
+* <strong>GLOBAL_ANALYSIS_date.o/.e</strong> logs represent the general output for the complete analysis (<em>toggleGenerator.pl</em> logs). They are located at the root of the output directory.
+* <strong>IndividualName_global_log.o/.e</strong> logs represent the local output for sub analysis (<em>toggleBzz.pl</em> and <em>toggleMultiple.pl</em> logs). They are located in their respective subdirectories in the output folder.</p>
+
+<h1 id="a-namedrawingadrawing-the-pipeline"><a name="drawing"></a>Drawing the pipeline</h1>
+<p>If <em>Graphviz</em> is installed on the running server, the <strong>toggleGenerator.pl</strong> script will also generate a graphical view of the pipeline in the output folder.
+If <em>Graphviz</em> is not installed, a .dot file is nevertheless created, allowing the user to create a graphical view on another machine having <em>Graphviz</em></p>
+
+<h1 id="a-nameprocessradstacksaprocessradstacks-step"><a name="processradstacks"></a>Process_Radstacks step</h1>
+<p>If process_radstacks from stacks is used in your pipeline, you have to put it as the fist step else TOGGLE return you an error.</p>
+
+		</article>
+<!--
+<aside>
+	<h3>aside</h3>
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices.</p>
+</aside>-->
+
+	</div> <!-- #main -->
+</div> <!-- #main-container -->
+<div id="footer-container">
+	<footer class="wrapper">
+		<h3>footer</h3>
+	</footer>
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
+
+<script src="js/script.js"></script>
+<script>
+	var _gaq=[['_setAccount','UA-20543951-2'],['_trackPageview']];
+	(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
+	g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+	s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+<!--[if lt IE 7 ]>
+	<script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.2/CFInstall.min.js"></script>
+	<script>window.attachEvent("onload",function(){CFInstall.check({mode:"overlay"})})</script>
+<![endif]-->
+</body>
+</html>
