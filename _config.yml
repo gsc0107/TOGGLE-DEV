@@ -21,7 +21,7 @@ description: > # this means to ignore newlines until "baseurl:"
   pipelines in using a single basic configuration file, which can be changed for each assay without having to change the code itself.
   We also describe one implementation of TOGGLE in a complete analysis pipeline designed for SNP discovery for large sets of
   genomic data, ready to use in different environments (from a single machine to HPC clusters).
-baseurl: "" # the subpath of your site, e.g. /blog
+baseurl: "TOGGLE-DEV" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: sravel
 github_username:  sravel
