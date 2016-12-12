@@ -7,7 +7,7 @@ title: "Readme"
 TOGGLE : Toolbox for generic NGS analyses
 ===========
 
-![TOGGLE Logo](/images/toggleLogo.png)
+![TOGGLE Logo]({{ site.url }}/images/toggleLogo.png)
 
 Dear Biologist, have you ever dream of using the whole power of those numerous NGS tools that your bioinformatician colleagues use through this awful list of command line ?
 
