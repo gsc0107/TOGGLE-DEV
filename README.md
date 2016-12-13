@@ -9,36 +9,37 @@ TOGGLE : Toolbox for generic NGS analyses
 
 ![TOGGLE Logo]({{ site.url }}/images/toggleLogo.png)
 
+<p align="justify">
 Dear Biologist, have you ever dream of using the whole power of those numerous NGS tools that your bioinformatician colleagues use through this awful list of command line ?
+</p>
 
+<p align="justify">
 Dear Bioinformatician, have you ever guess how to design really fastly a new NGS pipeline without having to retype again dozens of code lines to readapt your scripts or starting from scratch ?
+</p>
 
+<p align="justify">
 **So, be Happy ! TOGGLE is for you !!**
+</p>
 
+<p align="justify">
 TOGGLE (TOolbox for Generic nGs anaLysEs) is a suite of 19 packages and more than 110 modules able to manage a large set of NGS softwares
 and utilities to easily design pipelines able to handle hundreds of samples. Moreover, TOGGLE offers an easy way to manipulate the various
 options of the different softwares through the pipelines in using a single basic configuration file, that can be changed for each assay without
 having to change the code itself.
+</p>
 
+<p align="justify">
 Users can also create their own pipeline through an easy and user-friendly approach. The pipelines can start from Fastq (plain or gzipped), SAM, BAM or VCF (plain or gzipped) files, with parallel and global analyses. Samples pipelines are provided for SNP discovery and RNAseq counts.
+</p>
 
+<p align="justify">
 The system is able to detect parallel/scheduling launching and to manage large amount of samples on large cluster machines.
-
-
-{% highlight ruby %}
-def show
-  @widget = Widget(params[:id])
-  respond_to do |format|
-    format.html # show.html.erb
-    format.json { render json: @widget }
-  end
-end
-{% endhighlight %}
+</p>
 
 
 ##  Contributing
 
-* Licencied under CeCill-C (http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html) and GPLv3
+* Licencied under [CeCill-C](http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html) and GPLv3
 * Intellectual property belongs to IRD, CIRAD, ADNid and SouthGreen development platform
 * Written by Cecile Monat, Christine Tranchant, Ayite Kougbeadjo, Cedric Farcy, Mawusse Agbessi, Enrique Ortega-Abboud, Sébastien Ravel, Julie Orjuela-Bouniol, Souhila Amanzougarene, Gauthier Sarah, Marilyne Summo, and Francois Sabot
 * Copyright 2014-2016
@@ -47,30 +48,31 @@ end
 
 For bug tracking purpose you can use the GitHub or questions about TOGGLE, you can contact the mainteners using the following email addresses:
 
-* christine.tranchant@ird.fr
-* francois.sabot@ird.fr
+* [christine.tranchant@ird.fr](mailto:christine.tranchant@ird.fr)
+* [francois.sabot@ird.fr](mailto:francois.sabot@ird.fr)
 
 ##  Citation
 **TOGGLE: Toolbox for generic NGS analyses**. Cécile Monat, Christine Tranchant-Dubreuil, Ayité Kougbeadjo, Cédric Farcy, Enrique
 Ortega-Abboud, Souhila Amanzougarene, Sébastien Ravel, Mawussé Agbessi, Julie Orjuela-Bouniol, Maryline Summo and François Sabot.
 
-[*BMC Bioinformatics* 2015, 16:374  doi:10.1186/s12859-015-0795-6][paperLink]
+[*BMC Bioinformatics* 2015, 16:374  doi:10.1186/s12859-015-0795-6](http://www.biomedcentral.com/1471-2105/16/374)
+
 
 ##  INSTALLATION
 
-[Follow the INSTALLATION instructions][installLink]
+[Follow the INSTALLATION instructions]({{ site.url }}/INSTALL.html)
 
 ## MANUAL
 
-[You can find a detailed MANUAL here][manualLink]
+[You can find a detailed MANUAL here]({{ site.url }}/MANUAL.html)
 
 ## KNOWN ISSUES
 
-[You can find detailed known issues][knownIssues]
+[You can find detailed known issues]({{ site.url }}/KnownIssues.html)
 
 ## Release Notes
 
-[Current Release Notes][releaseLink]
+[Current Release Notes]({{ site.url }}/ReleaseNotes.html)
 
 ## REQUIREMENTS
 

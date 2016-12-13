@@ -7,7 +7,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-	<title></title>
+	<title>Versions Notes</title>
 	<meta name="description" content="">
 	<meta name="author" content="">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
@@ -74,9 +74,11 @@
 
 <div id="main-container">
 	<div id="main" class="wrapper clearfix">
+
 		<article>
-{"layout"=>"home", "title"=>nil, "content"=>"", "dir"=>"/", "name"=>"index.md", "path"=>"index.md", "url"=>"/"}
+{"layout"=>"page", "title"=>"Versions Notes", "content"=>"\n# Versions Notes\n\n## Release 0.3.1, xxth of xxx, 2016\n\n### Functions\n\n- Adding the MPRUN and LSF Scheduling system (through bash script launching)\n- Adding the possibility to add ENV variables\n\n## Release 0.3, the 16th of March, 2016\n\n### Modules\n\n- Adding the picardTools AddOrReplaceReadGroup CleanSam ValidateSamFile SamFormatConverter\n- Adding the GATK UnifiedGenotyper BaseRecalibrator PrintReads\n- Adding the samTools sortSam flagstats depth idxstats\n- Adding scheduler.pm module for scheduling system\n- Adding the SGE and Slurm schedulers\n- Adding cleaning and compression of given steps\n\n\n### Functions\n\n- *On the fly* creation of pipeline (see MANUAL.md for a detailled explanation)\n- Use of **Graphviz** to generate a visual output of the pipeline structure\n- Adding the automatic scheduling-aware launching system - For SGE and Slurm\n- Adding a cleaning and a compression system to remove/compress chosen intermediate data in order to save hard drive space (see MANUAL.md)\n- Use of initial compressed gzipped files\n- Possibility of starting from FASTQ, SAM/BAM or VCF (gzipped or not)\n- Possibility of working in relative path\n- Providing an output folder in order to not modify the input data (working with symbolic links)\n- Single creation of index/dictionary for reference, once per pipeline and no more once per sample, only if they do not exist.\n\n## Release 0.2.1, the 15th of May, 2015\n\n### Addition to previous version\n* Adding correct SGE version for globalAnalysis.pl\n* Adding RNAseq pipeline v1\n\n### Corrections of bugs\n* Correction of the ls bug for only a single pair\n* Correction of hard coded path\n* Validation of current softwares versions\n* Modification of the FASTQ format control\n* Various minor bugs adjustments\n\n### Software versions tested\n* bwa\n* Picard-tools 1.124 and Higher\n* SAMtools\n* GATK\n* FastQC\n* CutAdapt\n* Java\n\n\n## Release 0.2, 14st of March, 2015\n\nSecond version release\n", "dir"=>"/ReleaseNotes/", "name"=>"ReleaseNotes.md", "path"=>"ReleaseNotes.md", "url"=>"/ReleaseNotes/"}
 		</article>
+
 <!--
 <aside>
 	<h3>aside</h3>

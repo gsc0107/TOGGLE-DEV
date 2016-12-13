@@ -7,7 +7,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-	<title></title>
+	<title>INSTALL FROM GitHub REPOSITORY</title>
 	<meta name="description" content="">
 	<meta name="author" content="">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
@@ -74,9 +74,11 @@
 
 <div id="main-container">
 	<div id="main" class="wrapper clearfix">
+
 		<article>
-{"layout"=>"home", "title"=>nil, "content"=>"", "dir"=>"/", "name"=>"index.md", "path"=>"index.md", "url"=>"/"}
+{"layout"=>"page", "title"=>"INSTALL FROM GitHub REPOSITORY", "content"=>"There are 3 ways to obtain TOGGLE. We recommend the first one for an install in a cluster.\n\n# INSTALL FROM GitHub REPOSITORY\n\n* Create the directory TOGGLE where you want to install TOGGLE and go into this directory\n\n* Get the TOGGLE code Clone the git\n\n````\n$git clone https://github.com/SouthGreenPlatform/TOGGLE.git .\n````\n* Add the Module path to the PERL5LIB environment variable\n\n````\nexport PERL5LIB=$PERL5LIB:/pathToToggle/Modules\n````\n* In the same way add the TOGGLE directory to the PATH environment variable\n\n````\nexport PATH=$PATH:/pathToToggle\n````\n\nRq : you can add this to the ~/.bashrc to make it always available when you log-in.\n\n\n* Change the permission of the perl files in the directory TOGGLE\n\n```\n$cd /pathToToggle\n$chmod 755 *pl\n```\n\n* Modify the file /pathToToggle/Modules/localConfig.pm\n* Modify the shebang of perl in the begining of the script /pathToToggle/toggleGenerator.pl and onTheFly/startBlock.txt \n\n\n\n* Test the pipeline with the test data\n\nModify the path of adaptator file in the file SNPdiscoveryPaired.config.txt\n\n````\n$cutadapt\n-O=10\n-m=35\n-q=20\n--overlap=7\n-u=8\n#If you have a specific adaptator file, please indicate here. \n-adaptatorFile=/path/to/adaptator.txt\n````\n\n````\n$cd /pathToToggle\n$toggleGenerator.pl -c SNPdiscoveryPaired.config.txt -d DATA/testData/fastq/pairedTwoIndividusIrigin/ -r DATA/Bank/referenceIrigin.fasta -o toggleout2/\n````\n\n* Check the good running\n> > * No error message\n> > * toggleOUTPUT has been created in the /tmp folder\n> > * the data generated are good\n\n````\ntail /tmp/toggleOUTPUT/finalResults/GATKVARIANTFILTRATION.vcf\n\nTO BE CHANGED FOR  THE FINAL VCF USING IRIGIN\n````\n\n\n* Test the RNASeq pipeline with the test data\n\n````\n$cd /pathToToggle\ntoggleGenerator.pl -c RNASeq.config.txt -d DATA/testData/rnaseq/pairedOneIndividu/ -r DATA/Bank/referenceRnaseq.fa -g DATA/Bank/referenceRnaseq.gff3 -o toggleout/\n````\n\n* Check the good running\n> > * No error message\n> > * the directory toggleout has been created\n> > * the directory toggleout/output contain all the results\n> > * the file toggleout/finalResults/RNASeq.accepted_hits.HTSEQCOUNT.txt has been created\n> > * the data generated are good\n\n\n# INSTALL FROM THE DOCKER IMAGE\n\nA Docker image based on Ubuntu 14.04 is available at http://bioinfo-web.mpl.ird.fr/toggle/toggle.tgz\n\nIf Docker is installed on your system, you can use this image:\n\n````\n$wget http://bioinfo-web.mpl.ird.fr/toggle/toggle.tgz\n$cat toggle.tgz | docker import - toggle\n$docker run -i -t toggle /bin/bash\n````\n\nYou can then download your data in the container (or attach a network/local drive within). TOGGLE can be launch as for a GitHub installation.\n\n# INSTALL FROM THE AUTOMATIC SCRIPT\n\nThis script is dedicated for an installation in the user space (no admin rights required).\n\nJust download it, launch it and follow the instructions.\n\n````\n$wget http://bioinfo-web.mpl.ird.fr/toggle/TOGGLEinstall.sh\n$bash TOGGLEinstall.sh\n````\n\nThen you can launch the different scripts in the TOGGLE folder\n", "dir"=>"/INSTALL/", "name"=>"INSTALL.md", "path"=>"INSTALL.md", "url"=>"/INSTALL/"}
 		</article>
+
 <!--
 <aside>
 	<h3>aside</h3>

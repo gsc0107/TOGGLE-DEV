@@ -5,11 +5,55 @@
 	<title>{{ page.title }}</title>
 	<meta name="description" content="{{ page.description }}">
 	<meta name="author" content="{{ site.author }}">
-
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 
-	<link rel="stylesheet" href="css/style.css">
-	<link rel="stylesheet" href="css/monokai.css">
-
-	<script src="js/libs/modernizr-2.0.6.min.js"></script>
+    <link href="{{ site.url }}/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ site.url }}/css/monokai.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ site.url }}/css/stylesheet.css">
 </head>
+ <body>
+
+      <!-- Static navbar -->
+      <nav class="navbar navbar-default navbar-inverse navbar-static-top">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand visible-xs" href="#">TOGGLE</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <p class="navbar-text hidden-xs hidden-sm"><a href="https://github.com/SouthGreenPlatform/TOGGLE/releases" class="navbar-link">Current version: <?php echo $version; ?></a></p>
+              <li class="active"><a href="#">Home</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Docs<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="{{ site.url }}/README/">Readme</a></li>
+                  <li><a href="examples/rna-seq/multiqc_report.html">Install</a></li>
+                  <li><a href="examples/wgs/multiqc_report.html">Manual</a></li>
+                  <li><a href="examples/bs-seq/multiqc_report.html">Realese Notes</a></li>
+                  <li><a href="examples/hi-c/multiqc_report.html">Know Issues</a></li>
+                </ul>
+                <li class="active"><a id="forkme_banner" href="{{repository_url}}">View on GitHub</a></li>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <!--/.nav-collapse -->
+    <!-- Header -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <section id="downloads">
+            <a class="zip_download_link" href="#">Download as a .zip file</a>
+            <a class="tar_download_link" href="#">Download as a tar.gz file</a>
+          </section>
+          <h1 id="project_title">TOGGLE</h1>
+          <h2 id="project_tagline">Toolbox for generic NGS analyses</h2>
+        </header>
+    </div>

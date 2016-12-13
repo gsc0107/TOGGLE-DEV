@@ -1,5 +1,13 @@
-MANUAL for TOGGLEv0.3 using ONTHEFLY creation of PIPELINES
+---
+layout: page
+title: "Manual"
+permalink: /MANUAL/
+---
+
+MANUAL for TOGGLE v0.3 using ONTHEFLY creation of PIPELINES
 ===========
+
+
 # SUMMARY
 
 * [PRE REQUISITES](#prerequisites)
@@ -18,11 +26,14 @@ MANUAL for TOGGLEv0.3 using ONTHEFLY creation of PIPELINES
 * [DRAWING THE PIPELINE](#drawing)
 * [PROCESS_RADSTACKS STEPS](#processradstacks)
 
-
+<p align="justify">
 The TOGGLEv0.3 *onTheFly* version allows users to create their own customized pipelines.
 You can modify not only the different options for each software but also define specific organization for your analysis.
-
-You can therefore remove some steps compared to the previous version, starting from SAM/BAM or VCF files instead of FASTQ only, asking for individual treatments only, individual then common (such as mapping followed by common calling), or even only common treatment.
+</p>
+<p align="justify">
+You can therefore remove some steps compared to the previous version, starting from SAM/BAM or VCF files instead of FASTQ only, asking for individual treatments only,
+individual then common (such as mapping followed by common calling), or even only common treatment.
+</p>
 
 # <a name="prerequisites"></a>PRE REQUISITES
 
@@ -37,9 +48,9 @@ Please use only UTF-8 standard symbols, no weird characters or space, pipe, tild
 # <a name="launching"></a>Launching an analysis
 The current version is based on the **toggleGenerator.pl** script
 
-````
-$toggleGenerator.pl -d|--directory DIR -c|--config FILE -o|--outputdir DIR [-r|--reference FILE] [-k|--keyfile FILE] [-g|--gff FILE] [-nocheck|--nocheckFastq] [--help|-h]
-````
+{% highlight bash %}
+  toggleGenerator.pl -d|--directory DIR -c|--config FILE -o|--outputdir DIR [-r|--reference FILE] [-k|--keyfile FILE] [-g|--gff FILE] [-nocheck|--nocheckFastq] [--help|-h]
+{% endhighlight %}
 
 | Required named arguments:       |                                                                                                                                |
 | :------------------------------ | :----------------------------------------------------------------------------------------------------------------------------- |
@@ -62,7 +73,8 @@ All the the paths (files and folders) can be provided as absolute (/home/mylogin
 The *SNPdiscoveryPaired.config.txt* file is an example of how to customize your pipeline.
 
 Any software configuration will start as follows:
- ````
+
+{% highlight perl %}
  $First Software
  option1
  option2
@@ -70,13 +82,13 @@ Any software configuration will start as follows:
  $Second Software
  option1
  option2
- ````
+{% endhighlight %}
 
  # <a name="finalFolder"></a>What will you have in results ?
 
 TOGGLE will generate an output folder containing different files and subfolders, as follows:
 
- ![TOGGLE Final Folder](toggleOutputFolder.png)
+ ![TOGGLE Final Folder]({{ site.url }}/images/toggleOutputFolder.png)
 
  The final results are contained in the **finalResults** folder.
  TOGGLE will also copy the *software config* file corresponding to the analysis, in order users can recover their options.
@@ -84,26 +96,28 @@ TOGGLE will generate an output folder containing different files and subfolders,
 
 # <a name="sendingOptions"></a>Sending options
 As for the previous version, you can address any option to any given software (as soon as the given option exists for the given software ^^) as follows:
-````
+
+{% highlight perl %}
 $bwaAln
 -e=1
 -n=5
-````
+{% endhighlight %}
 
 You can also write as follows
-````
+
+{% highlight perl %}
 $BWA ALN
 -e=1
 -n=5
-````
+{% endhighlight %}
 
 The software name is not case sensitive and the subprogram can be "glued" to the name (bwaALN is recognized, as well as bwa aln).
 
 If your option has an equal symbol within, such as **-l hostname=MyNode**, you have to write the option as follows:
 
-````
+{% highlight perl %}
 -l hostname=MyNode
-````
+{% endhighlight %}
 
 # <a name="creatingPipeline"></a>Creating a pipeline
 
@@ -111,51 +125,56 @@ The **toggleGenerator.pl** script will use the configuration file informations (
 
 The order will be verified before creating the scripts, by checking if the output files from the step n-1 will be accepted as input for the step n.
 
-![TOGGLE pipeline](TogglePipeline.png)
+![TOGGLE pipeline]({{ site.url }}/images/TogglePipeline.png)
 
 ### <a name="order"></a>Providing an order
 The order of a specific pipeline is provided in the *software.config.txt* as the software *order*
 
 Thus, if you provide option such as:
-````
+
+{% highlight perl %}
 $order
 1=bwa aln
 2=BWASAMPE
 3=samtools view
-````
+{% endhighlight %}
+
 You will obtain a pipeline taking fastq files (plain text of gzipped), aligning them upon a given reference using bwa aln/sampe, and finally cleaning the resulting sam and providing a BAM file (if samtools view option are as such).
 
 Note that the way you write the name of the step is not really important, e.g. it is not case-sensitive, and can have space between the different words. A dedicated module will adjust everything.
 
 You can start from any type of format recognized by TOGGLE at any block from TOGGLE. Thus, if you have a raw VCF file you can start from this one at step one and clean it (**even if your VCF contains informations for multiple individuals**):
 
-````
+{% highlight perl %}
 $order
 1=gatkVariantFiltrator
 2=gatkSelectVariants
-````
+{% endhighlight %}
+
 **BE CAREFUL**: You can comment any step using a '#' symbol before it (ex *#3=bwaAln*) to avoid to retype all numbers. However, such a comment will provoke anomalies in cleaning and compressing steps. The best approach is to provide a list of following numbers (e.g. 1, 2, 3, 4 and not 1, 3, 4). This is also true for steps higher than 1000.
 
 
 ### <a name="samesoftmultiple"></a>Same software repeated multiple times
 
 If you want to adress multiple times the same step BUT with different configurations (e.g. a first samtools view to obtain a BAM then a second samtools view to clean this BAM using the -f option), you have to indicate as follows
-````
+
+{% highlight perl %}
 $order
 1=bwa aln
 2=BWASAMPE
 3=samtools view 1
-4= samtools view 2
-````
+4=samtools view 2
+{% endhighlight %}
 
 In the same time you have to provide the same informations in your configuration:
-````
+
+{% highlight perl %}
 $samtoolsView 1
 -Sb
-
 $samtools View 2
 -f 0x02
-````
+{% endhighlight %}
+
 **BE CAREFUL**: in such multiple times repeated software, you have to put a space between the software name and the step (ex samtoolsview 1 and samtoolsView 2) in the order as well as in the options !!
 
 
@@ -163,25 +182,27 @@ $samtools View 2
 
 If you want for instance to map all individuals (multiple files) separately then perform a common SNP calling, please add a step number higher than 999.
 
-````
+{% highlight perl %}
 $order
-1= bwaAln
+1=bwaAln
 2=bwaSampe
 3=picardTools SortSam
 1000=gatkUnifiedGenotyper
-````
+{% endhighlight %}
+
 This pipeline will map FASTQ then sort per coordinates the SAM for each individuals, and then will launch a common step for all as a global SNP calling. You can add after this calling other steps (1001=gatkVariantFiltrator for example).
 
 **Warnings**: if you want to map and call SNP from only one file, you do not need to call a 1000+ step (here *gatkUnifiedGenotyper* would be then the 4th step).
 
 ### <a name="commononly"></a>Starting only as a common treatment
 If you want only a global treatment **for multiple files** (you may have all your formatted BAM and you want to perform the calling and subsequent steps), you can create the following pipeline:
-````
+
+{% highlight perl %}
 $order
 1000=gatk UnifiedGenotyper
 1001=gatk VariantFiltrator
 1002=gatkSelectVariants
-````
+{% endhighlight %}
 
 The pipeline will treat the data as a global pipeline in this case, without separating the individual files.
 
@@ -191,7 +212,8 @@ In order to gain hard drive space, you may want to remove some steps from your c
 In this case, you can specify in the configuration file which step must be REMOVED along the pipeline (as soon as the step following them has been correctly completed), using the key *cleaner*.
 
 As an example
-````
+
+{% highlight perl %}
 $order
 1=bwaAln
 2=bwaSampe
@@ -200,7 +222,7 @@ $order
 $cleaner
 1
 2
-````
+{% endhighlight %}
 
 There only the last step result (samtools sort) will be conserved. The folders and logs of the cleaned steps are conserved, but not the resulting files.
 
@@ -212,7 +234,8 @@ In order to gain hard drive space but conserving data, you may want to compress 
 In this case, you can specify in the configuration file which step must be COMPRESSED in tar.gz along the pipeline (as soon as the step following them has been correctly completed), using the key *compress*.
 
 As an example
-````
+
+{% highlight perl %}
 $order
 1=bwaAln
 2=bwaSampe
@@ -221,7 +244,7 @@ $order
 $compress
 1
 2
-````
+{% endhighlight %}
 
 There only the last step result (samtools sort) will be conserved, the other being compressed in their respective tar.gz archive. The folders and logs of the compressed steps are conserved, but not the resulting files.
 
@@ -234,15 +257,15 @@ The current version is scheduler-aware (**SGE**, **MPRUN**, **Slurm** and **LSF*
 The jobs will be launched in parallel however only if the *software.config* file contains informations for scheduling, *i.e.* the queue name, number of core/threads per jobs, etc...
 
 As an example for **SGE**:
-````
+
+{% highlight perl %}
 $sge
 -q myqueue.q
 -pe ompi 2
 -b Y
 -cwd
 -V
-
-````
+{% endhighlight %}
 
 If the *software.config* file contains those **SGE/Slurm/MPRUN/LSF** informations AND the machine is **SGE/Slurm/MPRUN/LSF** capable, the *toggleBzz.pl* and the *toggleMultiple.pl* scripts will be launched as parallel jobs.
 
@@ -250,11 +273,11 @@ Moreover, in parallel as in linear mode, an error in one individual will not sto
 
 **NOTE**: If you need to provide specific ENVIRONMENT variables in your jobs (e.g. *export* or else), you can provide the $env key in your software.config file
 
-````
+{% highlight perl %}
 $env
 export PATH=$PATH:/my/other/PATH
 export PERL5LIB=$PERL5LIB/my/new/path
-````
+{% endhighlight %}
 
 # <a name="logs"></a>Output and Error Logs
 
