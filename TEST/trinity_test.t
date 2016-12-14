@@ -182,8 +182,6 @@ $expectedAnswer="8";
 $observedAnswer=`$cmd`;
 chomp($observedAnswer);
 
-warning_is {$observedAnswer != $expectedAnswer } "Given number must be > 0",
-    'warning when called with -1';
 is($observedAnswer,$expectedAnswer,'trinity::trinityRun- output content - single mode');
 
 1;
