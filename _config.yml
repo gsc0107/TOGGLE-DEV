@@ -23,8 +23,8 @@ description: > # this means to ignore newlines until "baseurl:"
   genomic data, ready to use in different environments (from a single machine to HPC clusters).
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://southgreenplatform.github.io" # the base hostname & protocol for your site, e.g. http://example.com
-#twitter_username: sravel
-github_username:  sravel
+github_username: sravel
+repository_url: "https://github.com/SouthGreenPlatform/TOGGLE-DEV/"
 
 # Build settings
 theme: minima
