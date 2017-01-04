@@ -125,7 +125,7 @@ sub createFileConf
     
     #Order initialization
     my $i = 1;
-    open (my $fhOut, "<", $outputName) or die("ERROR: fileConfigurator::creatFileConf : Cannot create output file $outputName\n: $!\n",0);
+    open (my $fhOut, ">", $outputName) or die("ERROR: fileConfigurator::creatFileConf : Cannot create output file $outputName\n: $!\n",0);
     
     while (@{$listOrder})
     {
