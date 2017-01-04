@@ -103,7 +103,7 @@ our %testParams=    {
 sub softParams
 {
     #This sub gathers all the soft parameters for tests and return the text to add
-    toolbox::exportLog("ERROR: fileConfigurator::softParams : should provide only one argument\n",0) if (@_ > 1);
+    die("ERROR: fileConfigurator::softParams : should provide only one argument\n",0) if (@_ > 1);
     my ($softName) = @_ ;
     
     if (exists $testParams{$softName})
@@ -113,19 +113,19 @@ sub softParams
     }
     else
     {
-        toolbox::exportLog("ERROR: fileConfigurator::softParams : unknown software $softName\n",0);
+        die("ERROR: fileConfigurator::softParams : unknown software $softName\n",0);
     }
 }
 
 sub createFileConf
 {
     #This subprogram will generate a config file for soft tests.
-    toolbox::exportLog("ERROR: fileConfigurator::creatFileConf : should provide two arguments, order of softs and output file name\n",0) if (@_ != 2);
+    die("ERROR: fileConfigurator::creatFileConf : should provide two arguments, order of softs and output file name\n",0) if (@_ != 2);
     my ($listOrder,$outputName) = @_ ;
     
     #Order initialization
     my $i = 1;
-    open (my $fhOut, "<", $outputName) or toolbox::exportLog("ERROR: fileConfigurator::creatFileConf : Cannot create output file $outputName\n: $!\n",0);
+    open (my $fhOut, "<", $outputName) or die("ERROR: fileConfigurator::creatFileConf : Cannot create output file $outputName\n: $!\n",0);
     
     while (@{$listOrder})
     {
