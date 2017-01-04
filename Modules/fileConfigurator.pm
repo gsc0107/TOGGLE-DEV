@@ -40,7 +40,7 @@ use toolbox;
 
 our %testParams=    (
         #BWA soft
-        "bwaAln" => ["-n 5","-i 5"],
+        "bwaAln" => ["-n 5"],
         "bwaSampe" => ["-a 500"],
         bwaSamse => [""],
         bwaMem => [""],
@@ -106,8 +106,7 @@ sub softParams
     die("ERROR: fileConfigurator::softParams : should provide only one argument\n",0) if (@_ > 1);
     my ($softName) = @_ ;
     
-    ##DEBUG
-    print Dumper (\%testParams);
+    ##DEBUG    print Dumper (\%testParams);
     
     if (exists $testParams{$softName})
     {
