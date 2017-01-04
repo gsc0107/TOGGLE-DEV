@@ -79,8 +79,6 @@ my $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
 #Creating config file for this test
-#$configCom = "echo -e \"\$order\n1=gatkunifiedgenotyper\n\n\$gatkunifiedgenotyper\n-rf BadCigar\n\" \| cat - >  blockTestConfig.txt";
-#system("$configCom") and die "#### ERROR : Can't execute the following command: $configCom";
 my @listSoft = ("gatkUnifiedGenotyper");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
