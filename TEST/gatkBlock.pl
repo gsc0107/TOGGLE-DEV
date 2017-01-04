@@ -100,7 +100,6 @@ system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test dire
 @listSoft = ("gatkSelectVariants");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
-
 $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneVcf." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for One Vcf no SGE mode";
@@ -115,7 +114,7 @@ $observedOutput = `ls $testingDir/finalResults`;
 is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Vcf (no SGE) list ');
 
 # expected output content
-$observedOutput=`tail -n 1 $testingDir/finalResults/GATKVARIANTFILTRATION.GATKSELECTVARIANT.vcf`;
+my $observedOutput=`tail -n 1 $testingDir/finalResults/GATKVARIANTFILTRATION.GATKSELECTVARIANT.vcf`;
 chomp $observedOutput;
-$expectedOutput="2290182	1013	.	A	G	42.74	PASS	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=21.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:70,6,0";
+my $expectedOutput="2290182	1013	.	A	G	42.74	PASS	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=21.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:70,6,0";
 is($observedOutput,$expectedOutput, 'toggleGenerator - One Vcf (no SGE) content ');
