@@ -38,7 +38,7 @@ use lib qw(.);
 use localConfig;
 use toolbox;
 
-our %testParams=    {
+our $testParams=    {
         #BWA soft
         bwaAln => ("-n 5"),
         bwaSampe => ("-a 500"),
@@ -107,11 +107,11 @@ sub softParams
     my ($softName) = @_ ;
     
     ##DEBUG
-    print Dumper (\%testParams);
+    print Dumper ($testParams);
     
-    if (exists $testParams{$softName})
+    if (exists $testParams->{$softName})
     {
-        my $returnValue = join ("\n",@{$testParams{$softName}});
+        my $returnValue = join ("\n",@{$testParams->{$softName}});
         return $returnValue ;
     }
     else
