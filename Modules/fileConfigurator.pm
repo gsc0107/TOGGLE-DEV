@@ -138,9 +138,14 @@ sub createFileConf
     {
         my $currentSoft = shift @{$listOrder};
         ##DEBUG print $currentSoft,"\n";
+        if ($currentSoft eq "1000")
+        {
+                $i = 1000;
+                next;
+        }
         $orderConfig .= $i."=".$currentSoft."\n";
         my $currentParams = softParams($currentSoft);
-        my $lineOut = "\$".$currentSoft."\n".$currentParams."\n";
+        my $lineOut = "\n\$".$currentSoft."\n".$currentParams."\n";
         print $fhOut $lineOut;
         $i++; #increasing the order level for next turn
     }
