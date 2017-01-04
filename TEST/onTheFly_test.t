@@ -289,7 +289,7 @@ is (onTheFly::generateGraphviz($hashConf,$toggle."/DATA-TEST/onTheFlyTestDir"),'
 # expected output test
 $observedOutput = `ls`;
 @observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','Reference.dict','Reference.fasta','Reference.fasta.amb','Reference.fasta.ann','Reference.fasta.bwt','Reference.fasta.fai','Reference.fasta.pac','Reference.fasta.sa','toggleBzzz.pl','togglePipeline.dot');
+@expectedOutput = ('individuSoft.txt','onTheFly_TEST_log.e','onTheFly_TEST_log.o','Reference.dict','Reference.fasta','Reference.fasta.amb','Reference.fasta.ann','Reference.fasta.bwt','Reference.fasta.fai','Reference.fasta.pac','Reference.fasta.sa','toggleBzzz.pl','togglePipeline.dot','togglePipeline.png');
 #
 is_deeply(\@observedOutput,\@expectedOutput,'onTheFly::generateGraphviz - output list');
 
