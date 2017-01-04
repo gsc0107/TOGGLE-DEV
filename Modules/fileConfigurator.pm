@@ -106,6 +106,7 @@ sub softParams
     die("ERROR: fileConfigurator::softParams : should provide only one argument\n",0) if (@_ > 1);
     my ($softName) = @_ ;
     
+    
     ##DEBUG    print Dumper (\%testParams);
     
     if (exists $testParams{$softName})
@@ -130,15 +131,20 @@ sub createFileConf
     my $i = 1;
     open (my $fhOut, ">", $outputName) or die("ERROR: fileConfigurator::creatFileConf : Cannot create output file $outputName\n: $!\n",0);
     
+    
+    my $orderConfig = "\n\n\$order\n";
+    
     while (@{$listOrder})
     {
         my $currentSoft = shift @{$listOrder};
         print $currentSoft,"\n";
+        $orderConfig .= $i."=".$currentSoft."\n";
         my $currentParams = softParams($currentSoft);
         my $lineOut = "\$".$currentSoft."\n".$currentParams."\n";
         print $fhOut $lineOut;
         $i++; #increasing the order level for next turn
     }
+    print $fhOut $orderConfig;
     close $fhOut;
     return 1;
 }
