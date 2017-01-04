@@ -60,7 +60,7 @@ our %testParams=    (
         #PicardTools soft
         picardToolsSortSam => ["SORT_ORDER=coordinate","VALIDATION_STRINGENCY=SILENT","CREATE_INDEX=TRUE"],
         picardToolsValidateSamFile => [""],
-        picardToolsAddOrReplaceReadGroups => ["ID=Test","LB=Irigin","PL=Illumina","SM=glaberrima","VALIDATION_STRINGENCY=SILENT"],
+        picardToolsAddOrReplaceReadGroups => ["ID=Test","LB=Irigin","PL=Illumina","SM=glaberrima","VALIDATION_STRINGENCY=SILENT","PU=unit1"],
         picardToolsMarkDuplicates => ["VALIDATION_STRINGENCY=SILENT","CREATE_INDEX=TRUE","REMOVE_DUPLICATES=TRUE"],
         picardToolsCreateSequenceDictionary => [""],
         picardToolsCleanSam => ["VALIDATION_STRINGENCY=SILENT"],
