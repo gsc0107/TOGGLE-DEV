@@ -32,7 +32,7 @@
 
 use strict;
 use warnings;
-use Test::More 'no_plan'; 
+use Test::More 'no_plan';
 use Test::Deep;
 use fileConfigurator;
 
@@ -43,6 +43,7 @@ use fileConfigurator;
 
 # fasta files
 my $dataFasta = "../DATA/testData/fasta/TGICL";
+my $dataFastqpairedOneIndividuPacaya = "../DATA/testData/fastq/assembly/pairedOneIndivuPacaya";
 
 print "\n\n#################################################\n";
 print "#### TEST TGICL Assembly\n";
@@ -52,12 +53,10 @@ print "#################################################\n";
 my @listSoft = ("tgicl");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
-
-# Remove files and directory created by previous test 
+# Remove files and directory created by previous test
 my $testingDir="../DATA-TEST/tgiclPacaya-noSGE";
 my $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
-
 
 my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFasta." -o ".$testingDir;
 
@@ -74,3 +73,28 @@ my $observedAnswer=`$cmd`;
 chomp($observedAnswer);
 #
 is($observedAnswer,$expectedAnswer,'tgicl::tgiclRun- output content');
+
+
+
+#####################
+## TOGGLE assembly pairedOneIndividuPacaya
+#####################
+print "\n\n#################################################\n";
+print "#### TEST Trinity assembly pairedOneIndividuPacaya (one individu) / no SGE mode\n";
+print "#################################################\n";
+
+
+#Creating config file for this test
+my @listSoft = ("trinity");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+# Remove files and directory created by previous test
+$testingDir="../DATA-TEST/pairedOneIndividuPacaya-noSGE";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFastqpairedOneIndividuPacaya." -o ".$testingDir;
+
+print "\n### $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuPacaya";
