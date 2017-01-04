@@ -40,8 +40,8 @@ use toolbox;
 
 our %testParams=    (
         #BWA soft
-        "bwaAln" => \("-n 5","-i 5"),
-        "bwaSampe" => \("-a 500"));
+        "bwaAln" => ["-n 5","-i 5"],
+        "bwaSampe" => ["-a 500"]);
         #bwaSamse => \(""),
         #bwaMem => \(""),
         #bwaIndex => \(""),
