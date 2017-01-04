@@ -32,7 +32,7 @@
 
 use strict;
 use warnings;
-use Test::More 'no_plan'; 
+use Test::More 'no_plan';
 use Test::Deep;
 use fileConfigurator;
 
@@ -51,7 +51,7 @@ print "\n\n#################################################\n";
 print "#### TEST gatk UnifiedGenotyper\n";
 print "#################################################\n";
 
-# Remove files and directory created by previous test 
+# Remove files and directory created by previous test
 my $testingDir="../DATA-TEST/oneBam-noSGE-otherBlocks";
 my $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
@@ -78,4 +78,44 @@ $observedOutput=`grep -v "#" $testingDir/finalResults/RC3-SAMTOOLSVIEW.GATKUNIFI
 chomp $observedOutput;
 is($observedOutput,"2233572	145	.	A	G	54.74	.	AC=2;AF=1.00;AN=2;DP=2;Dels=0.00;ExcessHet=3.0103;FS=0.000;HaplotypeScore=0.0000;MLEAC=2;MLEAF=1.00;MQ=49.84;MQ0=0;QD=27.37;SOR=2.303	GT:AD:DP:GQ:PL	1/1:0,2:2:6:82,6,0", 'toggleGenerator - One Bam (no SGE) gatkUnifiedGenotyper content');
 
+#####################
+## TOGGLE VCF singleVCF gatkSelectVariants
+#####################
 
+my $dataOneVcf = "../DATA/testData/vcf/singleVCF";
+
+print "\n\n#################################################\n";
+print "#### TEST one VCF / no SGE mode\n";
+print "#################################################\n";
+
+# Copy file config
+my $fileVcf="../vcf.config.txt";
+
+# Remove files and directory created by previous test
+$testingDir="../DATA-TEST/oneVcf-noSGE";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+@listSoft = ("gatkSelectVariants");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneVcf." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for One Vcf no SGE mode";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('GATKVARIANTFILTRATION.GATKSELECTVARIANT.vcf','GATKVARIANTFILTRATION.GATKSELECTVARIANT.vcf.idx');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Vcf (no SGE) list ');
+
+# expected output content
+$observedOutput=`tail -n 1 $testingDir/finalResults/GATKVARIANTFILTRATION.GATKSELECTVARIANT.vcf`;
+chomp $observedOutput;
+$expectedOutput="2290182	1013	.	A	G	42.74	PASS	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=21.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:70,6,0";
+is($observedOutput,$expectedOutput, 'toggleGenerator - One Vcf (no SGE) content ');
