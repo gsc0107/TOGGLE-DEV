@@ -76,7 +76,7 @@ my $fileSNPPairedIni="../SNPdiscoveryPaired.config.txt";          # Path of the 
 my $fileSNPPairedNoSGE="SNPdiscoveryPairedTest.config.txt";
 
 
-$cmd="cp $fileSNPPairedIni $fileSNPPairedNoSGE";
+my $cmd="cp $fileSNPPairedIni $fileSNPPairedNoSGE";
 ## DEBUG print "\n### COPY conf file SNPdiscoveryPaired : $cmd\n";
 system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TEST
 
@@ -84,11 +84,11 @@ system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TE
 sedFunction($fileSNPPairedNoSGE);
 
 # Remove files and directory created by previous test
-$testingDir="../DATA-TEST/pairedOneIndividuArcad-noSGE";
-$cleaningCmd="rm -Rf $testingDir";
+my $testingDir="../DATA-TEST/pairedOneIndividuArcad-noSGE";
+my $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-$runCmd = "toggleGenerator.pl -c ".$fileSNPPairedNoSGE." -d ".$dataFastqpairedOneIndividuArcad." -r ".$dataRefArcad." -o ".$testingDir;
+my $runCmd = "toggleGenerator.pl -c ".$fileSNPPairedNoSGE." -d ".$dataFastqpairedOneIndividuArcad." -r ".$dataRefArcad." -o ".$testingDir;
 print "\n### $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuArcad";
 
@@ -417,7 +417,7 @@ $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
 #Creating config file for this test
-my @listSoft = ("samToolsView","samToolsIndex","picardToolsSortSam","gatkRealignerTargetCreator","gatkIndelRealigner","picardToolsMarkDuplicates","1000","gatkHaplotypeCaller","gatkVariantFiltration","gatkSelectVariants");
+@listSoft = ("samToolsView","samToolsIndex","picardToolsSortSam","gatkRealignerTargetCreator","gatkIndelRealigner","picardToolsMarkDuplicates","1000","gatkHaplotypeCaller","gatkVariantFiltration","gatkSelectVariants");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
 $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataTwoBam." -r ".$dataRefIrigin." -o ".$testingDir;
@@ -453,7 +453,7 @@ print "#### TEST one SAM / no SGE mode\n";
 print "#################################################\n";
 
 #Creating config file for this test
-my @listSoft = ("samToolsView","samToolsIndex","picardToolsSortSam","gatkRealignerTargetCreator","gatkIndelRealigner","picardToolsMarkDuplicates","1000","gatkHaplotypeCaller","gatkVariantFiltration","gatkSelectVariants");
+@listSoft = ("samToolsView","samToolsIndex","picardToolsSortSam","gatkRealignerTargetCreator","gatkIndelRealigner","picardToolsMarkDuplicates","1000","gatkHaplotypeCaller","gatkVariantFiltration","gatkSelectVariants");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
 # Remove files and directory created by previous test
@@ -519,7 +519,7 @@ $observedOutput = `ls $testingDir/finalResults`;
 is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - processRadtags (no SGE) - list ');
 
 # expected output content
-$observedContent=`unzip -l $testingDir/finalResults/33-16.fq_fastqc.zip | tail -n1`;
+my $observedContent=`unzip -l $testingDir/finalResults/33-16.fq_fastqc.zip | tail -n1`;
 my $validContent = ( $observedContent =~ m/19 files/);
 is($validContent,1,'toggleGenerator - processRadtags (no SGE) - output content');
 
