@@ -106,6 +106,8 @@ sub softParams
     die("ERROR: fileConfigurator::softParams : should provide only one argument\n",0) if (@_ > 1);
     my ($softName) = @_ ;
     
+    print Dumper (\%testParams);
+    
     if (exists $testParams{$softName})
     {
         my $returnValue = join ("\n",@{$testParams{$softName}});
@@ -130,7 +132,7 @@ sub createFileConf
     while (@{$listOrder})
     {
         my $currentSoft = shift @{$listOrder};
-        print $currentSoft;
+        print $currentSoft,"\n";
         my $currentParams = softParams($currentSoft);
         my $lineOut = "\$".$currentSoft."\n".$currentParams."\n";
         print $fhOut $lineOut;
