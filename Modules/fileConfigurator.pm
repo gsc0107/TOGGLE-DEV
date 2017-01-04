@@ -105,13 +105,13 @@ sub softParams
     #This sub gathers all the soft parameters for tests and return the text to add
     die("ERROR: fileConfigurator::softParams : should provide only one argument\n",0) if (@_ > 1);
     my ($softName) = @_ ;
-    
-    
+
+
     ##DEBUG    print Dumper (\%testParams);
-    
+
     if (exists $testParams{$softName})
     {
-        ##DEBUG print @{$testParams{$softName}},"\n"; 
+        print @{$testParams{$softName}},"\n";
         my $returnValue = join ("\n",@{$testParams{$softName}});
         return $returnValue ;
     }
@@ -126,14 +126,14 @@ sub createFileConf
     #This subprogram will generate a config file for soft tests.
     die("ERROR: fileConfigurator::createFileConf : should provide two arguments, order of softs and output file name\n",0) if (@_ != 2);
     my ($listOrder,$outputName) = @_ ;
-    
+
     #Order initialization
     my $i = 1;
     open (my $fhOut, ">", $outputName) or die("ERROR: fileConfigurator::createFileConf : Cannot create output file $outputName\n: $!\n",0);
-    
-    
+
+
     my $orderConfig = "\n\n\$order\n";
-    
+
     while (@{$listOrder})
     {
         my $currentSoft = shift @{$listOrder};
