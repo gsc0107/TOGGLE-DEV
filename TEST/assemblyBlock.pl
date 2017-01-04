@@ -54,7 +54,7 @@ my @listSoft = ("tgicl");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
 # Remove files and directory created by previous test
-my $testingDir="../DATA-TEST/tgiclPacaya-noSGE";
+my $testingDir="../DATA-TEST/tgiclPacaya-noSGE-Blocks";
 my $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
@@ -89,7 +89,7 @@ my @listSoft = ("trinity");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
 # Remove files and directory created by previous test
-$testingDir="../DATA-TEST/pairedOneIndividuPacaya-noSGE";
+$testingDir="../DATA-TEST/pairedOneIndividuPacaya-noSGE-Blocks";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
