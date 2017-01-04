@@ -130,6 +130,7 @@ sub createFileConf
     while (@{$listOrder})
     {
         my $currentSoft = shift @{$listOrder};
+        print $currentSoft;
         my $currentParams = softParams($currentSoft);
         my $lineOut = "\$".$currentSoft."\n".$currentParams."\n";
         print $fhOut $lineOut;
