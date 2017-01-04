@@ -124,12 +124,12 @@ sub softParams
 sub createFileConf
 {
     #This subprogram will generate a config file for soft tests.
-    die("ERROR: fileConfigurator::creatFileConf : should provide two arguments, order of softs and output file name\n",0) if (@_ != 2);
+    die("ERROR: fileConfigurator::createFileConf : should provide two arguments, order of softs and output file name\n",0) if (@_ != 2);
     my ($listOrder,$outputName) = @_ ;
     
     #Order initialization
     my $i = 1;
-    open (my $fhOut, ">", $outputName) or die("ERROR: fileConfigurator::creatFileConf : Cannot create output file $outputName\n: $!\n",0);
+    open (my $fhOut, ">", $outputName) or die("ERROR: fileConfigurator::createFileConf : Cannot create output file $outputName\n: $!\n",0);
     
     
     my $orderConfig = "\n\n\$order\n";
@@ -137,7 +137,7 @@ sub createFileConf
     while (@{$listOrder})
     {
         my $currentSoft = shift @{$listOrder};
-        print $currentSoft,"\n";
+        ##DEBUG print $currentSoft,"\n";
         $orderConfig .= $i."=".$currentSoft."\n";
         my $currentParams = softParams($currentSoft);
         my $lineOut = "\$".$currentSoft."\n".$currentParams."\n";
