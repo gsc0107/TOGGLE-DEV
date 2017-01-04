@@ -2,7 +2,7 @@
 
 ###################################################################################################################################
 #
-# Copyright 2014 IRD-CIRAD
+# Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,14 +23,16 @@
 # You should have received a copy of the CeCILL-C license with this program.
 #If not see <http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.txt>
 #
-# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform
-# Written by Cecile Monat, Christine Tranchant, Ayite Kougbeadjo, Cedric Farcy, Mawusse Agbessi, Marilyne Summo, and Francois Sabot
+# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
+# Version 1 written by Cecile Monat, Ayite Kougbeadjo, Christine Tranchant, Cedric Farcy, Mawusse Agbessi, Maryline Summo, and Francois Sabot
+# Version 2 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Enrique Ortega-Abboud, Julie Orjuela-Bouniol, Sebastien Ravel, Souhila Amanzougarene, and Francois Sabot
+# Version 3 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Maryline Summo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
 #
 ###################################################################################################################################
 
 use strict;
 use warnings;
-use Test::More 'no_plan'; 
+use Test::More 'no_plan';
 use Test::Deep;
 use fileConfigurator;
 
@@ -43,11 +45,10 @@ print "\n\n#################################################\n";
 print "#### INDIVIDUAL BLOCK TEST \n";
 print "#################################################\n";
 
-system("perl gatkBlock.pl") and die "ERROR: $0: Cannot run test for gatkBlock.pl  \n$!\n";
-
-
 system("perl assemblyBlock.pl") and die "ERROR: $0: Cannot run test for assemblyBlock.pl  \n$!\n";
-
+system("perl gatkBlock.pl") and die "ERROR: $0: Cannot run test for gatkBlock.pl  \n$!\n";
+system("perl picardtoolsBlock.pl") and die "ERROR: $0: Cannot run test for assemblyBlock.pl  \n$!\n";
+system("perl samtoolsBlock.pl") and die "ERROR: $0: Cannot run test for assemblyBlock.pl  \n$!\n";
 
 
 #####################
@@ -70,7 +71,7 @@ print "\n\n#################################################\n";
 print "#### TEST SNPdiscoveryPaired paired ARCAD (one individu) / no SGE mode\n";
 print "#################################################\n";
 
-# Copy file config 
+# Copy file config
 my $fileSNPPairedIni="../SNPdiscoveryPaired.config.txt";          # Path of the SNPdiscoveryPaired.config.txt
 my $fileSNPPairedNoSGE="SNPdiscoveryPairedTest.config.txt";
 
@@ -82,7 +83,7 @@ system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TE
 # Change the TOGGLE addaptator configuration file
 sedFunction($fileSNPPairedNoSGE);
 
-# Remove files and directory created by previous test 
+# Remove files and directory created by previous test
 $testingDir="../DATA-TEST/pairedOneIndividuArcad-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
@@ -117,7 +118,7 @@ print "\n\n#################################################\n";
 print "#### TEST SNPdiscoveryPaired paired Irigin (two individus) / compressed fastq / no SGE mode\n";
 print "#################################################\n";
 
-# Remove files and directory created by previous test 
+# Remove files and directory created by previous test
 $testingDir="../DATA-TEST/pairedTwoIndividusGzippedIrigin-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
@@ -144,7 +145,7 @@ is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividusGzipped
 
 
 #####################
-## TOGGLE fastq pairedTwoIndividusIrigin 
+## TOGGLE fastq pairedTwoIndividusIrigin
 #####################
 
 my $dataFastqpairedTwoIndividusIrigin = "../DATA/testData/fastq/pairedTwoIndividusIrigin";
@@ -153,7 +154,7 @@ print "\n\n#################################################\n";
 print "#### TEST SNPdiscoveryPaired paired IRIGIN (two individu) / no SGE mode\n";
 print "#################################################\n";
 
-# Remove files and directory created by previous test 
+# Remove files and directory created by previous test
 $testingDir="../DATA-TEST/pairedTwoIndividusIrigin-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
@@ -199,7 +200,7 @@ system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TE
 # Change the TOGGLE addaptator configuration file
 sedFunction($fileSNPPairedSGE,1);
 
-# Remove files and directory created by previous test 
+# Remove files and directory created by previous test
 $testingDir="../DATA-TEST/pairedTwoIndividusIrigin-SGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
@@ -241,7 +242,7 @@ print "#### TEST SNPdiscoverySingle Irigin (one individu) / no SGE mode\n";
 print "#################################################\n";
 
 # Copy file config
-my $fileSNPSingleIni="../SNPdiscoverySingle.config.txt";         
+my $fileSNPSingleIni="../SNPdiscoverySingle.config.txt";
 my $fileSNPSingleNoSGE="SNPdiscoverySingleNoSGE.config.txt";
 
 $cmd="cp $fileSNPSingleIni $fileSNPSingleNoSGE";
@@ -250,7 +251,7 @@ system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TE
 # Change the TOGGLE addaptator configuration file
 sedFunction($fileSNPSingleNoSGE);
 
-# Remove files and directory created by previous test 
+# Remove files and directory created by previous test
 $testingDir="../DATA-TEST/singleOneIndividuIrigin-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
@@ -287,7 +288,7 @@ print "#### TEST SNPdiscoverySingle Irigin (two individus) / no SGE mode\n";
 print "#################################################\n";
 
 
-# Remove files and directory created by previous test 
+# Remove files and directory created by previous test
 $testingDir="../DATA-TEST/singleTwoIndividuIrigin-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
@@ -323,7 +324,7 @@ print "#### TEST RNASEQPaired  (one individu) / no SGE mode\n";
 print "#################################################\n";
 
 # Copy file config
-my $fileRNAPairedIni="../RNASeq.config.txt";         
+my $fileRNAPairedIni="../RNASeq.config.txt";
 my $fileRNAPairedNoSGE="RNASeqNoSGE.config.txt";
 
 $cmd="cp $fileRNAPairedIni $fileRNAPairedNoSGE";
@@ -332,7 +333,7 @@ system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TE
 # Change the TOGGLE addaptator configuration file
 sedFunction($fileRNAPairedNoSGE);
 
-# Remove files and directory created by previous test 
+# Remove files and directory created by previous test
 $testingDir="../DATA-TEST/RNAseq-pairedOneIndividu-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
@@ -373,8 +374,7 @@ print "#################################################\n";
 my @listSoft = ("samToolsView","samToolsIndex","picardToolsSortSam","gatkRealignerTargetCreator","gatkIndelRealigner","picardToolsMarkDuplicates","1000","gatkHaplotypeCaller","gatkVariantFiltration","gatkSelectVariants");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
-
-# Remove files and directory created by previous test 
+# Remove files and directory created by previous test
 $testingDir="../DATA-TEST/oneBam-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
@@ -398,8 +398,6 @@ chomp $observedOutput;
 $expectedOutput="2290182	1013	.	A	G	42.74	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=21.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:70,6,0";
 is($observedOutput,$expectedOutput, 'toggleGenerator - One Bam (no SGE) content ');
 
-
-
 #####################
 ## SAM-BAM TESTS
 #####################
@@ -413,7 +411,7 @@ print "#### TEST two BAM / no SGE mode\n";
 print "#################################################\n";
 
 
-# Remove files and directory created by previous test 
+# Remove files and directory created by previous test
 $testingDir="../DATA-TEST/twoBams-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
@@ -442,7 +440,6 @@ $expectedOutput="2290182	1013	.	A	G	44.17	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;Exces
 is($observedOutput,$expectedOutput, 'toggleGenerator - Two Bams (no SGE) content ');
 
 
-
 #####################
 ## SAM-BAM TESTS
 #####################
@@ -455,15 +452,16 @@ print "\n\n#################################################\n";
 print "#### TEST one SAM / no SGE mode\n";
 print "#################################################\n";
 
-# Copy file config
-my $fileSam="../sam.config.txt";   
+#Creating config file for this test
+my @listSoft = ("samToolsView","samToolsIndex","picardToolsSortSam","gatkRealignerTargetCreator","gatkIndelRealigner","picardToolsMarkDuplicates","1000","gatkHaplotypeCaller","gatkVariantFiltration","gatkSelectVariants");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
-# Remove files and directory created by previous test 
+# Remove files and directory created by previous test
 $testingDir="../DATA-TEST/oneSam-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-$runCmd = "toggleGenerator.pl -c ".$fileSam." -d ".$dataOneSam." -r ".$dataRefIrigin." -o ".$testingDir;
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneSam." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for One Sam no SGE mode";
 
@@ -482,200 +480,7 @@ chomp $observedOutput;
 $expectedOutput="2290182	1013	.	A	G	42.74	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;QD=21.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:70,6,0";
 is($observedOutput,$expectedOutput, 'toggleGenerator - One Sam (no SGE) content ');
 
-#####################
-## TOGGLE samtools sortsam
-#####################
 
-#Input data
-$dataOneBam = "../DATA/testData/samBam/oneBamUnsorted/";
-
-print "\n\n#################################################\n";
-print "#### TEST SAMtools sort / no SGE mode\n";
-print "#################################################\n";
-
-
-# Remove files and directory created by previous test 
-$testingDir="../DATA-TEST/oneBam-noSGE-otherBlocks";
-$cleaningCmd="rm -Rf $testingDir";
-system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
-
-#Creating config file for this test
-my $configCom = "echo -e \"\$order\n1=samtoolssort\n\n\$samtoolssort\n\" \| cat - >  blockTestConfig.txt";
-system("$configCom") and die "#### ERROR : Can't execute the following command: $configCom";
-
-$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
-print "\n### Toggle running : $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for samtools sort";
-
-# check final results
-print "\n### TEST Ouput list & content : $runCmd\n";
-$observedOutput = `ls $testingDir/finalResults`;
-@observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('unsorted.SAMTOOLSSORT.bam');
-
-# expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) sorting list ');
-
-# expected output content
-$observedOutput=`samtools view $testingDir/finalResults/unsorted.SAMTOOLSSORT.bam | head -n 2 | cut -f4`; # We pick up only the position field
-chomp $observedOutput;
-my @position = split /\n/, $observedOutput;
-$observedOutput= 0;
-$observedOutput = 1 if ($position[0] < $position[1]); # the first read is placed before the second one
-is($observedOutput,"1", 'toggleGenerator - One Bam (no SGE) sorting content ');
-
-
-#####################
-## TOGGLE picardtools ValidateSamFile
-#####################
-
-#Input data
-$dataOneBam = "../DATA/testData/samBam/oneBam/";
-
-print "\n\n#################################################\n";
-print "#### TEST picardtools ValidateSamFile\n";
-print "#################################################\n";
-
-
-# Remove files and directory created by previous test 
-$testingDir="../DATA-TEST/oneBam-noSGE-otherBlocks";
-$cleaningCmd="rm -Rf $testingDir";
-system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
-
-#Creating config file for this test
-$configCom = "echo -e \"\$order\n1=picardtoolsvalidatesamfile\n\n\$picardtoolsvalidatesamfile\n\" \| cat - >  blockTestConfig.txt";
-system("$configCom") and die "#### ERROR : Can't execute the following command: $configCom";
-
-$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
-print "\n### Toggle running : $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for picardtoolsValidateSamFile";
-
-# check final results
-print "\n### TEST Ouput list & content : $runCmd\n";
-$observedOutput = `ls $testingDir/finalResults`;
-@observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('RC3-SAMTOOLSVIEW.PICARDTOOLSVALIDATESAMFILE.report');
-
-# expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) validatingSam file list');
-
-# expected output content
-$observedOutput=`wc -l $testingDir/RC3-SAMTOOLSVIEW.PICARDTOOLSVALIDATESAMFILE.report`; # We pick up only the position field
-chomp $observedOutput;
-is($observedOutput,"34", 'toggleGenerator - One Bam (no SGE) validatingSam content');
-
-print "\n\n#################################################\n";
-print "#### TEST picardtools AddOrReplaceReadGroups\n";
-print "#################################################\n";
-
-
-# Remove files and directory created by previous test 
-$testingDir="../DATA-TEST/oneBam-noSGE-otherBlocks";
-$cleaningCmd="rm -Rf $testingDir";
-system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
-
-#Creating config file for this test
-$configCom = "echo -e \"\$order\n1=picardtoolsaddorreplacereadgroups\n\n\$picardtoolsaddorreplacereadgroups\nID=toto\nLB=tutu\nPL=Illumina\nPU=irigin\nSM=TOTO\nVALIDATION_STRINGENCY=SILENT\n\" \| cat - >  blockTestConfig.txt";
-system("$configCom") and die "#### ERROR : Can't execute the following command: $configCom";
-
-$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
-print "\n### Toggle running : $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for picardtoolsAddOrReplaceReadGroups";
-
-# check final results
-print "\n### TEST Ouput list & content : $runCmd\n";
-$observedOutput = `ls $testingDir/finalResults`;
-@observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('RC3-SAMTOOLSVIEW.PICARDTOOLSADDORREPLACEREADGROUPS.bam');
-
-# expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) AddOrReplaceReadGroups file list ');
-
-# expected output content
-$observedOutput=`samtools view -H $testingDir/RC3-SAMTOOLSVIEW.PICARDTOOLSADDORREPLACEREADGROUPS.bam| grep \@RG`; # We pick up only the position field
-chomp $observedOutput;
-is($observedOutput,"\@RG	ID:toto	LB:tutu	PL:Illumina	SM:TOTO	PU:irigin", 'toggleGenerator - One Bam (no SGE) AddOrReplaceReadGroups content');
-
-print "\n\n#################################################\n";
-print "#### TEST gatk UnifiedGenotyper\n";
-print "#################################################\n";
-
-
-# Remove files and directory created by previous test 
-$testingDir="../DATA-TEST/oneBam-noSGE-otherBlocks";
-$cleaningCmd="rm -Rf $testingDir";
-system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
-
-#Creating config file for this test
-#$configCom = "echo -e \"\$order\n1=gatkunifiedgenotyper\n\n\$gatkunifiedgenotyper\n-rf BadCigar\n\" \| cat - >  blockTestConfig.txt";
-#system("$configCom") and die "#### ERROR : Can't execute the following command: $configCom";
-my @listSoft = ("gatkUnifiedGenotyper");
-fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
-
-$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
-print "\n### Toggle running : $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for gatkUnifiedGenotyper";
-
-# check final results
-print "\n### TEST Ouput list & content : $runCmd\n";
-$observedOutput = `ls $testingDir/finalResults`;
-@observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('RC3-SAMTOOLSVIEW.GATKUNIFIEDGENOTYPER.vcf');
-
-# expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) gatkUnifiedGenotyper file list ');
-
-# expected output content
-$observedOutput=`grep -v "#" $testingDir/RC3-SAMTOOLSVIEW.GATKUNIFIEDGENOTYPER.vcf`; # We pick up only the position field
-chomp $observedOutput;
-is($observedOutput,"2233572	145	.	A	G	54.74	.	AC=2;AF=1.00;AN=2;DP=2;Dels=0.00;ExcessHet=3.0103;FS=0.000;HaplotypeScore=0.0000;MLEAC=2;MLEAF=1.00;MQ=49.84;MQ0=0;QD=27.37;SOR=2.303	GT:AD:DP:GQ:PL	1/1:0,2:2:6:82,6,0", 'toggleGenerator - One Bam (no SGE) gatkUnifiedGenotyper content');
-
-
-# *** VCF ***
-#   - TOGGLE VCF singleVCF
-
-#####################
-## VCF TESTS
-#####################
-## TOGGLE VCF singleVCF
-#####################
-
-my $dataOneVcf = "../DATA/testData/vcf/singleVCF";
-
-print "\n\n#################################################\n";
-print "#### TEST one VCF / no SGE mode\n";
-print "#################################################\n";
-
-# Copy file config
-my $fileVcf="../vcf.config.txt";         
-
-# Remove files and directory created by previous test 
-$testingDir="../DATA-TEST/oneVcf-noSGE";
-$cleaningCmd="rm -Rf $testingDir";
-system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
-
-$runCmd = "toggleGenerator.pl -c ".$fileVcf." -d ".$dataOneVcf." -r ".$dataRefIrigin." -o ".$testingDir;
-print "\n### Toggle running : $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for One Vcf no SGE mode";
-
-# check final results
-print "\n### TEST Ouput list & content : $runCmd\n";
-$observedOutput = `ls $testingDir/finalResults`;
-@observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('GATKVARIANTFILTRATION.GATKSELECTVARIANT.vcf','GATKVARIANTFILTRATION.GATKSELECTVARIANT.vcf.idx');
-
-# expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Vcf (no SGE) list ');
-
-# expected output content
-$observedOutput=`tail -n 1 $testingDir/finalResults/GATKVARIANTFILTRATION.GATKSELECTVARIANT.vcf`;
-chomp $observedOutput;
-$expectedOutput="2290182	1013	.	A	G	42.74	PASS	AC=2;AF=1.00;AN=2;DP=2;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=29.00;MQ0=0;QD=21.37;SOR=0.693	GT:AD:DP:GQ:PL	1/1:0,2:2:6:70,6,0";
-is($observedOutput,$expectedOutput, 'toggleGenerator - One Vcf (no SGE) content ');
-
-
-#####################
-## FASTQ TESTS
 #####################
 ## TOGGLE radseq processRadtags Single
 #####################
@@ -688,13 +493,13 @@ print "#### TEST processRadtags  (single) / no SGE mode\n";
 print "#################################################\n";
 
 # Copy file config
-my $fileconfRadseq="../radseqSingle.config.txt";         
+my $fileconfRadseq="../radseqSingle.config.txt";
 my $fileconfRadseqNoSGE="radseqSingle.config.txt";
 
 $cmd="cp $fileconfRadseq $fileconfRadseqNoSGE";
 system($cmd) and die ("#### ERROR COPY CONFIG FILE: $cmd\n");     # Copy into TEST
 
-# Remove files and directory created by previous test 
+# Remove files and directory created by previous test
 $testingDir="../DATA-TEST/processRadtags-Single-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
@@ -728,7 +533,7 @@ sub sedFunction
 {
     my $file=$_[0];
     my $bool=defined($_[1])? $_[1] : 0;
-    
+
     # Change the TOGGLE addaptator configuration file for paired data
     my $sed="sed -i -e 's|-b ADAPTATOR1REVERSE -B ADAPTATOR1REVERSE|-b GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG  -B GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG|' ". $file;
     #print $sed."\n\n";
@@ -736,16 +541,16 @@ sub sedFunction
     $sed="sed -i -e 's|-b ADAPTATOR1FORWARD -B ADAPTATOR1FORWARD|-b GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG -B GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG|' ". $file;
     #print $sed."\n\n";
     system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
-   
-    
+
+
     $sed="sed -i -e 's|-b ADAPTATOR1REVERSE|-b GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG|' ". $file;
     #print $sed."\n\n";
     system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
     $sed="sed -i -e 's|-b ADAPTATOR1FORWARD|-b GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG|' ". $file;
     #print $sed."\n\n";
     system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
-    
-    
+
+
     # Add SGE part
     if ($bool)
     {
@@ -760,8 +565,8 @@ sub sedFunction
         system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
         $sed="sed -i -e 's|#-V|-V|' ". $file;
         ## DEBUG print $sed;
-        system($sed) and die ("#### ERROR  SED COMMAND: $sed\n"); 
+        system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
     }
-    
-    
+
+
 }
