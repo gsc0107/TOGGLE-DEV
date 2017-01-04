@@ -62,7 +62,44 @@
 use warnings;
 use Test::More 'no_plan'; 
 use Test::Deep;
+use fileConfigurator;
 
+
+print "\n\n#################################################\n";
+print "#### TEST gatk UnifiedGenotyper\n";
+print "#################################################\n";
+
+
+# Remove files and directory created by previous test 
+my $testingDir="../DATA-TEST/oneBam-noSGE-otherBlocks";
+my $cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+#$configCom = "echo -e \"\$order\n1=gatkunifiedgenotyper\n\n\$gatkunifiedgenotyper\n-rf BadCigar\n\" \| cat - >  blockTestConfig.txt";
+#system("$configCom") and die "#### ERROR : Can't execute the following command: $configCom";
+my @listSoft = ("gatkUnifiedGenotyper");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for gatkUnifiedGenotyper";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+my $observedOutput = `ls $testingDir/finalResults`;
+my @observedOutput = split /\n/,$observedOutput;
+my @expectedOutput = ('RC3-SAMTOOLSVIEW.GATKUNIFIEDGENOTYPER.vcf');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) gatkUnifiedGenotyper file list ');
+
+# expected output content
+$observedOutput=`grep -v "#" $testingDir/RC3-SAMTOOLSVIEW.GATKUNIFIEDGENOTYPER.vcf`; # We pick up only the position field
+chomp $observedOutput;
+is($observedOutput,"2233572	145	.	A	G	54.74	.	AC=2;AF=1.00;AN=2;DP=2;Dels=0.00;ExcessHet=3.0103;FS=0.000;HaplotypeScore=0.0000;MLEAC=2;MLEAF=1.00;MQ=49.84;MQ0=0;QD=27.37;SOR=2.303	GT:AD:DP:GQ:PL	1/1:0,2:2:6:82,6,0", 'toggleGenerator - One Bam (no SGE) gatkUnifiedGenotyper content');
+
+__END__
 
 ######################
 ## SUB
@@ -753,8 +790,10 @@ $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
 #Creating config file for this test
-$configCom = "echo -e \"\$order\n1=gatkunifiedgenotyper\n\n\$gatkunifiedgenotyper\n-rf BadCigar\n\" \| cat - >  blockTestConfig.txt";
-system("$configCom") and die "#### ERROR : Can't execute the following command: $configCom";
+#$configCom = "echo -e \"\$order\n1=gatkunifiedgenotyper\n\n\$gatkunifiedgenotyper\n-rf BadCigar\n\" \| cat - >  blockTestConfig.txt";
+#system("$configCom") and die "#### ERROR : Can't execute the following command: $configCom";
+my @listSoft = ("gatkUnifiedGenotyper");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
 $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
