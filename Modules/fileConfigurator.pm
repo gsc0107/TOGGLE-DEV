@@ -133,6 +133,7 @@ sub createFileConf
         my $currentParams = softParams($currentSoft);
         my $lineOut = "\$".$currentSoft."\n".$currentParams."\n";
         print $fhOut $lineOut;
+        $i++; #increasing the order level for next turn
     }
     close $fhOut;
     exit;
