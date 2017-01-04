@@ -153,7 +153,7 @@ $expectedAnswer="9";
 $observedAnswer=`$cmd`;
 chomp($observedAnswer);
 
-skip:
+SKIP:
 {
     skip "Non reproducible tgicl results", 1 if ($observedAnswer == 15 );
     is($observedAnswer,$expectedAnswer,'trinity::trinityRun- output content - Several banks');
@@ -170,7 +170,6 @@ $observedOutput = `ls $trinitySingleOutDir`;
 @observedOutput = split /\n/,$observedOutput;
 @expectedOutput = ($readGroup.'_inchworm.K25.L25.DS.fa',$readGroup.'_inchworm.K25.L25.DS.fa.finished',$readGroup.'_inchworm.kmer_count',$readGroup.'_jellyfish.kmers.fa',$readGroup.'_jellyfish.kmers.fa.histo',$readGroup.'_partitioned_reads.files.list',$readGroup.'_partitioned_reads.files.list.ok',$readGroup.'_recursive_trinity.cmds',$readGroup.'_recursive_trinity.cmds.completed',$readGroup.'_recursive_trinity.cmds.ok',$readGroup.'_single.fa',$readGroup.'_single.fa.ok',$readGroup.'_single.fa.read_count',$readGroup.'_Trinity.fasta',$readGroup.'_Trinity.timing');
 #@expectedOutput = ($readGroup.'_both.fa',$readGroup.'_both.fa.ok',$readGroup.'_both.fa.read_count',$readGroup.'_chrysalis',$readGroup.'_inchworm.K25.L25.DS.fa',$readGroup.'_inchworm.K25.L25.DS.fa.finished',$readGroup.'_inchworm.kmer_count',$readGroup.'_jellyfish.kmers.fa',$readGroup.'_jellyfish.kmers.fa.histo',$readGroup.'_left.fa.ok',$readGroup.'___log.e',$readGroup.'___log.o',$readGroup.'_partitioned_reads.files.list',$readGroup.'_partitioned_reads.files.list.ok',$readGroup.'_read_partitions',$readGroup.'_recursive_trinity.cmds',$readGroup.'_recursive_trinity.cmds.completed',$readGroup.'_recursive_trinity.cmds.ok',$readGroup.'_right.fa.ok',$readGroup.'_Trinity.fasta',$readGroup.'_Trinity.timing');
-#
 
 is_deeply(\@observedOutput,\@expectedOutput,'trinity::trinityRun - output list - single mode');
 #
