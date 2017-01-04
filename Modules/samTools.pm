@@ -118,15 +118,26 @@ sub samToolsView
      { ##Check if entry file exist and is not empty
           
           #Check if the format is correct
-          if (toolbox::checkSamOrBamFormat($bamFileIn)==0) {#The file is not a BAM/SAM file
+          if (toolbox::checkSamOrBamFormat($bamFileIn)==0)
+          {
+               #The file is not a BAM/SAM file
                toolbox::exportLog("ERROR: samTools::samToolsView : The file $bamFileIn is not a SAM/BAM file\n",0);
                return 0;
           }
 
           my $options="";
-          if ($optionsHachees) {
+          if ($optionsHachees)
+          {
                $options=toolbox::extractOptions($optionsHachees); ##Get given options
           }
+          
+          #Automatic adding the -S option for samtools view if not added (i.e. input is in Sam format and not BAM)
+          if (toolbox::checkSamOrBamFormat($bamFileIn)==1)
+          {
+               #The file is a SAM file
+              $options .= " -S" unless $options =~ m/-S/;
+          }
+          
           my $command=$samtools." view ".$options." -o ".$bamFileOut." ".$bamFileIn;
           #toolbox::exportLog($command."\n",1);
           #Execute command
