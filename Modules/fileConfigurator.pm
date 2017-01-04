@@ -38,10 +38,10 @@ use lib qw(.);
 use localConfig;
 use toolbox;
 
-our $testParams=    {
+our $testParams=    (
         #BWA soft
         "bwaAln" => ("-n 5","-i 5"),
-        "bwaSampe" => ("-a 500")};
+        "bwaSampe" => ("-a 500"));
         #bwaSamse => \(""),
         #bwaMem => \(""),
         #bwaIndex => \(""),
@@ -111,6 +111,7 @@ sub softParams
     
     if (exists $testParams->{$softName})
     {
+        print @{$testParams->{$softName}},"\n"; 
         my $returnValue = join ("\n",@{$testParams->{$softName}});
         return $returnValue ;
     }
