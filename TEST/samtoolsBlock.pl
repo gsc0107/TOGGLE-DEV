@@ -32,7 +32,7 @@
 
 use strict;
 use warnings;
-use Test::More 'no_plan'; 
+use Test::More 'no_plan';
 use Test::Deep;
 use fileConfigurator;
 
@@ -41,15 +41,16 @@ use fileConfigurator;
 #####################
 
 #Input data
-$dataOneBam = "../DATA/testData/samBam/oneBamUnsorted/";
+my $dataOneBam = "../DATA/testData/samBam/oneBamUnsorted/";
+my $dataRefIrigin = "../DATA/Bank/referenceIrigin.fasta";
 
 print "\n\n#################################################\n";
 print "#### TEST SAMtools sort / no SGE mode\n";
 print "#################################################\n";
 
-# Remove files and directory created by previous test 
-$testingDir="../DATA-TEST/oneBam-noSGE-otherBlocks";
-$cleaningCmd="rm -Rf $testingDir";
+# Remove files and directory created by previous test
+my $testingDir="../DATA-TEST/samToolsSort-noSGE-Blocks";
+my $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
 #Creating config file for this test
@@ -57,15 +58,15 @@ my @listSoft = ("samToolsSort");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
 
-$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
+my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for samtools sort";
 
 # check final results
 print "\n### TEST Ouput list & content : $runCmd\n";
-$observedOutput = `ls $testingDir/finalResults`;
-@observedOutput = split /\n/,$observedOutput;
-@expectedOutput = ('unsorted.SAMTOOLSSORT.bam');
+my $observedOutput = `ls $testingDir/finalResults`;
+my @observedOutput = split /\n/,$observedOutput;
+my @expectedOutput = ('unsorted.SAMTOOLSSORT.bam');
 
 # expected output test
 is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) sorting list ');
@@ -77,4 +78,3 @@ my @position = split /\n/, $observedOutput;
 $observedOutput= 0;
 $observedOutput = 1 if ($position[0] < $position[1]); # the first read is placed before the second one
 is($observedOutput,"1", 'toggleGenerator - One Bam (no SGE) sorting content ');
-
