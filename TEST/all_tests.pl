@@ -28,206 +28,43 @@
 #
 ###################################################################################################################################
 
-
-
-# TESTS :
-# *** FASTQ ***
-#   - TOGGLE fastq pairedOneIndividuArcad
-#   - TOGGLE fastq pairedTwoIndividusGzippedIrigin
-#   - TOGGLE fastq pairedTwoIndividusIrigin 
-#   - TOGGLE fastq pairedTwoIndividusIrigin en QSUB
-#   - TOGGLE fastq singleOneIndividuIrigin
-#   - TOGGLE fastq singleTwoIndividuIrigin
-
-# *** RNASeq ***
-#   - TOGGLE RNASeq pairedOneIndividu
-#   - TOGGLE RNASeq singleOneIndividu
-# *** samBam ***
-#   - TOGGLE samBam oneBam
-#   - TOGGLE samBam oneSam
-#   - TOGGLE samBam twoBamsIrigin
-# *** VCF ***
-#   - TOGGLE VCF singleVCF
-#   - TOGGLE VCF vcfForRecalibration
-# *** Assembly ***
-#   - TOGGLE Assembly Trinity
-# *** Demultiplexing ***
-#   - TOGGLE radseq processRadtags
-#
-
-
-
-
-#use strict;
+use strict;
 use warnings;
 use Test::More 'no_plan'; 
 use Test::Deep;
 use fileConfigurator;
 
 
+
+#####################################################
+## BLOCK TEST
+#####################################################
 print "\n\n#################################################\n";
-print "#### TEST gatk UnifiedGenotyper\n";
+print "#### INDIVIDUAL BLOCK TEST \n";
 print "#################################################\n";
 
-my $dataRefIrigin = "../DATA/Bank/referenceIrigin.fasta";
-my $dataOneBam = "../DATA/testData/samBam/oneBam/";
+system("perl gatkBlock.pl") and die "ERROR: $0: Cannot run test for gatkBlock.pl  \n$!\n";
 
 
-# Remove files and directory created by previous test 
-my $testingDir="../DATA-TEST/oneBam-noSGE-otherBlocks";
-my $cleaningCmd="rm -Rf $testingDir";
-system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
-
-#Creating config file for this test
-my @listSoft = ("gatkUnifiedGenotyper");
-fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
-
-my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
-print "\n### Toggle running : $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for gatkUnifiedGenotyper";
-
-# check final results
-print "\n### TEST Ouput list & content : $runCmd\n";
-my $observedOutput = `ls $testingDir/finalResults`;
-my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('RC3-SAMTOOLSVIEW.GATKUNIFIEDGENOTYPER.vcf','RC3-SAMTOOLSVIEW.GATKUNIFIEDGENOTYPER.vcf.idx');
-
-# expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) gatkUnifiedGenotyper file list ');
-
-# expected output content
-$observedOutput=`grep -v "#" $testingDir/finalResults/RC3-SAMTOOLSVIEW.GATKUNIFIEDGENOTYPER.vcf`; # We pick up only the position field
-chomp $observedOutput;
-is($observedOutput,"2233572	145	.	A	G	54.74	.	AC=2;AF=1.00;AN=2;DP=2;Dels=0.00;ExcessHet=3.0103;FS=0.000;HaplotypeScore=0.0000;MLEAC=2;MLEAF=1.00;MQ=49.84;MQ0=0;QD=27.37;SOR=2.303	GT:AD:DP:GQ:PL	1/1:0,2:2:6:82,6,0", 'toggleGenerator - One Bam (no SGE) gatkUnifiedGenotyper content');
-
-__END__
-
-######################
-## SUB
-######################
-
-sub sedFunction
-{
-    my $file=$_[0];
-    my $bool=defined($_[1])? $_[1] : 0;
-    
-    # Change the TOGGLE addaptator configuration file for paired data
-    my $sed="sed -i -e 's|-b ADAPTATOR1REVERSE -B ADAPTATOR1REVERSE|-b GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG  -B GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG|' ". $file;
-    #print $sed."\n\n";
-    system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
-    $sed="sed -i -e 's|-b ADAPTATOR1FORWARD -B ADAPTATOR1FORWARD|-b GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG -B GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG|' ". $file;
-    #print $sed."\n\n";
-    system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
-   
-    
-    $sed="sed -i -e 's|-b ADAPTATOR1REVERSE|-b GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG|' ". $file;
-    #print $sed."\n\n";
-    system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
-    $sed="sed -i -e 's|-b ADAPTATOR1FORWARD|-b GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG|' ". $file;
-    #print $sed."\n\n";
-    system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
-    
-    
-    # Add SGE part
-    if ($bool)
-    {
-        my $sed="sed -i -e 's|#\$sge|\$sge|' ". $file;
-        ## DEBUG print $sed;
-        system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
-        $sed="sed -i -e 's|#-q YOURQUEUE.q|-q bioinfo.q|' ". $file;
-        ## DEBUG print $sed;
-        system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
-        $sed="sed -i -e 's|#-b Y|-b Y|' ". $file;
-        ## DEBUG print $sed;
-        system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
-        $sed="sed -i -e 's|#-V|-V|' ". $file;
-        ## DEBUG print $sed;
-        system($sed) and die ("#### ERROR  SED COMMAND: $sed\n"); 
-    }
-    
-    
-}
+system("perl assemblyBlock.pl") and die "ERROR: $0: Cannot run test for assemblyBlock.pl  \n$!\n";
 
 
 
 #####################
+## PIPELINE TEST
+#####################
+
 ## PATH for datas test
-#####################
-
 # references files
 my $dataRefIrigin = "../DATA/Bank/referenceIrigin.fasta";
 my $dataRefArcad = "../DATA/Bank/referenceArcad.fasta";
 my $dataRefRnaseq = "../DATA/Bank/referenceRnaseq.fa";
 my $dataRefRnaseqGFF = "../DATA/Bank/referenceRnaseq.gff3";
-
-
-#####################
-## FASTA TESTS 
-#####################
-print "\n\n#################################################\n";
-print "#### TEST TGICL Assembly\n";
-print "#################################################\n";
-
-my $dataFasta = "../DATA/testData/fasta/TGICL";
-my $fileAssemblyNoSGE="../assembly.config.txt"; 
-
-# Remove files and directory created by previous test 
-my $testingDir="../DATA-TEST/tgiclPacaya-noSGE";
-my $cleaningCmd="rm -Rf $testingDir";
-system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
-
-
-my $runCmd = "toggleGenerator.pl -c ".$fileAssemblyNoSGE." -d ".$dataFasta." -o ".$testingDir;
-
-print "\n### $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for TGICL-Pacaya";
-
-# check final results
-
-# expected output content
-my $cmd = 'grep -c "^>" '.$testingDir.'/finalResults/all_contigs.fasta';
-##print $cmd;
-my $expectedAnswer="88";
-my $observedAnswer=`$cmd`;
-chomp($observedAnswer);
-#
-is($observedAnswer,$expectedAnswer,'tgicl::tgiclRun- output content');
-
-
-
-
-#####################
-## FASTQ TESTS
-
-#####################
-## TOGGLE assembly pairedOneIndividuPacaya
-#####################
-print "\n\n#################################################\n";
-print "#### TEST Trinity assembly pairedOneIndividuPacaya (one individu) / no SGE mode\n";
-print "#################################################\n";
-
-my $dataFastqpairedOneIndividuPacaya = "../DATA/testData/fastq/assembly/pairedOneIndivuPacaya";
-my $fileAssemblyPairedNoSGE="../assembly.config.txt"; 
-
-# Remove files and directory created by previous test 
-$testingDir="../DATA-TEST/pairedOneIndividuPacaya-noSGE";
-$cleaningCmd="rm -Rf $testingDir";
-system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
-
-
-$runCmd = "toggleGenerator.pl -c ".$fileAssemblyPairedNoSGE." -d ".$dataFastqpairedOneIndividuPacaya." -o ".$testingDir;
-
-print "\n### $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuPacaya";
-
+my $dataFastqpairedOneIndividuArcad = "../DATA/testData/fastq/pairedOneIndividuArcad";
 
 #####################
 ## TOGGLE fastq pairedOneIndividuArcad
 #####################
-
-my $dataFastqpairedOneIndividuArcad = "../DATA/testData/fastq/pairedOneIndividuArcad";
-
-
 
 print "\n\n#################################################\n";
 print "#### TEST SNPdiscoveryPaired paired ARCAD (one individu) / no SGE mode\n";
@@ -270,9 +107,6 @@ my $expectedOutput="LOC_Os12g32240.1	864	.	C	T	350.77	PASS	AC=2;AF=1.00;AN=2;DP=
 is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividu (no SGE) content ');
 
 
-
-#####################
-## FASTQ TESTS
 #####################
 ## TOGGLE fastq pairedTwoIndividusGzippedIrigin
 #####################
@@ -309,9 +143,6 @@ $expectedOutput="2290182	1013	.	A	G	44.17	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;Exces
 is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividusGzippedIrigin (no SGE) content ');
 
 
-
-#####################
-## FASTQ TESTS
 #####################
 ## TOGGLE fastq pairedTwoIndividusIrigin 
 #####################
@@ -321,7 +152,6 @@ my $dataFastqpairedTwoIndividusIrigin = "../DATA/testData/fastq/pairedTwoIndivid
 print "\n\n#################################################\n";
 print "#### TEST SNPdiscoveryPaired paired IRIGIN (two individu) / no SGE mode\n";
 print "#################################################\n";
-
 
 # Remove files and directory created by previous test 
 $testingDir="../DATA-TEST/pairedTwoIndividusIrigin-noSGE";
@@ -348,8 +178,6 @@ $expectedOutput="2290182	1013	.	A	G	44.17	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;Exces
 is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividusIrigin  (no SGE) content ');
 
 
-#####################
-## FASTQ TESTS
 #####################
 ## TOGGLE fastq pairedTwoIndividusIrigin en QSUB
 #####################
@@ -402,10 +230,6 @@ $expectedOutput=6;
 is($observedOutput,$expectedOutput, 'toggleGenerator - pairedTwoIndividu (SGE mode) found qsub command');
 
 
-
-
-#####################
-## FASTQ TESTS
 #####################
 ## TOGGLE fastq singleOneIndividuIrigin
 #####################
@@ -452,10 +276,6 @@ $expectedOutput="#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	irigin2";
 is($observedOutput,$expectedOutput, 'toggleGenerator - singleOneIndividu (no SGE) content ');
 
 
-
-
-#####################
-## FASTQ TESTS
 #####################
 ## TOGGLE fastq singleTwoIndividuIrigin
 #####################
@@ -492,8 +312,6 @@ $expectedOutput="2179526	467	.	T	C	64.17	FILTER-DP	AC=2;AF=1.00;AN=2;DP=2;Excess
 is($observedOutput,$expectedOutput, 'toggleGenerator - singleTwoIndividu (no SGE) content ');
 
 
-#####################
-## FASTQ TESTS
 #####################
 ## TOGGLE RNASeq pairedOneIndividu
 #####################
@@ -539,14 +357,6 @@ $expectedOutput="2388 $testingDir/finalResults/RNASeq.accepted_hits.HTSEQCOUNT.t
 is($observedOutput,$expectedOutput, 'toggleGenerator - pairedOneIndividuRNASEQ (no SGE) content ');
 
 
-
-
-
-# *** RNASeq ***
-#   - TOGGLE RNASeq singleOneIndividu
-
-
-
 #####################
 ## SAM-BAM TESTS
 #####################
@@ -559,15 +369,17 @@ print "\n\n#################################################\n";
 print "#### TEST one BAM / no SGE mode\n";
 print "#################################################\n";
 
-# Copy file config
-my $fileBam="../bam.config.txt";         
+#Creating config file for this test
+my @listSoft = ("samToolsView","samToolsIndex","picardToolsSortSam","gatkRealignerTargetCreator","gatkIndelRealigner","picardToolsMarkDuplicates","1000","gatkHaplotypeCaller","gatkVariantFiltration","gatkSelectVariants");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
 
 # Remove files and directory created by previous test 
 $testingDir="../DATA-TEST/oneBam-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-$runCmd = "toggleGenerator.pl -c ".$fileBam." -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for One Bam no SGE mode";
 
@@ -606,7 +418,11 @@ $testingDir="../DATA-TEST/twoBams-noSGE";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-$runCmd = "toggleGenerator.pl -c ".$fileBam." -d ".$dataTwoBam." -r ".$dataRefIrigin." -o ".$testingDir;
+#Creating config file for this test
+my @listSoft = ("samToolsView","samToolsIndex","picardToolsSortSam","gatkRealignerTargetCreator","gatkIndelRealigner","picardToolsMarkDuplicates","1000","gatkHaplotypeCaller","gatkVariantFiltration","gatkSelectVariants");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataTwoBam." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for Two Bams no SGE mode";
 
@@ -904,3 +720,48 @@ is($validContent,1,'toggleGenerator - processRadtags (no SGE) - output content')
 
 exit;
 
+######################
+## SUB
+######################
+
+sub sedFunction
+{
+    my $file=$_[0];
+    my $bool=defined($_[1])? $_[1] : 0;
+    
+    # Change the TOGGLE addaptator configuration file for paired data
+    my $sed="sed -i -e 's|-b ADAPTATOR1REVERSE -B ADAPTATOR1REVERSE|-b GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG  -B GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG|' ". $file;
+    #print $sed."\n\n";
+    system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+    $sed="sed -i -e 's|-b ADAPTATOR1FORWARD -B ADAPTATOR1FORWARD|-b GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG -B GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG|' ". $file;
+    #print $sed."\n\n";
+    system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+   
+    
+    $sed="sed -i -e 's|-b ADAPTATOR1REVERSE|-b GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG|' ". $file;
+    #print $sed."\n\n";
+    system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+    $sed="sed -i -e 's|-b ADAPTATOR1FORWARD|-b GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG|' ". $file;
+    #print $sed."\n\n";
+    system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+    
+    
+    # Add SGE part
+    if ($bool)
+    {
+        my $sed="sed -i -e 's|#\$sge|\$sge|' ". $file;
+        ## DEBUG print $sed;
+        system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+        $sed="sed -i -e 's|#-q YOURQUEUE.q|-q bioinfo.q|' ". $file;
+        ## DEBUG print $sed;
+        system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+        $sed="sed -i -e 's|#-b Y|-b Y|' ". $file;
+        ## DEBUG print $sed;
+        system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+        $sed="sed -i -e 's|#-V|-V|' ". $file;
+        ## DEBUG print $sed;
+        system($sed) and die ("#### ERROR  SED COMMAND: $sed\n"); 
+    }
+    
+    
+}
