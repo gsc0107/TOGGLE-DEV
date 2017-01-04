@@ -52,7 +52,7 @@ print "#### TEST gatk UnifiedGenotyper\n";
 print "#################################################\n";
 
 # Remove files and directory created by previous test
-my $testingDir="../DATA-TEST/oneBam-noSGE-otherBlocks";
+my $testingDir="../DATA-TEST/gatkUnifiedGenotyper-noSGE-Blocks";
 my $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
@@ -92,7 +92,7 @@ print "#################################################\n";
 my $fileVcf="../vcf.config.txt";
 
 # Remove files and directory created by previous test
-$testingDir="../DATA-TEST/oneVcf-noSGE";
+$testingDir="../DATA-TEST/gatkSelectVariants-noSGE-Blocks";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
