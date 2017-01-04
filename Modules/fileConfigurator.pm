@@ -40,64 +40,64 @@ use toolbox;
 
 our $testParams=    {
         #BWA soft
-        bwaAln => ("-n 5"),
-        bwaSampe => ("-a 500"),
-        bwaSamse => (""),
-        bwaMem => (""),
-        bwaIndex => (""),
+        bwaAln => \("-n 5"),
+        bwaSampe => \("-a 500"),
+        bwaSamse => \(""),
+        bwaMem => \(""),
+        bwaIndex => \(""),
         #TopHat soft
-        tophat2 => ("-i=30","-I=20000","-a=8","-m=1","--no-coverage-search","-g=10","--bowtie-n","--library-type=fr-unstranded","--microexon-search"),
+        tophat2 => \("-i=30","-I=20000","-a=8","-m=1","--no-coverage-search","-g=10","--bowtie-n","--library-type=fr-unstranded","--microexon-search"),
         #GATK soft
-        gatkRealignerTargetCreator => (""),
-        gatkIndelRealigner => (""),
-        gatkHaplotypeCaller => ("-rf BadCigar"),
-        gatkUnifiedGenotyper => ("-rf BadCigar"),
-        gatkVariantFiltration => ("--filterName 'FILTER-DP' --filterExpression 'DP<10 || DP>600' --filterName 'LowQual' --filterExpression 'QUAL<30'"),
-        gatkSelectVariants => ("-selectType=SNP"),
-        gatkBaseRecalibrator => ("-knownSites=../DATA/expectedData/GATKVARIANTFILTRATION.vcf"),
-        gatkReadBackedPhasing => (""),
-        gatkPrindReads => (""),
+        gatkRealignerTargetCreator => \(""),
+        gatkIndelRealigner => \(""),
+        gatkHaplotypeCaller => \("-rf BadCigar"),
+        gatkUnifiedGenotyper => \("-rf BadCigar"),
+        gatkVariantFiltration => \("--filterName 'FILTER-DP' --filterExpression 'DP<10 || DP>600' --filterName 'LowQual' --filterExpression 'QUAL<30'"),
+        gatkSelectVariants => \("-selectType=SNP"),
+        gatkBaseRecalibrator => \("-knownSites=../DATA/expectedData/GATKVARIANTFILTRATION.vcf"),
+        gatkReadBackedPhasing => \(""),
+        gatkPrindReads => \(""),
         #PicardTools soft
-        picardToolsSortSam => ("SORT_ORDER=coordinate","VALIDATION_STRINGENCY=SILENT","CREATE_INDEX=TRUE"),
-        picardToolsValidateSamFile => (""),
-        picardToolsAddOrReplaceReadGroups => ("ID=Test","LB=Irigin","PL=Illumina","SM=glaberrima","VALIDATION_STRINGENCY=SILENT"),
-        picardToolsMarkDuplicates => ("VALIDATION_STRINGENCY=SILENT","CREATE_INDEX=TRUE","REMOVE_DUPLICATES=TRUE"),
-        picardToolsCreateSequenceDictionary => (""),
-        picardToolsCleanSam => ("VALIDATION_STRINGENCY=SILENT"),
-        picardToolsSamFormatCOnverter => ("VALIDATION_STRINGENCY=SILENT"),
+        picardToolsSortSam => \("SORT_ORDER=coordinate","VALIDATION_STRINGENCY=SILENT","CREATE_INDEX=TRUE"),
+        picardToolsValidateSamFile => \(""),
+        picardToolsAddOrReplaceReadGroups => \("ID=Test","LB=Irigin","PL=Illumina","SM=glaberrima","VALIDATION_STRINGENCY=SILENT"),
+        picardToolsMarkDuplicates => \("VALIDATION_STRINGENCY=SILENT","CREATE_INDEX=TRUE","REMOVE_DUPLICATES=TRUE"),
+        picardToolsCreateSequenceDictionary => \(""),
+        picardToolsCleanSam => \("VALIDATION_STRINGENCY=SILENT"),
+        picardToolsSamFormatCOnverter => \("VALIDATION_STRINGENCY=SILENT"),
         #SAMtools
-        samToolsView => ("-h","-b","-f=0x02"),
-        samToolsSort => (""),
-        samToolsFaidx => (""),
-        samToolsIndex => (""),
-        mergeHeader => (""),
-        samToolsMerge => (""),
-        samToolsIdxStats => (""),
-        samToolsDepth => (""),
-        samToolsFlagstat => (""),
-        samToolsMpileUp => (""),
+        samToolsView => \("-h","-b","-f=0x02"),
+        samToolsSort => \(""),
+        samToolsFaidx => \(""),
+        samToolsIndex => \(""),
+        mergeHeader => \(""),
+        samToolsMerge => \(""),
+        samToolsIdxStats => \(""),
+        samToolsDepth => \(""),
+        samToolsFlagstat => \(""),
+        samToolsMpileUp => \(""),
         #Fastqc
-        fastqc => (""),
+        fastqc => \(""),
         #Cutadapt
-        cutadapt => ("-O=10","-m=35","-q=20,20","--overlap=7","-b GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG -B GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG","-b GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG -B GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG"),
+        cutadapt => \("-O=10","-m=35","-q=20,20","--overlap=7","-b GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG -B GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG","-b GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG -B GTTCGTCTTCTGCCGTATGCTCTAGCACTACACTGACCTCAAGTCTGCACACGAGAAGGCTAG"),
         #FastXToolKit
-        fastxTrimmer => ("-f 8", "-Q33"),
+        fastxTrimmer => \("-f 8", "-Q33"),
         #SnpEFF
-        snpEffAnn => (""),
+        snpEffAnn => \(""),
         #Stacks
-        processRadtags => ("-i fastq","-e 'apeKI'","--retain_header"),
+        processRadtags => \("-i fastq","-e 'apeKI'","--retain_header"),
         #TGICL
-        tgicl => ("-c 6","-p 90","-l 20"),
+        tgicl => \("-c 6","-p 90","-l 20"),
         #Trinity
-        trinity => ("--seqType fq","--max_memory 20G","--full_cleanup"),
+        trinity => \("--seqType fq","--max_memory 20G","--full_cleanup"),
         #HTSeqCount
-        htseqcount => ("-r=name","-s=no","-t=mRNA","-m=union","-i=ID"),
+        htseqcount => \("-r=name","-s=no","-t=mRNA","-m=union","-i=ID"),
         #Pindel
-        pindel => ("-c ALL","-x 4","-l","-k","-s","-M 10","-A 20","--MIN_DD_MAP_DISTANCE 2000"),
+        pindel => \("-c ALL","-x 4","-l","-k","-s","-M 10","-A 20","--MIN_DD_MAP_DISTANCE 2000"),
         #BreakDancer
-        breakdancer => (""),
+        breakdancer => \(""),
         #SGE
-        sge => ("-q bioinfo.q","-b Y")
+        sge => \("-q bioinfo.q","-b Y")
         };
 
 sub softParams
