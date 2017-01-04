@@ -111,7 +111,7 @@ sub softParams
     
     if (exists $testParams{$softName})
     {
-        print @{$testParams{$softName}},"\n"; 
+        ##DEBUG print @{$testParams{$softName}},"\n"; 
         my $returnValue = join ("\n",@{$testParams{$softName}});
         return $returnValue ;
     }
