@@ -38,7 +38,7 @@ use lib qw(.);
 use localConfig;
 use toolbox;
 
-our %testParams=    ()
+our %testParams=    (
         #BWA soft
         bwaAln => ("-n 5"),
         bwaSampe => ("-a 500"),
