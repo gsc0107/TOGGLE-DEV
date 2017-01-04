@@ -69,6 +69,9 @@ print "\n\n#################################################\n";
 print "#### TEST gatk UnifiedGenotyper\n";
 print "#################################################\n";
 
+my $dataRefIrigin = "../DATA/Bank/referenceIrigin.fasta";
+my $dataOneBam = "../DATA/testData/samBam/oneBam/";
+
 
 # Remove files and directory created by previous test 
 my $testingDir="../DATA-TEST/oneBam-noSGE-otherBlocks";
