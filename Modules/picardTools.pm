@@ -41,20 +41,20 @@ use toolbox;
 # This module examine aligned records in the supplied BAM file to locate duplicate molecules. All records are then written to the output file with the duplicate records flagged
 sub picardToolsMarkDuplicates
 {
-   
+
     my ($bamToAnalyze, $bamAnalyzed, $bamDuplicates, $optionsHachees) = @_;     # recovery of information
     if (toolbox::checkSamOrBamFormat($bamToAnalyze)==2 && toolbox::sizeFile($bamToAnalyze)==1)      # check if file are really bam file; if file exists and isn't empty
     {
         my $options="";
-        if ($optionsHachees) 
+        if ($optionsHachees)
 	{
             $options=toolbox::extractOptions($optionsHachees,"=");      # recovery of options if they are provided
         }
-        my $comPicardToolsMarkDuplicates = "$picard MarkDuplicates $options INPUT=$bamToAnalyze OUTPUT=$bamAnalyzed METRICS_FILE=$bamDuplicates ";      #command line 
+        my $comPicardToolsMarkDuplicates = "$picard MarkDuplicates $options INPUT=$bamToAnalyze OUTPUT=$bamAnalyzed METRICS_FILE=$bamDuplicates ";      #command line
         if (toolbox::run($comPicardToolsMarkDuplicates)==1)
 	{
 	    return 1;
-	}                                                                                                                                                                                                                
+	}
     }
     else        # if something wrong (size, format) in the file to examine, don't run the module ...                                                                                                                                                                                                                                                                 # if previous files doesn't exists or are empty or if picardToolsMarkDuplicates failed
     {
@@ -68,7 +68,7 @@ sub picardToolsMarkDuplicates
 sub picardToolsCreateSequenceDictionary
 {
     my($refFastaFile,$dictFileOut,$optionsHachees)= @_;     # recovery of informations
-    if (toolbox::sizeFile($refFastaFile)==1)        # check if the reference fasta file is not empty 
+    if (toolbox::sizeFile($refFastaFile)==1)        # check if the reference fasta file is not empty
     {
 	if (toolbox::existsFile($dictFileOut,0)==0)
 	{
@@ -83,7 +83,7 @@ sub picardToolsCreateSequenceDictionary
 	        return 1;
 	    }
 	}
-	else 
+	else
 	{
 	    toolbox::exportLog("INFOS: picardTools::picardToolsCreateSequenceDictionary : The file $dictFileOut already exists\n",1);
 	    return 1;
@@ -94,7 +94,7 @@ sub picardToolsCreateSequenceDictionary
         toolbox::exportLog("ERROR: picardTools::picardToolsCreateSequenceDictionary : The file $refFastaFile is incorrect\n",0);        # ... and return and error message
         return 0;
     }
-}    
+}
 ######################################
 #PicardToolsSortSam
 ######################################
@@ -234,18 +234,18 @@ sub picardToolsAddOrReplaceReadGroups
 
 =head1 NAME
 
-    Package I<picardTools> 
+    Package I<picardTools>
 
 =head1 SYNOPSIS
 
         use picardTools;
-    
+
         picardTools::picardToolsMarkDuplicates ($bamToAnalyze, $bamAnalyzed, $bamDuplicates, $option_prog{'picardTools markDuplicates'});
-    
+
         picardTools::picardToolsCreateSequenceDictionary ($refFastaFile,$dictFileOut,$option_prog{'picardTools createSequenceDictionary'});
-    
+
         picardTools::picardToolsSortSam ($bamOrSamFileIn,$bamOrSamFileOut,$option_prog{'picardTools sortsam single/pair'});
-	
+
 	picardTools::picardToolsValidateSamFile ($bamOrSamFileIn,$bamOrSamFileOut,$option_prog{'picardTools validateSamFile single/pair'});
 
 
@@ -302,7 +302,7 @@ This module changes the ReadGroup or add one
 
 =head1 AUTHORS
 
-Intellectual property belongs to IRD, CIRAD and South Green developpement plateform 
+Intellectual property belongs to IRD, CIRAD and South Green developpement plateform
 Written by Cecile Monat, Ayite Kougbeadjo, Marilyne Summo, Cedric Farcy, Mawusse Agbessi, Christine Tranchant and Francois Sabot
 
 =head1 SEE ALSO
