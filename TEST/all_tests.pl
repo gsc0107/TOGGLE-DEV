@@ -145,16 +145,25 @@ print "\n### $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for TGICL-Pacaya";
 
 # check final results
+SKIP:
+{
+    # get hostname 
+    my $host = `hostname`;
+    chomp $host;
+    
+    #if tests wasn't running on master, the 3 tests following will be skipped
+    skip "No tgicl test on node", 3 if ($host !~/^master0.alineos.net$/ );
+    
+    # expected output content
+    my $cmd = 'grep -c "^>" '.$testingDir.'/finalResults/all_contigs.fasta';
+    ##print $cmd;
+    my $expectedAnswer="73";
+    my $observedAnswer=`$cmd`;
+    chomp($observedAnswer);
+    #
+    is($observedAnswer,$expectedAnswer,'tgicl::tgiclRun- output content');
 
-# expected output content
-my $cmd = 'grep -c "^>" '.$testingDir.'/finalResults/all_contigs.fasta';
-##print $cmd;
-my $expectedAnswer="88";
-my $observedAnswer=`$cmd`;
-chomp($observedAnswer);
-#
-is($observedAnswer,$expectedAnswer,'tgicl::tgiclRun- output content');
-
+}
 
 
 
@@ -181,6 +190,8 @@ $runCmd = "toggleGenerator.pl -c ".$fileAssemblyPairedNoSGE." -d ".$dataFastqpai
 
 print "\n### $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuPacaya";
+
+exit;
 
 
 #####################
