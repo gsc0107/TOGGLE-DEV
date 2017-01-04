@@ -126,7 +126,7 @@ chomp($observedAnswer);
 
 SKIP:
 {
-    skip "Non reproducible tgicl results", 1 if ($observedAnswer == 13 );
+    skip "Non reproducible trinity results", 1 if ($observedAnswer == 13 );
 #    is($observedAnswer,$expectedAnswer,'trinity::trinityRun- output content - single mode');
 
     is($observedAnswer,$expectedAnswer,'trinity::trinityRun- output content - One paired bank');
