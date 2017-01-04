@@ -119,7 +119,23 @@ sub softParams
 
 sub createFileConf
 {
-    #This subprogram will generate a config file for all soft tests.
+    #This subprogram will generate a config file for soft tests.
+    toolbox::exportLog("ERROR: fileConfigurator::creatFileConf : should provide two arguments, order of softs and output file name\n",0) if (@_ != 2);
+    my ($listOrder,$outputName) = @_ ;
+    
+    #Order initialization
+    my $i = 1;
+    open (my $fhOut, "<", $outputName) or toolbox::exportLog("ERROR: fileConfigurator::creatFileConf : Cannot create output file $outputName\n: $!\n",0);
+    
+    while (@{$listOrder})
+    {
+        my $currentSoft = shift @{$listOrder};
+        my $currentParams = softParams($currentSoft);
+        my $lineOut = "\$".$currentSoft."\n".$currentParams."\n";
+        print $fhOut $lineOut;
+    }
+    close $fhOut;
+    exit;
 }
 
 sub generateAllConf
@@ -137,7 +153,7 @@ package I<fileConfigurator>
 
 	fileConfigurator::softParams($softName);
 
-	fileConfigurator::createFileConf(@listOrder,$outputName);
+	fileConfigurator::createFileConf($listOrder,$outputName);
 
 	fileConfigurator::generateAllConf($outputName);
 
