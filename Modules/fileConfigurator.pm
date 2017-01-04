@@ -136,7 +136,7 @@ sub createFileConf
         $i++; #increasing the order level for next turn
     }
     close $fhOut;
-    exit;
+    return 1;
 }
 
 sub generateAllConf
