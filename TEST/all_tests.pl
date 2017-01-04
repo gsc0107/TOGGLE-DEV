@@ -92,7 +92,7 @@ system("$runCmd") and die "#### ERROR : Can't run TOGGLE for gatkUnifiedGenotype
 print "\n### TEST Ouput list & content : $runCmd\n";
 my $observedOutput = `ls $testingDir/finalResults`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('RC3-SAMTOOLSVIEW.GATKUNIFIEDGENOTYPER.vcf');
+my @expectedOutput = ('RC3-SAMTOOLSVIEW.GATKUNIFIEDGENOTYPER.vcf','RC3-SAMTOOLSVIEW.GATKUNIFIEDGENOTYPER.vcf.idx');
 
 # expected output test
 is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) gatkUnifiedGenotyper file list ');
