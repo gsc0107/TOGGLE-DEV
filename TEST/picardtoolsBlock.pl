@@ -38,14 +38,51 @@ use Test::Deep;
 use fileConfigurator;
 
 
-#####################
-## TOGGLE picardtools ValidateSamFile
-#####################
-
 ## PATH for datas test
 # references files
 my $dataRefIrigin = "../DATA/Bank/referenceIrigin.fasta";
 my $dataOneBam = "../DATA/testData/samBam/oneBam/";
+
+
+#####################
+## TOGGLE picardToolsCleanSam
+#####################
+
+print "\n\n#################################################\n";
+print "#### TEST picardtools cleanSam\n";
+print "#################################################\n";
+
+
+# Remove files and directory created by previous test
+my $testingDir="../DATA-TEST/cleanSam-noSGE-Blocks";
+my $cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+my @listSoft = ("picardToolsCleanSam");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for picardToolsCleanSam";
+
+## check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+my $observedOutput = `ls $testingDir/finalResults/`;
+my @observedOutput = split /\n/,$observedOutput;
+my @expectedOutput = ('RC3-SAMTOOLSVIEW.PICARDTOOLSCLEANSAM.sam');
+
+## expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) cleanSam file list');
+
+# expected output content
+$observedOutput=`wc -l $testingDir/finalResults/RC3-SAMTOOLSVIEW.PICARDTOOLSCLEANSAM.sam`; # We pick up only the position field
+chomp $observedOutput;
+is($observedOutput,"2952 $testingDir/finalResults/RC3-SAMTOOLSVIEW.PICARDTOOLSCLEANSAM.sam", 'toggleGenerator - One Bam (no SGE) cleanSam content');
+
+#####################
+## TOGGLE picardtools ValidateSamFile
+#####################
 
 print "\n\n#################################################\n";
 print "#### TEST picardtools ValidateSamFile\n";
@@ -53,23 +90,23 @@ print "#################################################\n";
 
 
 # Remove files and directory created by previous test
-my $testingDir="../DATA-TEST/validateSamFile-noSGE-Blocks";
-my $cleaningCmd="rm -Rf $testingDir";
+$testingDir="../DATA-TEST/validateSamFile-noSGE-Blocks";
+$cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
 #Creating config file for this test
-my @listSoft = ("picardToolsValidateSamFile");
+@listSoft = ("picardToolsValidateSamFile");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
-my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for picardToolsValidateSamFile";
 
 # check final results
 print "\n### TEST Ouput list & content : $runCmd\n";
-my $observedOutput = `ls $testingDir/output/RC3-SAMTOOLSVIEW/1_picardToolsValidateSamFile/`;
-my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('RC3-SAMTOOLSVIEW.PICARDTOOLSVALIDATESAMFILE.report');
+$observedOutput = `ls $testingDir/output/RC3-SAMTOOLSVIEW/1_picardToolsValidateSamFile/`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('RC3-SAMTOOLSVIEW.PICARDTOOLSVALIDATESAMFILE.report');
 
 # expected output test
 is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) validatingSam file list');
@@ -78,6 +115,11 @@ is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) 
 $observedOutput=`wc -l $testingDir/output/RC3-SAMTOOLSVIEW/1_picardToolsValidateSamFile/RC3-SAMTOOLSVIEW.PICARDTOOLSVALIDATESAMFILE.report`; # We pick up only the position field
 chomp $observedOutput;
 is($observedOutput,"34 $testingDir/output/RC3-SAMTOOLSVIEW/1_picardToolsValidateSamFile/RC3-SAMTOOLSVIEW.PICARDTOOLSVALIDATESAMFILE.report", 'toggleGenerator - One Bam (no SGE) validatingSam content');
+
+
+#####################
+## TOGGLE picardtools AddOrReplaceReadGroups
+#####################
 
 print "\n\n#################################################\n";
 print "#### TEST picardtools AddOrReplaceReadGroups\n";
