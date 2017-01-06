@@ -416,7 +416,8 @@ if ($refFastaFile ne 'None')
     while (@listOfRefFiles)
     {
       my $currentRefFile = shift @listOfRefFiles;
-      my $shortRefFileName = toolbox::extractName($currentRefFile);
+      $shortRefFileName = toolbox::extractName($currentRefFile);
+      $shortRefFileName = (split /\./, $shortRefFileName)[0].".fa";			# rename to fa for bowtie bug
       my $refLsCommand = "cp $currentRefFile $refDir/$shortRefFileName";
       ##DEBUG print $refLsCommand,"\n";
       toolbox::run($refLsCommand,"noprint");
