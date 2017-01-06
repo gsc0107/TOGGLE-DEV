@@ -48,27 +48,59 @@ my $dataOneBam = "../DATA/testData/samBam/oneBam/";
 
 
 print "\n\n#################################################\n";
-print "#### TEST gatk UnifiedGenotyper\n";
+print "#### TEST gatk BaseRecalibrator\n";
 print "#################################################\n";
 
 # Remove files and directory created by previous test
-my $testingDir="../DATA-TEST/gatkUnifiedGenotyper-noSGE-Blocks";
+my $testingDir="../DATA-TEST/gatkBaseRecalibrator-noSGE-Blocks";
 my $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
 #Creating config file for this test
-my @listSoft = ("gatkUnifiedGenotyper");
+my @listSoft = ("gatkBaseRecalibrator");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
 my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for gatkUnifiedGenotyper";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for gatkBaseRecalibrator";
 
 # check final results
 print "\n### TEST Ouput list & content : $runCmd\n";
 my $observedOutput = `ls $testingDir/finalResults`;
 my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('RC3-SAMTOOLSVIEW.GATKUNIFIEDGENOTYPER.vcf','RC3-SAMTOOLSVIEW.GATKUNIFIEDGENOTYPER.vcf.idx');
+my @expectedOutput = ('RC3-SAMTOOLSVIEW.GATKBASERECALIBRATOR.tableReport');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) gatkBaseRecalibrator file list ');
+
+# expected output content
+$observedOutput=`wc -l $testingDir/finalResults/RC3-SAMTOOLSVIEW.GATKBASERECALIBRATOR.tableReport`; # We pick up only the position field
+chomp $observedOutput;
+is($observedOutput,"6273 $testingDir/finalResults/RC3-SAMTOOLSVIEW.GATKBASERECALIBRATOR.tableReport", 'toggleGenerator - One Bam (no SGE) gatkBaseRecalibrator content');
+
+
+print "\n\n#################################################\n";
+print "#### TEST gatk UnifiedGenotyper\n";
+print "#################################################\n";
+
+# Remove files and directory created by previous test
+$testingDir="../DATA-TEST/gatkUnifiedGenotyper-noSGE-Blocks";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+@listSoft = ("gatkUnifiedGenotyper");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for gatkUnifiedGenotyper";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('RC3-SAMTOOLSVIEW.GATKUNIFIEDGENOTYPER.vcf','RC3-SAMTOOLSVIEW.GATKUNIFIEDGENOTYPER.vcf.idx');
 
 # expected output test
 is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) gatkUnifiedGenotyper file list ');
