@@ -147,7 +147,7 @@ OUT=fastq
 $tophat2
 IN=fastq
 OUT=bam
-MANDATORY=reference,gff
+MANDATORY=reference
 
 $picardToolsSortSam
 IN=sam,bam
@@ -195,4 +195,3 @@ $processRadtags
 IN=fastq
 OUT=fastq
 MANDATORY=keyfile
-
