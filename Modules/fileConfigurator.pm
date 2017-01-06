@@ -54,7 +54,7 @@ our %testParams=    (
         gatkUnifiedGenotyper => ["-rf BadCigar"],
         gatkVariantFiltration => ["--filterName 'FILTER-DP' --filterExpression 'DP<10 || DP>600' --filterName 'LowQual' --filterExpression 'QUAL<30'"],
         gatkSelectVariants => ["-selectType=SNP"],
-        gatkBaseRecalibrator => ["-knownSites=../DATA/expectedData/GATKVARIANTFILTRATION.vcf"],
+        gatkBaseRecalibrator => ["-knownSites=../../../../DATA/expectedData/GATKVARIANTFILTRATION.vcf"],
         gatkReadBackedPhasing => [""],
         gatkPrindReads => [""],
         #PicardTools soft
