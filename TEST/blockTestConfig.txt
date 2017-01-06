@@ -1,7 +1,7 @@
-#This config file is used for testing block
+
+$samToolsSort
+
+
 
 $order
-1=samtools sort
-
-
-$samtools sort
+1=samToolsSort
