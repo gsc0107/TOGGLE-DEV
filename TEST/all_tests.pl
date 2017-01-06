@@ -60,7 +60,7 @@ system("perl samtoolsBlock.pl") and die "ERROR: $0: Cannot run test for assembly
 my $dataRefIrigin = "../DATA/Bank/referenceIrigin.fasta";
 my $dataRefArcad = "../DATA/Bank/referenceArcad.fasta";
 my $dataRefRnaseq = "../DATA/Bank/referenceRnaseq.fa";
-my $dataRefRnaseqGFF = "../DATA/Bank/referenceRnaseq.gff3";
+my $dataRefRnaseqGFF = "../DATA/Bank/referenceRnaseqGFF.gff3";
 my $dataFastqpairedOneIndividuArcad = "../DATA/testData/fastq/pairedOneIndividuArcad";
 
 #####################
