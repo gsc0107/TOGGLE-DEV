@@ -8,7 +8,7 @@
 
 ###################################################################################################################################
 #
-# Copyright 2014-2016 IRD-CIRAD-INRA-ADNid
+# Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -72,7 +72,7 @@ my $parser = Getopt::ArgParse->new_parser(
         epilog          => "
 ##########################################################################
 # More information:
-#\thttps://github.com/SouthGreenPlatform/TOGGLE/blob/master/README.md
+#\thttps://github.com/SouthGreenPlatform/TOGGLE/blob/master/docs/README.md
 #
 # Citation:
 #\tTOGGLE: Toolbox for generic NGS analyses. Cécile Monat & al..
