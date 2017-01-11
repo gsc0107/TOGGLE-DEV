@@ -1,12 +1,24 @@
 
 # Versions Notes
 
-## Release 0.3.1, xxth of xxx, 2016
+## Release 0.3.1, 11th of January, 2017
 
 ### Functions
 
 - Adding the MPRUN and LSF Scheduling system (through bash script launching)
 - Adding the possibility to add ENV variables
+- Some options are not required anymore
+- Users can by pass the FASTQ checking in order to accelerate launching
+- Help has been optimized (-h options)
+
+### Modules
+- Adding tgicl
+- Adding Trinity
+- Adding samtools MpileUp
+- Adding snpEff annotation
+
+### Various
+Divers bugs corrected
 
 ## Release 0.3, the 16th of March, 2016
 
