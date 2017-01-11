@@ -565,7 +565,7 @@ sub sedFunction
         system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
         $sed="sed -i -e 's|#-V|-V|' ". $file;
         ## DEBUG print $sed;
-        system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
+        #system($sed) and die ("#### ERROR  SED COMMAND: $sed\n");
     }
 
 
