@@ -210,8 +210,7 @@ is($observedMD5sum,$expectedMD5sum,'samTools::samToolsSort - output structure');
 my @bamFiles=('../../DATA/expectedData/RC3.SAMTOOLSVIEW.bam','../../DATA/expectedData/RC3.PICARDTOOLSSORT.bam');
 my $headerExtractCommand="samtools view -H ../../DATA/expectedData/RC3.SAMTOOLSVIEW.bam > headerFile.sam";  #Extracting header for the following test
 system($headerExtractCommand) and die ("\nCannot launch the header extract command: $!\n Aborting tests\n");
-%optionsRef = ("-h" => '', "-b" => '', "-F" => "0*02");
-$optionsHachees = \%optionsRef;
+
 
 #Outputfile
 $bamFileOut = "MergeBam.bam";

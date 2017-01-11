@@ -64,7 +64,7 @@ my $parser = Getopt::ArgParse->new_parser(
 #\tBMC Bioinformatics 2015, 16:374
 ###########################################################################\n",
         help            => 'a framework to build quickly NGS pipelines',
-        error_prefix    => "\n\e[31m\tERROR MSG: "
+        error_prefix    => "\n\tERROR MSG: "
 );
 
 
@@ -416,7 +416,8 @@ if ($refFastaFile ne 'None')
     while (@listOfRefFiles)
     {
       my $currentRefFile = shift @listOfRefFiles;
-      my $shortRefFileName = toolbox::extractName($currentRefFile);
+      $shortRefFileName = toolbox::extractName($currentRefFile);
+      $shortRefFileName = (split /\./, $shortRefFileName)[0].".fa";			# rename to fa for bowtie bug
       my $refLsCommand = "cp $currentRefFile $refDir/$shortRefFileName";
       ##DEBUG print $refLsCommand,"\n";
       toolbox::run($refLsCommand,"noprint");

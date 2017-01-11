@@ -93,7 +93,7 @@ sub pairRecognition
 		#if the file is a gz Compressed file
 		$firstLineComplete = `zcat $currentFile | head -n 1` if ($currentFile =~ m/gz$/);
 		chomp $firstLineComplete;
-		my $namingConvention;		#Infos for the type of modification
+		my $namingConvention = 0;		#Infos for the type of modification
 		
 		#We need 3 infos: the coding convention ($namingConvention), the name of the pair ($sequenceName) and the strand of the current mate of the pair ($typeOfStrand)
 		

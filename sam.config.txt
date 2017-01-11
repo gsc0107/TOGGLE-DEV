@@ -3,7 +3,7 @@ $order
 2=samToolsIndex
 3=picardToolsSortSam
 4=gatkRealignerTargetCreator
-4=gatkIndelRealigner
+5=gatkIndelRealigner
 6=picardToolsMarkDuplicates
 1000=gatkHaplotypeCaller
 1001=gatkVariantFiltration
