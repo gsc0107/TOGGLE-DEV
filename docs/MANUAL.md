@@ -105,6 +105,8 @@ If your option has an equal symbol within, such as **-l hostname=MyNode**, you h
 -l hostname=MyNode
 ````
 
+**BE CAREFUL: for any file send as option (e.g. "-knownsite" option in GATK BaseRecalibrator), the path for this file must provided as an absolute one, and not relative. It must be thus noted as /my/absolute/path/FILE and not ../FILE, for instance.**
+
 # <a name="creatingPipeline"></a>Creating a pipeline
 
 The **toggleGenerator.pl** script will use the configuration file informations (generally named as *software.config.txt* file, but not mandatory) to create specific pipeline scripts in the output folder called **toggleBzz.pl** for individual treatments (individual mapping e.g.) and **toggleMultiple.pl** for global treatment (global SNP calling e.g.).
