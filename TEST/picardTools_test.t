@@ -256,7 +256,7 @@ $observedOutput = `ls`;
 is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsAddOrReplaceReadGroups - output list');
 
 # expected content test
-$expectedLastLines="\@RG	ID:Test	LB:Irigin	PL:Illumina	SM:glaberrima	PU:unit1";
+$expectedLastLine="\@RG	ID:Test	LB:Irigin	PL:Illumina	SM:glaberrima	PU:unit1";
 $observedOutput=`samtools view -H RC3.PICARDTOOLSADDORREPLACEREADGROUPS.bam| grep \@RG`; # We pick up only the position field
 chomp $observedOutput;
 is($observedOutput,$expectedLastLine,'picardTools::picardToolsAddOrReplaceReadGroups - output structure');
