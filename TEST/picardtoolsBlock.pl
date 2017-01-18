@@ -152,3 +152,43 @@ is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) 
 $observedOutput=`samtools view -H $testingDir/finalResults/RC3-SAMTOOLSVIEW.PICARDTOOLSADDORREPLACEREADGROUPS.bam| grep \@RG`; # We pick up only the position field
 chomp $observedOutput;
 is($observedOutput,"\@RG	ID:Test	LB:Irigin	PL:Illumina	SM:glaberrima	PU:unit1", 'toggleGenerator - One Bam (no SGE) AddOrReplaceReadGroups content');
+
+
+#####################
+## TOGGLE picardtools AddOrReplaceReadGroups
+#####################
+
+print "\n\n#################################################\n";
+print "#### TEST picardtools SortSam\n";
+print "#################################################\n";
+
+
+# Remove files and directory created by previous test
+$testingDir="../DATA-TEST/picardToolsSortSam-noSGE-Blocks";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+@listSoft = ("picardToolsSortSam");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for picardToolsSortSam";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('RC3-SAMTOOLSVIEW.PICARDTOOLSSORT.bai', 'RC3-SAMTOOLSVIEW.PICARDTOOLSSORT.bam');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) SortSam file list ');
+
+# expected output content
+$observedOutput=`wc -l $testingDir/finalResults/RC3-SAMTOOLSVIEW.PICARDTOOLSSORT.bam`; # We pick up only the position field
+chomp $observedOutput;
+is($observedOutput,"820 $testingDir/finalResults/RC3-SAMTOOLSVIEW.PICARDTOOLSSORT.bam", 'toggleGenerator - One Bam (no SGE) picardToolsSortSam content');
+
+
+
