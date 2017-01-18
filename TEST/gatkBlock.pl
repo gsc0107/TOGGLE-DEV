@@ -110,6 +110,77 @@ $observedOutput=`grep -v "#" $testingDir/finalResults/RC3-SAMTOOLSVIEW.GATKUNIFI
 chomp $observedOutput;
 is($observedOutput,"2233572	145	.	A	G	54.74	.	AC=2;AF=1.00;AN=2;DP=2;Dels=0.00;ExcessHet=3.0103;FS=0.000;HaplotypeScore=0.0000;MLEAC=2;MLEAF=1.00;MQ=49.84;MQ0=0;QD=27.37;SOR=2.303	GT:AD:DP:GQ:PL	1/1:0,2:2:6:82,6,0", 'toggleGenerator - One Bam (no SGE) gatkUnifiedGenotyper content');
 
+print "\n\n#################################################\n";
+print "#### TEST gatkIndelRealigner\n";
+print "#################################################\n";
+
+# Remove files and directory created by previous test
+$testingDir="../DATA-TEST/gatkIndelRealigner-noSGE-Blocks";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+@listSoft = ("gatkBaseRecalibrator","gatkIndelRealigner");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for gatkIndelRealigner";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('RC3-SAMTOOLSVIEW.GATKINDELREALIGNER.bai','RC3-SAMTOOLSVIEW.GATKINDELREALIGNER.bam');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) gatkIndelRealigner file list ');
+
+# expected output content
+$observedOutput=`wc -l $testingDir/finalResults/RC3-SAMTOOLSVIEW.GATKINDELREALIGNER.bam`; # We pick up only the position field
+chomp $observedOutput;
+is($observedOutput,"947 $testingDir/finalResults/RC3-SAMTOOLSVIEW.GATKINDELREALIGNER.bam", 'toggleGenerator - One Bam (no SGE) gatkIndelRealigner content');
+
+
+
+print "\n\n#################################################\n";
+print "#### TEST gatkprintReads \n";
+print "#################################################\n";
+
+# Remove files and directory created by previous test
+$testingDir="../DATA-TEST/gatkPrindReads-noSGE-Blocks";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+@listSoft = ("gatkBaseRecalibrator","gatkPrintReads");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for gatkPrindReads";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('RC3-SAMTOOLSVIEW.GATKPRINTREADS.bai','RC3-SAMTOOLSVIEW.GATKPRINTREADS.bam');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) gatkPrindReads file list ');
+
+# expected output content
+$observedOutput=`wc -l $testingDir/finalResults/RC3-SAMTOOLSVIEW.GATKPRINTREADS.bam`; # We pick up only the position field
+chomp $observedOutput;
+is($observedOutput,"585 $testingDir/finalResults/RC3-SAMTOOLSVIEW.GATKPRINTREADS.bam", 'toggleGenerator - One Bam (no SGE) gatkPrindReads content');
+
+
+
+
+
+
+
+
 #####################
 ## TOGGLE VCF singleVCF gatkSelectVariants
 #####################
