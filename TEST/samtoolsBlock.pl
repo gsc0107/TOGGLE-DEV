@@ -78,3 +78,42 @@ my @position = split /\n/, $observedOutput;
 $observedOutput= 0;
 $observedOutput = 1 if ($position[0] < $position[1]); # the first read is placed before the second one
 is($observedOutput,"1", 'toggleGenerator - One Bam (no SGE) sorting content ');
+
+#####################
+## TOGGLE samtools MpileUp
+#####################
+
+#Input data
+$dataOneBam = "../DATA/testData/samBam/oneBam/";
+
+print "\n\n#################################################\n";
+print "#### TEST SAMtools MpileUp\n";
+print "#################################################\n";
+
+# Remove files and directory created by previous test
+$testingDir="../DATA-TEST/samToolsMpileUp";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+@listSoft = ("samToolsMpileUp");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for samtools MpileUp";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('RC3-SAMTOOLSVIEW.SAMTOOLSMPILEUP.mpileup');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) MpileUp list ');
+
+# expected output content
+$observedOutput=`wc -l $testingDir/finalResults/RC3-SAMTOOLSVIEW.SAMTOOLSMPILEUP.mpileup`; # We pick up only the position field
+chomp $observedOutput;
+is($observedOutput,"155888 ../DATA-TEST/samToolsMpileUp/finalResults/RC3-SAMTOOLSVIEW.SAMTOOLSMPILEUP.mpileup", 'toggleGenerator - One Bam (no SGE) MpileUp content ');
