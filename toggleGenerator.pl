@@ -46,10 +46,12 @@ use toolbox;
 use onTheFly;
 use scheduler;
 use radseq;
+use versionSofts;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
 ##########################################
+my $version = `grep -m 1 "Release" $toggle/docs/ReleaseNotes.md | cut -d"#" -f3,3 | sed -e 's/ //'`;
 
 my $parser = Getopt::ArgParse->new_parser(
         prog            => "\n\ntoggleGenerator.pl",
@@ -63,7 +65,7 @@ my $parser = Getopt::ArgParse->new_parser(
 #\tTOGGLE: Toolbox for generic NGS analyses. Cécile Monat & al..
 #\tBMC Bioinformatics 2015, 16:374
 ###########################################################################\n",
-        help            => 'a framework to build quickly NGS pipelines',
+        help            => 'a framework to build quickly NGS pipelines'."\n\n".$version,
         error_prefix    => "\n\tERROR MSG: "
 );
 
@@ -101,6 +103,13 @@ $parser->add_args(
                         dest     => 'checkFastq'
                     ],
                     [
+                        '-v','--version',
+                        required => 0,
+                        type     =>"Bool",
+                        help     => 'Use if you want to know which version of TOGGLE you are using',
+                        dest     => 'version'
+                    ],
+                    [
                         '-g','--gff',
                         required => 0,
                         type     =>"Scalar",
@@ -135,9 +144,17 @@ my $help = join ("\n", @$usage);
 
 $parser->{"error_prefix"} = $help."\n".$parser->{"error_prefix"};
 
-my $args = $parser->parse_args();
 #recovery supplementary arguments undefined by toggle
 my @argv= $parser->argv;
+
+if ("-v" ~~ @ARGV or "--version" ~~ @ARGV or "-version" ~~ @ARGV)
+{
+    print $version;
+    exit;
+}
+
+my $args = $parser->parse_args();
+
 
 #Recovery obligatory arguments
 my $initialDir = toolbox::relativeToAbsolutePath($parser->namespace->directory, 0);       # recovery of the name of the directory to analyse
@@ -203,6 +220,7 @@ print F1 "ANALYSIS_$date\n";
 toolbox::exportLog("#########################################\nINFOS: TOGGLE analysis starts \n#########################################\n",1);;
 toolbox::exportLog("INFOS: $0 : Command line : $cmd_line\n",1);
 toolbox::exportLog("INFOS: Your output folder is $outputDir\n",1);
+toolbox::exportLog("INFOS: the current version of TOGGLE is $version\n",1);
 
 # Verify if file arguments exist
 foreach my $file (@listFilesMandatory)
@@ -215,6 +233,10 @@ foreach my $file (@listFilesMandatory)
 ########################################
 
 toolbox::exportLog("#########################################\nINFOS: Software version/location \n#########################################\n",1);
+
+my $ver = versionSofts::javaVersion;
+print $ver;
+
 open (my $fhConfig, "<", "$toggle/Modules/localConfig.pm");
 while (my $line = <$fhConfig>)
 {
