@@ -50,7 +50,7 @@ use radseq;
 ##########################################
 # recovery of parameters/arguments given when the program is executed
 ##########################################
-my $version = `grep -m 1 "Release" docs/ReleaseNotes.md | cut -d"#" -f3,3 | sed -e 's/ //'`;
+my $version = `grep -m 1 "Release" $toggle/docs/ReleaseNotes.md | cut -d"#" -f3,3 | sed -e 's/ //'`;
 
 my $parser = Getopt::ArgParse->new_parser(
         prog            => "\n\ntoggleGenerator.pl",
@@ -219,6 +219,7 @@ print F1 "ANALYSIS_$date\n";
 toolbox::exportLog("#########################################\nINFOS: TOGGLE analysis starts \n#########################################\n",1);;
 toolbox::exportLog("INFOS: $0 : Command line : $cmd_line\n",1);
 toolbox::exportLog("INFOS: Your output folder is $outputDir\n",1);
+toolbox::exportLog("INFOS: the current version of TOGGLE is $version\n",1);
 
 # Verify if file arguments exist
 foreach my $file (@listFilesMandatory)
