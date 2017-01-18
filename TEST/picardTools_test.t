@@ -236,6 +236,31 @@ $observedLastLines=`tail -n 2 $samFileOut`;
 chomp $observedLastLines;       
 is($observedLastLines,$expectedLastLines,'picardTools::picardToolsSamFormatConverter - output structure');
 
+###########################################
+# picardToolsAddOrReplaceReadGroups test
+###########################################
+#output files
+$bamFileOut = "RC3.PICARDTOOLSADDORREPLACEREADGROUPS.bam";
+
+%optionsRef = ("ID" => "Test","LB" => "Irigin","PL" => "Illumina","SM" => "glaberrima","VALIDATION_STRINGENCY" => "SILENT","PU" => "unit1");        # Hash containing informations
+$optionsHachees = \%optionsRef;                           # Ref of the hash
+
+#execution test
+is(picardTools::picardToolsAddOrReplaceReadGroups($bamFile, $bamFileOut,$optionsHachees),1,'picardTools::picardToolsAddOrReplaceReadGroups');
+
+# expected output test
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSADDORREPLACEREADGROUPS.bam','RC3.PICARDTOOLSCLEANSAM.bam','RC3.PICARDTOOLSMARKDUPLICATES.bam','RC3.PICARDTOOLSMARKDUPLICATES.bamDuplicates','RC3.PICARDTOOLSSAMFORMATCONVERTER.sam','RC3.PICARDTOOLSSORT.bam',,'Reference.dict','Reference.fasta');
+
+is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsAddOrReplaceReadGroups - output list');
+
+# expected content test
+$expectedLastLines="\@RG	ID:Test	LB:Irigin	PL:Illumina	SM:glaberrima	PU:unit1";
+$observedOutput=`samtools view -H $testingDir/finalResults/RC3-SAMTOOLSVIEW.PICARDTOOLSADDORREPLACEREADGROUPS.bam| grep \@RG`; # We pick up only the position field
+chomp $observedOutput;
+is($observedOutput,$expectedLastLine,'picardTools::picardToolsAddOrReplaceReadGroups - output structure');
+
 
 ###########################################
 # picardToolsValidateSamFile test
