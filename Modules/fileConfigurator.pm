@@ -56,7 +56,7 @@ our %testParams=    (
         gatkSelectVariants => ["-selectType=SNP"],
         gatkBaseRecalibrator => ["-knownSites=../../../../DATA/expectedData/GATKVARIANTFILTRATION.vcf"],
         gatkReadBackedPhasing => [""],
-        gatkPrindReads => [""],
+        gatkPrintReads => [""],
         #PicardTools soft
         picardToolsSortSam => ["SORT_ORDER=coordinate","VALIDATION_STRINGENCY=SILENT","CREATE_INDEX=TRUE"],
         picardToolsValidateSamFile => [""],
