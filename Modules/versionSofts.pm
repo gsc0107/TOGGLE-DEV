@@ -35,7 +35,7 @@ use warnings;
 use localConfig;
 use toolbox;
 use Data::Dumper;
-
+use Switch;
 
 sub bowtieBuildVersion
 {
@@ -174,12 +174,105 @@ sub trinityVersion
 	return $version;
 }
 
-#my $configInfo=toolbox::readFileConf($fileConf);
+
+sub writeLogVersion
+{
+	my ($fileConf, $version) = @_;
+	my %softPathVersion = (	"java"		=> javaVersion,
+							"toggle"	=> $version);
+
+	toolbox::checkFile($fileConf);
+	my $configInfo=toolbox::readFileConf($fileConf);
+	my $hashOrder=toolbox::extractHashSoft($configInfo,"order");	#Picking up the options for the order of the pipeline
+
+	for my $softOrder ( values %{ $hashOrder } )
+	{
+		print $softOrder."\n";
+
+		switch (1)
+		{
+			#FOR bwa.pm
+			case ($softOrder =~ m/^bwa.*/i){$softPathVersion{"bwa"}= bwaVersion if not defined $softPathVersion{"bwa"}; }
+
+			#FOR samTools.pm
+			case ($softOrder =~ m/^samtools.*/i){$softPathVersion{"samtools"}= samtoolsVersion if not defined $softPathVersion{"samtools"};}
+
+			#FOR picardTools.pm
+			case ($softOrder =~ m/^picard.*/i){$softPathVersion{"picard"}= picardToolsVersion if not defined $softPathVersion{"picard"};}
+
+			#FOR gatk.pm
+			case ($softOrder =~ m/^gatk.*/i){$softPathVersion{"GATK"}= gatkVersion if not defined $softPathVersion{"GATK"};}
+
+			#FOR fastqc
+			case ($softOrder =~ m/^fastqc/i){$softPathVersion{"fastqc"}= fastqcVersion if not defined $softPathVersion{"fastqc"}}
+
+			#FOR fastxToolkit
+			case ($softOrder =~ m/^fastx.*/i){$softPathVersion{"fastxTrimmer"}= fastxToolkitVersion if not defined $softPathVersion{"fastxTrimmer"};}
+
+			#FOR tophat.pm
+			case ($softOrder =~ m/^bowtie2.*/i){$softPathVersion{"bowtie2Build"}= bowtie2BuildVersion if not defined $softPathVersion{"bowtie2Build"}; }
+			case ($softOrder =~ m/^bowtie/i){$softPathVersion{"bowtieBuild"}= bowtieBuildVersion if not defined $softPathVersion{"bowtieBuild"}; }
+			case ($softOrder =~ m/^tophat.*/i){$softPathVersion{"tophat2"}= tophatVersion if not defined $softPathVersion{"tophat2"};
+											   $softPathVersion{"bowtieBuild"}= bowtieBuildVersion if not defined $softPathVersion{"bowtieBuild"};
+											   $softPathVersion{"bowtie2Build"}= bowtie2BuildVersion if not defined $softPathVersion{"bowtie2Build"};}
+
+			#FOR cufflinks.pm
+			case ($softOrder =~ m/^cufflinks.*/i){$softPathVersion{"cufflinks"}= cufflinksVersion if not defined $softPathVersion{"cufflinks"}; }
+			case ($softOrder =~ m/^cuffdiff.*/i){$softPathVersion{"cuffdiff"}= cufflinksVersion if not defined $softPathVersion{"cuffdiff"}; }
+			case ($softOrder =~ m/^cuffmerge.*/i){$softPathVersion{"cuffmerge"}= cufflinksVersion if not defined $softPathVersion{"cuffmerge"}; }
+
+			#FOR HTSeq
+			case ($softOrder =~ m/^htseq.*/i){$softPathVersion{"htseqcount"}= htseqcountVersion if not defined $softPathVersion{"htseqcount"}; }
+
+			#FOR snpEff.pm
+			case ($softOrder =~ m/^snp.*/i){$softPathVersion{"snpEff"}= snpeffVersion if not defined $softPathVersion{"snpEff"};}
+
+			#FOR processRadtags.pm
+			case ($softOrder =~ m/process.*/i){$softPathVersion{"stacks"}= stacksVersion if not defined $softPathVersion{"stacks"};}
+
+			#FOR cutadapt functions
+			case ($softOrder =~ m/^cutadapt/i){$softPathVersion{"cutadapt"}= cutadaptVersion if not defined $softPathVersion{"cutadapt"};}
+
+			#FOR TGICL
+			case ($softOrder =~ m/^tgicl/i){$softPathVersion{"TGICL"}= tgiclVersion if not defined $softPathVersion{"TGICL"};}
+
+			#FOR trinity
+			case ($softOrder =~ m/^trinity/i){$softPathVersion{"trinity"}= trinityVersion if not defined $softPathVersion{"trinity"};}
+
+			else {toolbox::exportLog("ERROR : $0 : the $softOrder function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
+		}
+	}
+	## DEBUG print Dumper(%softPathVersion);
+
+	open (my $fhConfig, "<", "$toggle/Modules/localConfig.pm");
+	while (my $line = <$fhConfig>)
+	{
+		chomp $line;
+		chop $line; #Remove the last character, ie ";"
+		next unless $line =~ m/^our \$/;
+		my ($soft,$value) = split /=/, $line;
+		$soft =~ s/our| |\$//g;
+		if (defined $value)
+		{
+			$value =~ s/\"//g;
+			$value =~ s/\w+ |\$|-//g unless $soft =~ m/java|toggle/i;
+			$value =~ s/^ //;
+		}
+		else
+		{
+			$value = "NOT DEFINED";
+		}
+		toolbox::exportLog("$soft : $value : $softPathVersion{$soft}",1) if defined $softPathVersion{$soft};
+	}
 
 
 
+
+}
 
 1;
+
+
 
 =head1 NAME
 
@@ -189,7 +282,7 @@ sub trinityVersion
 
         use versionSofts;
     
-        versionSofts::returnVersion ();
+        versionSofts::writeLogVersion ();
  
 =head1 DESCRIPTION
 
@@ -197,7 +290,7 @@ sub trinityVersion
 	
 =head2 FUNCTIONS
 
-=head3 versionSofts::returnVersion
+=head3 versionSofts::writeLogVersion
 
 This module return soft version
 
