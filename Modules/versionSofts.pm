@@ -40,7 +40,7 @@ use Data::Dumper;
 sub bowtieBuildVersion
 {
 	`$bowtieBuild --version > /tmp/out.txt` ; #We works with the STDOUT output
-	my $version = `grep "bowtie-build version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::bowtieBuildVersion : Can not grep bowtieBuild version\n", 0);
+	my $version = `grep "bowtie-build version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::bowtieBuildVersion : Can not grep bowtieBuild version.\nPlease check your bowtie installation.\n", 0);
 	unlink("/tmp/out.txt");
 	chomp($version);
 	return $version;
@@ -49,7 +49,7 @@ sub bowtieBuildVersion
 sub bowtie2BuildVersion
 {
 	`$bowtie2Build --version > /tmp/out.txt` ; #We works with the STDOUT output
-	my $version = `grep "bowtie2-build version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::bowtie2BuildVersion : Can not grep bowtie2Build version\n", 0);
+	my $version = `grep "bowtie2-build version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::bowtie2BuildVersion : Can not grep bowtie2Build version\nPlease check your bowtie2 installation.\n", 0);
 	unlink("/tmp/out.txt");
 	chomp($version);
 	return $version;
@@ -58,7 +58,7 @@ sub bowtie2BuildVersion
 sub bwaVersion
 {
 	`$bwa 2> /tmp/out.txt` ; #We works with the STDERR output
-	my $version = `grep "Version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::bwaVersion : Can not grep bwa version\n", 0);
+	my $version = `grep "Version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::bwaVersion : Can not grep bwa version\nPlease check your bwa installation.\n", 0);
 	unlink("/tmp/out.txt");
 	chomp($version);
 	return $version;
@@ -67,7 +67,7 @@ sub bwaVersion
 sub cufflinksVersion
 {
 	`$cufflinks/cufflinks 2> /tmp/out.txt`;#We works with the STDERR output
-	my $version = `grep "cufflinks v" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::cufflinksVersion : Can not grep cufflinks version\n", 0);
+	my $version = `grep "cufflinks v" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::cufflinksVersion : Can not grep cufflinks version\nPlease check your cufflinks installation.\n", 0);
 	unlink("/tmp/out.txt");
 	chomp($version);
 	return $version;
@@ -76,7 +76,7 @@ sub cufflinksVersion
 sub cutadaptVersion
 {
 	`$cutadapt 2> /tmp/out.txt`;#We works with the STDERR output
-	my $version = `grep "cutadapt version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::cutadaptVersion : Can not grep cutadapt version\n", 0);
+	my $version = `grep "cutadapt version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::cutadaptVersion : Can not grep cutadapt version\nPlease check your cutadapt installation.\n", 0);
 	unlink("/tmp/out.txt");
 	chomp($version);
 	return $version;
@@ -84,7 +84,7 @@ sub cutadaptVersion
 
 sub fastqcVersion
 {
-	my $version = `$fastqc -v` or die toolbox::exportLog("ERROR: versionSoft::fastqcVersion : Can not grep fastqc version\n", 0);;#We works with the STDERR output
+	my $version = `$fastqc -v` or die toolbox::exportLog("ERROR: versionSoft::fastqcVersion : Can not grep fastqc version\nPlease check your fastqc installation.\n", 0);;#We works with the STDERR output
 	chomp($version);
 	return $version;
 }
@@ -92,7 +92,7 @@ sub fastqcVersion
 sub fastxToolkitVersion
 {
 	`$fastxTrimmer -h 1> /tmp/out.txt`; #We works with the STDOUT output
-	my $version = `grep "FASTX Toolkit" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::fastqxToolkitVersion : Can not grep fastxToolkit version\n", 0);
+	my $version = `grep "FASTX Toolkit" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::fastqxToolkitVersion : Can not grep fastxToolkit version\nPlease check your fastxToolkit installation.\n", 0);
 	unlink("/tmp/out.txt");
 	chomp($version);
 	return $version;
@@ -100,7 +100,7 @@ sub fastxToolkitVersion
 
 sub gatkVersion
 {
-	my $version = `$GATK -version` or die toolbox::exportLog("ERROR: versionSoft::gatkVersion : Can not grep gatk version\n", 0); #We works with the STDOUT output
+	my $version = `$GATK -version` or die toolbox::exportLog("ERROR: versionSoft::gatkVersion : Can not grep gatk version\nPlease check your GATK installation.\n", 0); #We works with the STDOUT output
 	chomp($version);
 	return $version;
 }
@@ -108,7 +108,7 @@ sub gatkVersion
 sub htseqcountVersion
 {
 	`$htseqcount -h 1> /tmp/out.txt`; #We works with the STDOUT output
-	my $version = `grep "version" /tmp/out | cut -d"," -f 2,2` or die toolbox::exportLog("ERROR: versionSoft::htseqcountVersion : Can not grep htseqcount version\n", 0);
+	my $version = `grep "version" /tmp/out | cut -d"," -f 2,2` or die toolbox::exportLog("ERROR: versionSoft::htseqcountVersion : Can not grep htseqcount version\nPlease check your HTseq-Count installation.\n", 0);
 	unlink("/tmp/out.txt");
 	chomp($version);
 	return $version;
@@ -117,7 +117,7 @@ sub htseqcountVersion
 sub javaVersion
 {
 	`$java -version 2> /tmp/out.txt`; #We works with the STDERR output
-	my $version = `grep "version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::javaVersion : Can not grep java version\n", 0);
+	my $version = `grep "version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::javaVersion : Can not grep java version\nPlease check your java installation.\n", 0);
 	unlink("/tmp/out.txt");
 	chomp($version);
 	return $version;
@@ -125,14 +125,14 @@ sub javaVersion
 
 sub picardToolsVersion
 {
-	my $version = `$picard CheckFingerprint --version 2>&1` or die toolbox::exportLog("ERROR: versionSoft::picardToolsVersion : Can not grep picardTools version\n", 0); #We works with the STDOUT output
+	my $version = `$picard CheckFingerprint --version 2>&1` or die toolbox::exportLog("ERROR: versionSoft::picardToolsVersion : Can not grep picardTools version\nPlease check your picardtools installation.\n", 0); #We works with the STDOUT output
 	chomp($version);
 	return $version;
 }
 
 sub stacksVersion
 {
-	my $version = `$stacks -v 2>&1` or die toolbox::exportLog("ERROR: versionSoft::stacksVersion : Can not grep stacks version\n", 0); #We works with the STDOUT output
+	my $version = `$stacks -v 2>&1` or die toolbox::exportLog("ERROR: versionSoft::stacksVersion : Can not grep stacks version\nPlease check your stacks installation.\n", 0); #We works with the STDOUT output
 	chomp($version);
 	return $version;
 }
@@ -140,7 +140,7 @@ sub stacksVersion
 sub samtoolsVersion
 {
 	`$samtools --help 1> /tmp/out.txt`; #We works with the STDOUT output
-	my $version = `grep "Version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::samtoolsVersion : Can not grep samtools version\n", 0);
+	my $version = `grep "Version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::samtoolsVersion : Can not grep samtools version\nPlease check your samtools installation.\n", 0);
 	unlink("/tmp/out.txt");
 	chomp($version);
 	return $version;
@@ -148,7 +148,7 @@ sub samtoolsVersion
 
 sub snpeffVersion
 {
-	my $version = `$snpEff -version 2>&1` or die toolbox::exportLog("ERROR: versionSoft::snpeffVersion : Can not grep snpeff version\n", 0); #We works with the STDOUT output
+	my $version = `$snpEff -version 2>&1` or die toolbox::exportLog("ERROR: versionSoft::snpeffVersion : Can not grep snpeff version\nPlease check your snpeff installation.\n", 0); #We works with the STDOUT output
 	chomp($version);
 	return $version;
 }
@@ -160,7 +160,7 @@ sub tgiclVersion
 
 sub tophatVersion
 {
-	my $version = `tophat -v` or die toolbox::exportLog("ERROR: versionSoft::tophatVersion : Can not grep tophat version\n", 0); #We works with the STDOUT output
+	my $version = `tophat -v` or die toolbox::exportLog("ERROR: versionSoft::tophatVersion : Can not grep tophat version\nPlease check your tophat installation.\n", 0); #We works with the STDOUT output
 	chomp($version);
 	return $version;
 }
@@ -168,7 +168,7 @@ sub tophatVersion
 sub trinityVersion
 {
 	`$trinity --version > /tmp/out.txt`; #We works with the STDOUT output
-	my $version = `grep "Trinity version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::trinityVersion : Can not grep trinity version\n", 0);
+	my $version = `grep "Trinity version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::trinityVersion : Can not grep trinity version\nPlease check your trinity installation.\n", 0);
 	unlink("/tmp/out.txt");
 	chomp($version);
 	return $version;
