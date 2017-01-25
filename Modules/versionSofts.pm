@@ -46,7 +46,7 @@ sub bowtieBuildVersion
 
 sub bowtie2BuildVersion
 {   #We works with the STDOUT output
-	my $version = `$bowtie2Build --version 2>&1 | grep "bowtie-build version"` or die toolbox::exportLog("ERROR: versionSoft::bowtie2BuildVersion : Can not grep bowtie2Build version.\nPlease check your bowtie2 installation.\n", 0); 
+	my $version = `$bowtie2Build --version 2>&1 | grep "bowtie2-build version"` or die toolbox::exportLog("ERROR: versionSoft::bowtie2BuildVersion : Can not grep bowtie2Build version.\nPlease check your bowtie2 installation.\n", 0); 
 	chomp($version);
 	return $version;
 }
@@ -90,7 +90,7 @@ sub gatkVersion
 {
 	my $version = `$GATK -version` or die toolbox::exportLog("ERROR: versionSoft::gatkVersion : Can not grep gatk version\nPlease check your GATK installation.\n", 0); #We works with the STDOUT output
 	chomp($version);
-	return "VERSION: ".$version;
+	return "Version: ".$version;
 }
 
 sub htseqcountVersion
@@ -111,7 +111,7 @@ sub picardToolsVersion
 {
 	my $version = `$picard CheckFingerprint --version 2>&1` or die toolbox::exportLog("ERROR: versionSoft::picardToolsVersion : Can not grep picardTools version\nPlease check your picardtools installation.\n", 0); #We works with the STDOUT output
 	chomp($version);
-	return $version;
+	return "Version: ".$version;
 }
 
 sub stacksVersion
@@ -132,7 +132,7 @@ sub snpeffVersion
 {
 	my $version = `$snpEff -version 2>&1` or die toolbox::exportLog("ERROR: versionSoft::snpeffVersion : Can not grep snpeff version\nPlease check your snpeff installation.\n", 0); #We works with the STDOUT output
 	chomp($version);
-	return $version;
+	return "Version: ".$version;
 }
 
 sub tgiclVersion
@@ -176,11 +176,11 @@ sub writeLogVersion
 			case ($softOrder =~ m/^samtools.*/i){$softPathVersion{"samtools"}= samtoolsVersion if not defined $softPathVersion{"samtools"};}
 
 			#FOR picardTools.pm
-			case ($softOrder =~ m/^picard.*/i){$softPathVersion{"java"}= picardToolsVersion if not defined $softPathVersion{"java"};
+			case ($softOrder =~ m/^picard.*/i){$softPathVersion{"java"}= javaVersion if not defined $softPathVersion{"java"};
 											   $softPathVersion{"picard"}= picardToolsVersion if not defined $softPathVersion{"picard"};}
 			
 			#FOR gatk.pm
-			case ($softOrder =~ m/^gatk.*/i){$softPathVersion{"java"}= picardToolsVersion if not defined $softPathVersion{"java"};
+			case ($softOrder =~ m/^gatk.*/i){$softPathVersion{"java"}= javaVersion if not defined $softPathVersion{"java"};
 											 $softPathVersion{"GATK"}= gatkVersion if not defined $softPathVersion{"GATK"};}
 
 			#FOR fastqc
@@ -205,7 +205,7 @@ sub writeLogVersion
 			case ($softOrder =~ m/^htseq.*/i){$softPathVersion{"htseqcount"}= htseqcountVersion if not defined $softPathVersion{"htseqcount"}; }
 
 			#FOR snpEff.pm
-			case ($softOrder =~ m/^snp.*/i){$softPathVersion{"java"}= picardToolsVersion if not defined $softPathVersion{"java"};
+			case ($softOrder =~ m/^snp.*/i){$softPathVersion{"java"}= javaVersion if not defined $softPathVersion{"java"};
 											$softPathVersion{"snpEff"}= snpeffVersion if not defined $softPathVersion{"snpEff"};}
 
 			#FOR processRadtags.pm
