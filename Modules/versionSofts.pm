@@ -38,62 +38,50 @@ use Data::Dumper;
 use Switch;
 
 sub bowtieBuildVersion
-{
-	`$bowtieBuild --version > /tmp/out.txt` ; #We works with the STDOUT output
-	my $version = `grep "bowtie-build version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::bowtieBuildVersion : Can not grep bowtieBuild version.\nPlease check your bowtie installation.\n", 0);
-	unlink("/tmp/out.txt");
+{   #We works with the STDOUT output
+	my $version = `$bowtieBuild --version 2>&1 | grep "bowtie-build version"` or die toolbox::exportLog("ERROR: versionSoft::bowtieBuildVersion : Can not grep bowtieBuild version.\nPlease check your bowtie installation.\n", 0); 
 	chomp($version);
 	return $version;
 }
 
 sub bowtie2BuildVersion
-{
-	`$bowtie2Build --version > /tmp/out.txt` ; #We works with the STDOUT output
-	my $version = `grep "bowtie2-build version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::bowtie2BuildVersion : Can not grep bowtie2Build version\nPlease check your bowtie2 installation.\n", 0);
-	unlink("/tmp/out.txt");
+{   #We works with the STDOUT output
+	my $version = `$bowtie2Build --version 2>&1 | grep "bowtie-build version"` or die toolbox::exportLog("ERROR: versionSoft::bowtie2BuildVersion : Can not grep bowtie2Build version.\nPlease check your bowtie2 installation.\n", 0); 
 	chomp($version);
 	return $version;
 }
 
 sub bwaVersion
-{
-	`$bwa 2> /tmp/out.txt` ; #We works with the STDERR output
-	my $version = `grep "Version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::bwaVersion : Can not grep bwa version\nPlease check your bwa installation.\n", 0);
-	unlink("/tmp/out.txt");
+{    #We works with the STDERR output
+	my $version = `$bwa 2>&1 | grep "Version"` or die toolbox::exportLog("ERROR: versionSoft::bwaVersion : Can not grep bwa version\nPlease check your bwa installation.\n", 0); 
 	chomp($version);
 	return $version;
 }
 
 sub cufflinksVersion
-{
-	`$cufflinks/cufflinks 2> /tmp/out.txt`;#We works with the STDERR output
-	my $version = `grep "cufflinks v" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::cufflinksVersion : Can not grep cufflinks version\nPlease check your cufflinks installation.\n", 0);
-	unlink("/tmp/out.txt");
+{   #We works with the STDERR output
+	my $version = `$cufflinks/cufflinks 2>&1 | grep "cufflinks v"`or die toolbox::exportLog("ERROR: versionSoft::cufflinksVersion : Can not grep cufflinks version\nPlease check your cufflinks installation.\n", 0);
 	chomp($version);
 	return $version;
 }
 
 sub cutadaptVersion
-{
-	`$cutadapt 2> /tmp/out.txt`;#We works with the STDERR output
-	my $version = `grep "cutadapt version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::cutadaptVersion : Can not grep cutadapt version\nPlease check your cutadapt installation.\n", 0);
-	unlink("/tmp/out.txt");
+{   #We works with the STDERR output
+	my $version = `$cutadapt 2>&1 | grep "cutadapt version"` or die toolbox::exportLog("ERROR: versionSoft::cutadaptVersion : Can not grep cutadapt version\nPlease check your cutadapt installation.\n", 0);
 	chomp($version);
 	return $version;
 }
 
 sub fastqcVersion
 {
-	my $version = `$fastqc -v` or die toolbox::exportLog("ERROR: versionSoft::fastqcVersion : Can not grep fastqc version\nPlease check your fastqc installation.\n", 0);;#We works with the STDERR output
+	my $version = `$fastqc -v ` or die toolbox::exportLog("ERROR: versionSoft::fastqcVersion : Can not grep fastqc version\nPlease check your fastqc installation.\n", 0);
 	chomp($version);
 	return $version;
 }
 
 sub fastxToolkitVersion
-{
-	`$fastxTrimmer -h 1> /tmp/out.txt`; #We works with the STDOUT output
-	my $version = `grep "FASTX Toolkit" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::fastqxToolkitVersion : Can not grep fastxToolkit version\nPlease check your fastxToolkit installation.\n", 0);
-	unlink("/tmp/out.txt");
+{   #We works with the STDOUT output
+	my $version = `$fastxTrimmer -h | grep "FASTX Toolkit"` or die toolbox::exportLog("ERROR: versionSoft::fastqxToolkitVersion : Can not grep fastxToolkit version\nPlease check your fastxToolkit installation.\n", 0); 
 	chomp($version);
 	return $version;
 }
@@ -102,23 +90,19 @@ sub gatkVersion
 {
 	my $version = `$GATK -version` or die toolbox::exportLog("ERROR: versionSoft::gatkVersion : Can not grep gatk version\nPlease check your GATK installation.\n", 0); #We works with the STDOUT output
 	chomp($version);
-	return $version;
+	return "VERSION: ".$version;
 }
 
 sub htseqcountVersion
-{
-	`$htseqcount -h 1> /tmp/out.txt`; #We works with the STDOUT output
-	my $version = `grep "version" /tmp/out | cut -d"," -f 2,2` or die toolbox::exportLog("ERROR: versionSoft::htseqcountVersion : Can not grep htseqcount version\nPlease check your HTseq-Count installation.\n", 0);
-	unlink("/tmp/out.txt");
+{    #We works with the STDOUT output
+	my $version = `$htseqcount -h | grep "version" | cut -d"," -f 2,2` or die toolbox::exportLog("ERROR: versionSoft::htseqcountVersion : Can not grep htseqcount version\nPlease check your HTseq-Count installation.\n", 0); 
 	chomp($version);
 	return $version;
 }
 
 sub javaVersion
-{
-	`$java -version 2> /tmp/out.txt`; #We works with the STDERR output
-	my $version = `grep "version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::javaVersion : Can not grep java version\nPlease check your java installation.\n", 0);
-	unlink("/tmp/out.txt");
+{   #We works with the STDERR output
+	my $version = `$java -version 2>&1 | grep "version"`or die toolbox::exportLog("ERROR: versionSoft::javaVersion : Can not grep java version\nPlease check your java installation.\n", 0);
 	chomp($version);
 	return $version;
 }
@@ -138,10 +122,8 @@ sub stacksVersion
 }
 
 sub samtoolsVersion
-{
-	`$samtools --help 1> /tmp/out.txt`; #We works with the STDOUT output
-	my $version = `grep "Version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::samtoolsVersion : Can not grep samtools version\nPlease check your samtools installation.\n", 0);
-	unlink("/tmp/out.txt");
+{   #We works with the STDOUT output
+	my $version = `$samtools --help | grep "Version"` or die toolbox::exportLog("ERROR: versionSoft::samtoolsVersion : Can not grep samtools version\nPlease check your samtools installation.\n", 0); 
 	chomp($version);
 	return $version;
 }
@@ -166,20 +148,16 @@ sub tophatVersion
 }
 
 sub trinityVersion
-{
-	`$trinity --version > /tmp/out.txt`; #We works with the STDOUT output
-	my $version = `grep "Trinity version" /tmp/out` or die toolbox::exportLog("ERROR: versionSoft::trinityVersion : Can not grep trinity version\nPlease check your trinity installation.\n", 0);
-	unlink("/tmp/out.txt");
+{   #We works with the STDOUT output
+	my $version = `$trinity --version | grep "Trinity version"` or die toolbox::exportLog("ERROR: versionSoft::trinityVersion : Can not grep trinity version\nPlease check your trinity installation.\n", 0);
 	chomp($version);
 	return $version;
 }
 
-
 sub writeLogVersion
 {
 	my ($fileConf, $version) = @_;
-	my %softPathVersion = (	"java"		=> javaVersion,
-							"toggle"	=> $version);
+	my %softPathVersion = ("toggle"	=> $version);
 
 	toolbox::checkFile($fileConf);
 	my $configInfo=toolbox::readFileConf($fileConf);
@@ -187,7 +165,7 @@ sub writeLogVersion
 
 	for my $softOrder ( values %{ $hashOrder } )
 	{
-		print $softOrder."\n";
+		#DEBUG: print $softOrder."\n";
 
 		switch (1)
 		{
@@ -198,10 +176,12 @@ sub writeLogVersion
 			case ($softOrder =~ m/^samtools.*/i){$softPathVersion{"samtools"}= samtoolsVersion if not defined $softPathVersion{"samtools"};}
 
 			#FOR picardTools.pm
-			case ($softOrder =~ m/^picard.*/i){$softPathVersion{"picard"}= picardToolsVersion if not defined $softPathVersion{"picard"};}
-
+			case ($softOrder =~ m/^picard.*/i){$softPathVersion{"java"}= picardToolsVersion if not defined $softPathVersion{"java"};
+											   $softPathVersion{"picard"}= picardToolsVersion if not defined $softPathVersion{"picard"};}
+			
 			#FOR gatk.pm
-			case ($softOrder =~ m/^gatk.*/i){$softPathVersion{"GATK"}= gatkVersion if not defined $softPathVersion{"GATK"};}
+			case ($softOrder =~ m/^gatk.*/i){$softPathVersion{"java"}= picardToolsVersion if not defined $softPathVersion{"java"};
+											 $softPathVersion{"GATK"}= gatkVersion if not defined $softPathVersion{"GATK"};}
 
 			#FOR fastqc
 			case ($softOrder =~ m/^fastqc/i){$softPathVersion{"fastqc"}= fastqcVersion if not defined $softPathVersion{"fastqc"}}
@@ -225,7 +205,8 @@ sub writeLogVersion
 			case ($softOrder =~ m/^htseq.*/i){$softPathVersion{"htseqcount"}= htseqcountVersion if not defined $softPathVersion{"htseqcount"}; }
 
 			#FOR snpEff.pm
-			case ($softOrder =~ m/^snp.*/i){$softPathVersion{"snpEff"}= snpeffVersion if not defined $softPathVersion{"snpEff"};}
+			case ($softOrder =~ m/^snp.*/i){$softPathVersion{"java"}= picardToolsVersion if not defined $softPathVersion{"java"};
+											$softPathVersion{"snpEff"}= snpeffVersion if not defined $softPathVersion{"snpEff"};}
 
 			#FOR processRadtags.pm
 			case ($softOrder =~ m/process.*/i){$softPathVersion{"stacks"}= stacksVersion if not defined $softPathVersion{"stacks"};}
@@ -262,12 +243,9 @@ sub writeLogVersion
 		{
 			$value = "NOT DEFINED";
 		}
+		
 		toolbox::exportLog("$soft : $value : $softPathVersion{$soft}",1) if defined $softPathVersion{$soft};
 	}
-
-
-
-
 }
 
 1;
