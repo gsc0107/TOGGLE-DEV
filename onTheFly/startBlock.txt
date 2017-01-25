@@ -68,7 +68,7 @@ use radseq;
 my $cmd_line=$0." @ARGV"; # for printing in log file
 
 my $parser = Getopt::ArgParse->new_parser(
-        prog            => "\n\ntoggleGenerator.pl",
+        prog            => "\n\ntoggleBzz.pl",
         description     => '',
         epilog          => "
 ##########################################################################
@@ -80,19 +80,11 @@ my $parser = Getopt::ArgParse->new_parser(
 #\tBMC Bioinformatics 2015, 16:374
 ###########################################################################\n",
         help            => 'a framework to build quickly NGS pipelines',
-        error_prefix    => "\n\ttoggleGenerator.pl -h to display help \n\n\tERROR MSG: "
+        error_prefix    => "\n\tERROR MSG: "
 );
 
 
 $parser->add_args(
-                    [
-                        '-o','--outputdir',
-                        required => 0,
-                        type     =>"Scalar",
-                        metavar  => "DIR",
-                        help     => 'Output folder name (it will be created)',
-                        dest     => 'outputdir'
-                    ],
                     [
                         '-c','--config',
                         required => 1,
@@ -159,12 +151,15 @@ my @argv= $parser->argv;
 #Recovery obligatory arguments
 my $initialDir = toolbox::relativeToAbsolutePath($parser->namespace->directory, 0);       # recovery of the name of the directory to analyse
 my $fileConf = toolbox::relativeToAbsolutePath($parser->namespace->config, 0);            # recovery of the name of the software.configuration.txt file
-my $outputDir = toolbox::relativeToAbsolutePath($parser->namespace->outputdir, 0);        # recovery of the output folder
 
 #Recovery optional arguments
 my $refFastaFile = toolbox::relativeToAbsolutePath($parser->namespace->reference, 0);   # recovery of the reference file
 my $gffFile = toolbox::relativeToAbsolutePath($parser->namespace->gff, 0);              # recovery of the gff file used by topHat and rnaseq analysis
 my $keyfile = toolbox::relativeToAbsolutePath($parser->namespace->keyfile, 0);          # recovery of the keyfile used by radseq
+
+#verify if -nocheckfastq arguments exist in args. The fastq format is verified par default if $checkFastq == 0.
+# WARNING with the parser : if nocheckfastq argument is add then $checkFastq == 1
+my $checkFastq = $parser->namespace->checkFastq;
 
 my @listFilesMandatory=($initialDir, $fileConf); #stock mandatory files to test if they exist
 push (@listFilesMandatory,$refFastaFile) if $refFastaFile !~ m/None$/;
