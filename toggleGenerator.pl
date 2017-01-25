@@ -515,6 +515,7 @@ if ($orderBefore1000)
         my $launcherCommand="$scriptSingle -d $currentDir -c $fileConf ";
         $launcherCommand.=" -r $refFastaFile" if ($refFastaFile ne 'None');
         $launcherCommand.=" -g $gffFile" if ($gffFile ne 'None');
+        $launcherCommand.=" -nocheck" if ($checkFastq == 1);
 
         #Launching through the scheduler launching system
         my $jobOutput = scheduler::launcher($launcherCommand, "1", $currentDir, $configInfo); #not blocking job, explaining the '1'
@@ -653,6 +654,7 @@ if ($orderAfter1000)
     my $launcherCommand="$scriptMultiple -d $workingDir -c $fileConf ";
     $launcherCommand.=" -r $refFastaFile" if ($refFastaFile ne 'None');
     $launcherCommand.=" -g $gffFile" if ($gffFile ne 'None');
+    $launcherCommand.=" -nocheck" if ($checkFastq == 1);
 
 
     my $jobList="";
