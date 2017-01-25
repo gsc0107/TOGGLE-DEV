@@ -52,6 +52,7 @@ use versionSofts;
 # recovery of parameters/arguments given when the program is executed
 ##########################################
 my $version = `grep -m 1 "Release" $toggle/docs/ReleaseNotes.md | cut -d"#" -f3,3 | sed -e 's/ //'`;
+my $cmd_line=$0." @ARGV"; # for printing in log file
 
 my $parser = Getopt::ArgParse->new_parser(
         prog            => "\n\ntoggleGenerator.pl",
@@ -155,7 +156,6 @@ if ("-v" ~~ @ARGV or "--version" ~~ @ARGV or "-version" ~~ @ARGV)
 
 my $args = $parser->parse_args();
 
-
 #Recovery obligatory arguments
 my $initialDir = toolbox::relativeToAbsolutePath($parser->namespace->directory, 0);       # recovery of the name of the directory to analyse
 my $fileConf = toolbox::relativeToAbsolutePath($parser->namespace->config, 0);            # recovery of the name of the software.configuration.txt file
@@ -175,8 +175,6 @@ my @listFilesMandatory=($initialDir, $fileConf);
 push (@listFilesMandatory,$refFastaFile) if $refFastaFile !~ m/None$/;
 push (@listFilesMandatory,$gffFile) if $gffFile !~ m/None$/;
 push (@listFilesMandatory,$keyfile) if $keyfile !~ m/None$/;
-
-my $cmd_line=$0." @ARGV"; # for printing in log file
 
 ##########################################
 # Creation of the output folder
