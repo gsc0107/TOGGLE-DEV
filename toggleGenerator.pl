@@ -70,7 +70,6 @@ my $parser = Getopt::ArgParse->new_parser(
         error_prefix    => "\n\tERROR MSG: "
 );
 
-
 $parser->add_args(
                     [
                         '-o','--outputdir',
@@ -232,29 +231,7 @@ foreach my $file (@listFilesMandatory)
 
 toolbox::exportLog("#########################################\nINFOS: Software version/location \n#########################################\n",1);
 
-my $ver = versionSofts::javaVersion;
-print $ver;
-
-open (my $fhConfig, "<", "$toggle/Modules/localConfig.pm");
-while (my $line = <$fhConfig>)
-{
-  chomp $line;
-  chop $line; #Remove the last character, ie ";"
-  next unless $line =~ m/^our \$/;
-  my ($soft,$value) = split /=/, $line;
-  $soft =~ s/our| |\$//g;
-  if (defined $value)
-  {
-    $value =~ s/\"//g;
-    $value =~ s/\w+ |\$|-//g unless $soft =~ m/java|toggle/i;
-    $value =~ s/^ //;
-  }
-  else
-  {
-    $value = "NOT DEFINED";
-  }
-  toolbox::exportLog("$soft : $value",1);
-}
+versionSofts::writeLogVersion($fileConf,$version);
 
 toolbox::exportLog("\n#########################################\nINFOS: Data checking \n#########################################\n",1);
 toolbox::checkFile($fileConf);                              # check if this file exists
