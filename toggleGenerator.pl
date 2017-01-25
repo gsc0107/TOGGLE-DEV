@@ -51,6 +51,7 @@ use radseq;
 # recovery of parameters/arguments given when the program is executed
 ##########################################
 my $version = `grep -m 1 "Release" $toggle/docs/ReleaseNotes.md | cut -d"#" -f3,3 | sed -e 's/ //'`;
+my $cmd_line=$0." @ARGV"; # for printing in log file
 
 my $parser = Getopt::ArgParse->new_parser(
         prog            => "\n\ntoggleGenerator.pl",
@@ -175,7 +176,7 @@ push (@listFilesMandatory,$refFastaFile) if $refFastaFile !~ m/None$/;
 push (@listFilesMandatory,$gffFile) if $gffFile !~ m/None$/;
 push (@listFilesMandatory,$keyfile) if $keyfile !~ m/None$/;
 
-my $cmd_line=$0." @ARGV"; # for printing in log file
+
 
 ##########################################
 # Creation of the output folder
