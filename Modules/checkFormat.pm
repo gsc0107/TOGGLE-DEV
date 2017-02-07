@@ -179,7 +179,51 @@ sub checkFormatFastq
 # END sub checkFormatFastq
 ################################################################################################
 
+################################################################################################
+# sub checkSamOrBamFormat => verifying the SAM/BAM format based on samtools view system
+# samtools view gave an error in case of non SAM or BAM format
+################################################################################################
+# arguments : filename to analyze
+# Returns boolean (1 if the fileformat is sam, 2 bam and 0 neither bam or sam)
+################################################################################################
+sub checkSamOrBamFormat
+{
 
+    my ($samFile)=@_;
+
+    existsFile($samFile); # Will check if the submitted file exists
+
+    #Is the file sam of bam through the binary mode? Requested for the -S option in samtools view
+    my ($inputOption,$binary);
+    if (-B $samFile) #The file is a binary BAM file
+    {
+	$inputOption = ""; #no specific option in samtools view requested
+	$binary = 1; # the file is binary
+    }
+    else #the file is a not binary SAM file
+    {
+	$inputOption = " -S ";#-S mean input is SAM
+	$binary = 0; # the file is not binary
+    }
+    my $checkFormatCommand="$samtools view $inputOption $samFile -H > /dev/null";
+    # The samtools view will ask only for the header to be outputted (-H option), and the STDOUT is redirected to nowher (>/dev/null);
+    my $formatValidation=run($checkFormatCommand,"noprint");
+
+    if ($formatValidation == 1)                    # if no error occured in extracting header, ok
+    {
+        ##DEBUG toolbox::exportLog("INFOS: toolbox::checkSamOrBamFormat : The file $samFile is a SAM/BAM file\n",1);
+	return 1 if $binary == 0;# Return 1 if the file is a SAM
+	return 2 if $binary == 1;# Return 2 if the file is a BAM
+    }
+    else                                # if one or some error(s) occured in extracting header, not ok
+    {
+        toolbox::exportLog("ERROR: checkFormat::checkSamOrBamFormat : The file $samFile is not a SAM/BAM file\n",0);
+	return 0;
+    }
+}
+################################################################################################
+# END checkSamOrBamFormat
+################################################################################################
 
 
 1;
