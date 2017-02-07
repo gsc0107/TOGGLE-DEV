@@ -180,8 +180,14 @@ sub correctName
         case ($name =~ m/^tgicl/i){$correctedName="tgicl"}
         
         #FOR trinity
-        case ($name =~ m/^trinity/i){$correctedName="trinity"}  # pour chercher le nom du block
-
+        case ($name =~ m/^trinity/i){$correctedName="trinity"}  # Correction for Trinity step
+		
+		#FOR checkFormat
+		case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*fasta/i){$correctedName="checkFormatFasta"}  # Correction for checkFormatFasta step
+		case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*format[\s|\.|\-| \/|\\|\|]*fastq/i){$correctedName="checkFormatFastq"}  # Correction for checkFormatFastq step
+		case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*vcf[\s|\.|\-| \/|\\|\|]*format/i){$correctedName="checkVcfFormat"}  # Correction for checkVcfFormat step
+		case ($name =~ m/^check[\s|\.|\-| \/|\\|\|]*sam[\s|\.|\-| \/|\\|\|]*or[\s|\.|\-| \/|\\|\|]*bam[\s|\.|\-| \/|\\|\|]*format/i){$correctedName="checkSamOrBamFormat"}  # Correction for checkSamOrBam step
+		
         else {toolbox::exportLog("ERROR : $0 : the $name function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
     }
     $correctedName .= " ".$order if ($order);

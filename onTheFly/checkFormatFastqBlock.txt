@@ -1,0 +1,16 @@
+############################
+# Block for checkFormatFastq
+############################
+
+
+##########################################
+# checkFormat::checkFormatFastq
+##########################################
+
+$softParameters = toolbox::extractHashSoft($optionRef, $stepName);                         # recovery of specific parameters of FatsQC
+
+
+foreach my $file (@{$fileList})
+{
+    checkFormat::checkFormatFastq($file);                                                            # run fastQC program on current file
+}
