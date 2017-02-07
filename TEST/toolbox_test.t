@@ -284,27 +284,6 @@ is($count,'1000',"toolbox::checkNumberLines - OK");
 
 
 ########################################
-#File Format test
-########################################
-########################################
-#toolbox::checkFormatFastq
-########################################
-is(toolbox::checkFormatFastq($fastqFile),'1', 'toolbox::checkFormatFastq - OK');
-
-########################################
-#toolbox::checkSamOrBamFormat
-########################################
-is (toolbox::checkSamOrBamFormat($samFile),'1', 'toolbox::checkSamOrBamFormat - sam format');
-is (toolbox::checkSamOrBamFormat($bamFile),'2', 'toolbox::checkSamOrBamFormat - bam format');
-
-########################################
-#toolbox::checkFormatFasta
-########################################
-is (toolbox::checkFormatFasta($reference),'1','toolbox::checkFormatFasta - Format Ok');
-is (toolbox::checkFormatFasta($wrongFasta),'0','toolbox::checkFormatFasta - Format not Ok, warnings send');
-
-
-########################################
 #Config file test
 ########################################
 
@@ -388,11 +367,7 @@ my $endOfLog=`tail -n 1 log.txt `; #The last line of log is always "Cmd Done", s
 chomp $endOfLog;
 ok($date eq $endOfLog,'toolbox::run - command behaviour');
 
-########################################
-#toolbox::checkVcfFormat test TODO add test negatif
-########################################
-is (toolbox::checkVcfFormat($vcfFile),'1','toolbox::checkVcfFormat - vcf file');
-#isnt (toolbox::checkVcfFormat($samFile),'1','Test for checkVcfFormat - sam file');
+
 
 ########################################
 #toolbox::checkInitialDirContent test TODO add test negatif

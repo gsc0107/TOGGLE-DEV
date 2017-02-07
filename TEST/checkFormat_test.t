@@ -97,4 +97,32 @@ my $bamFile=$expectedData."RC3.PICARDTOOLSSORT.bam";
 #VCF file
 my $vcfFile=$expectedData."GATKHAPLOTYPECALLER.vcf";
 
+#Fasta files
+my $reference=$expectedData."correctReference.fasta";
+my $wrongFasta=$expectedData."wrongReference.fasta";
 
+########################################
+#File Format test
+########################################
+########################################
+#toolbox::checkFormatFastq
+########################################
+is(checkFormat::checkFormatFastq($fastqFile),'1', 'checkFormat::checkFormatFastq - OK');
+
+########################################
+#toolbox::checkSamOrBamFormat
+########################################
+is (checkFormat::checkSamOrBamFormat($samFile),'1', 'checkFormat::checkSamOrBamFormat - sam format');
+is (checkFormat::checkSamOrBamFormat($bamFile),'2', 'checkFormat::checkSamOrBamFormat - bam format');
+
+########################################
+#toolbox::checkFormatFasta
+########################################
+is (checkFormat::checkFormatFasta($reference),'1','checkFormat::checkFormatFasta - Format Ok');
+is (checkFormat::checkFormatFasta($wrongFasta),'0','checkFormat::checkFormatFasta - Format not Ok, warnings send');
+
+########################################
+#toolbox::checkVcfFormat test TODO add test negatif
+########################################
+is (toolbox::checkVcfFormat($vcfFile),'1','toolbox::checkVcfFormat - vcf file');
+#isnt (toolbox::checkVcfFormat($samFile),'1','Test for checkVcfFormat - sam file');
