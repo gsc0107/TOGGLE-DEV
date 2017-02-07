@@ -295,5 +295,105 @@ sub checkVcfFormat
 # END sub checkVcfFormat
 ################################################################################################
 
+################################################################################################
+# sub checkFormatFasta => check if a given file is a fasta or not
+################################################################################################
+# arguments :
+# 	- the fasta file
+# returns :
+#	- a boolean 1 for Ok, 0 for not.
+#	- send a warning to the log if not a fasta file
+################################################################################################
+
+sub checkFormatFasta{
+    my ($file)=@_;
+
+    #Check if we can read the file
+    my $rightToRead = toolbox::readFile($file);
+    if ($rightToRead == 0)
+    {
+	toolbox::exportLog("ERROR: checkFormat::checkFormatFasta : The file $file is not readable\n",0);
+	return 0;
+    }
+
+    #Opening file
+    open(FILE, "<", $file) or toolbox::exportLog("ERROR: checkFormat::checkFormatFasta : Cannot open the file $file\n$!\n",0);
+
+    #Reading file
+    my $initiator = 0; #We need to scan the very first line, that begins with '>', but this is the only one beginning with that we need
+    my %errors; # Will score all the error types
+    my $lineNumber=0;#Recording line position
+    while (my $line = <FILE>)
+       {
+	chomp $line;
+	$lineNumber++;#Counter for scoring lines with errors
+    #Checking first line, that must be '>NAME'
+	if ($initiator == 0)
+	    {
+	    #very first line
+	    $initiator = 1; #no need for any other lines beginning with ##
+	    next if $line =~ m/^>/; #Correct first line, let's go to the following ones
+	    #First line is not correct
+	    $errors{$lineNumber} = "Not correctly formatted, must be a header name such as '>NAME'.";
+            #Will stop immediatly as the file is not correct at all
+            last;
+	    }
+    #Other lines
+	next if $line =~ m/^$/;# Representing empty lines
+	if ($line =~ m/^>/) #A new sequence beginning
+	    {
+	    next;
+	    }
+	else # The sequence is read
+	    {
+	    my $modifiedLine = $line;
+	    $modifiedLine =~ s/[A|T|G|C|a|g|t|c|N|n]//g;
+	    #DEBUG : print "\n**",$modifiedLine,"**\n";
+	    #DEBUG : exit;
+	    next if length($modifiedLine eq "");
+	    $errors{$lineNumber} = "Not basic IUPAC letter, only ATGCNatgcn characters are allowed: unauthorized characters are $modifiedLine.";
+	    }
+	#Check if there are too much errors...
+        if (scalar (keys %errors) > 19)
+          {
+          #Will stop after 20 errors
+          my $tooMuchErrors = "WARNING : checkFormat::checkFormatFasta : Too much errors in the Fasta file $file, only the first 20 errors are shown..."; #Will be printed before all errors
+	  toolbox::exportLog($tooMuchErrors,2);
+          last;
+          }
+        next;
+
+        }
+    close FILE;
+
+    #Checking if there are errors
+    my $numberOfErrors = scalar(keys %errors);
+
+    #Sending the warning message, if any
+    if ($numberOfErrors)#There are errors, we will send a warning to the system
+	{
+	#Formatting errors for the warning
+	my $warningLog;
+	$warningLog.="WARNING : checkFormat::checkFormatFasta : There are $numberOfErrors errors detected for file $file\n";
+	foreach my $individualError (sort {$a <=> $b} keys %errors)#Sorting error per line number
+	    {
+	    $warningLog.="WARNING : checkFormat::checkFormatFasta : Line $individualError does not respect FASTA standard : $errors{$individualError}\n";
+	    }
+	#Sending the warning
+	toolbox::exportLog($warningLog,2);
+	#returning for failure
+	return 0;
+        }
+
+    #returning ok
+    toolbox::exportLog("INFOS: checkFormat::checkFormatFasta : The file $file is a FASTA file\n",1);
+    return 1;
+    }
+
+
+################################################################################################
+# END sub fastaFormatValidator
+################################################################################################
+
 1;
 
