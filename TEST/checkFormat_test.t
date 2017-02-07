@@ -124,5 +124,5 @@ is (checkFormat::checkFormatFasta($wrongFasta),'0','checkFormat::checkFormatFast
 ########################################
 #toolbox::checkVcfFormat test TODO add test negatif
 ########################################
-is (toolbox::checkVcfFormat($vcfFile),'1','toolbox::checkVcfFormat - vcf file');
+is (checkFormat::checkVcfFormat($vcfFile),'1','checkFormat::checkVcfFormat - vcf file');
 #isnt (toolbox::checkVcfFormat($samFile),'1','Test for checkVcfFormat - sam file');
