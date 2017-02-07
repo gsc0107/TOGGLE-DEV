@@ -36,6 +36,7 @@ use warnings;
 use localConfig;
 use toolbox;
 use Data::Dumper;
+use checkFormat;
 
 
 ################################################################################################
@@ -47,7 +48,7 @@ use Data::Dumper;
 sub fastxTrimmer
 {
     my($fastqFileIn,$fastqFileOut,$optionsHachees)=@_;
-    if (toolbox::sizeFile($fastqFileIn)==1 and toolbox::checkFormatFastq($fastqFileIn)==1)             ##Check if the fastqfile exist and is not empty
+    if (toolbox::sizeFile($fastqFileIn)==1 and checkFormat::checkFormatFastq($fastqFileIn)==1)             ##Check if the fastqfile exist and is not empty
     {
         my $options=toolbox::extractOptions($optionsHachees, " ");  ##Get given options by software.config
         ## DEBUG toolbox::exportLog("DEBUG: fastxToolkit::fastxTrimmer : fastxTrimmer option equals to $options",1);

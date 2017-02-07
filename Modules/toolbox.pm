@@ -1280,13 +1280,7 @@ C<toolbox::run("rm /data/projects/oryza/*.fastq"); >
 
 
 
-=head3 toolbox::checkFormatFastq()
 
-This function checks if a file is really a FASTQ file.
-Returns  boolean (1 if the format is fastq else 0)
-
-Example :
-C<toolbox::checkFormatFastq("/data/projects/oryza/RC1.fastq"); >
 
 
 =head3 toolbox::addInfoHeader()
@@ -1299,13 +1293,7 @@ C<toolbox::addInfoHeader($bamFile, 'RC1'); >
 
 
 
-=head3 toolbox::checkSamOrBamFormat()
 
-This function verifies the SAM/BAM format based on samtools view system. One argument is required : filename to analyze.
-Returns  boolean (1 if the fileformat is sam, 2 bam and 0 neither bam or sam)
-
-Example :
-C<toolbox::checkSamOrBamFormat($samFile); >
 
 
 =head3 toolbox::changeDirectoryArbo()
@@ -1338,16 +1326,6 @@ C<toolbox::checkInitialDirContent($initialDir); >
 
 
 
-=head3 toolbox::checkVcfFormat()
-
-This function checks if the format of the given as argument is VCF.
-Returns 1  if the file format is validated else 0 (an error is maneged by toolbox::exportLog)
-
-Example :
-C<toolbox::checkVcfForm($file); >
-
-
-
 =head3 toolbox::transferDirectoryFromMasterToNode()
 
 This function copy data directory from a master server to one local scratch space of the node. One argument is required :
@@ -1370,32 +1348,6 @@ No parameter returned.
 Example :
 C<( toolbox::transferDirectoryFromNodeToMaster($initialDir."/*", $MasterDir, $nodeInitial,1);); >
 
-
-=head3 toolbox::checkFormatFasta()
-
-This function checks if a given file is a true DNA fasta file
-The only required argument is the filemane. The file can be plain text
-Returns a 1 for success, and a 0 for failure. Will send a warning to the log in case of failure.
-Will return a maximum of 20 errors.
-Will stop immediatly if the first line is misformatted
-
-Example :
-C<( toolbox::checkFormatFasta($fastaFile);); >
-
-
-=head3 toolbox::checkFormatFastq()
-
-This function checks if a given file is a FASTQ file.
-The only required argument is the filename.
-Returns a 1 for success, and a 0 for failure. Will send a warning to the log in case of failure.
-Will return a maximum of 1 errors.
-Will stop immediatly if the first line is misformatted
-Use toolbox::checkNumberLines to count the number of lines and calculate if this number is a multiple of 4.
-Use a 4 lines block to avoid stocking in memory the whole of lines from file.
-Check the format of the first 50000 fastq reads.
-
-Example :
-toolbox::checkFormatFasta($fastaFile);
 
 
 =head3 toolbox::checkNumberLines

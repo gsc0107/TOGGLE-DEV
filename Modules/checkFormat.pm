@@ -397,3 +397,66 @@ sub checkFormatFasta{
 
 1;
 
+=head1 NAME
+
+package I<checkFormat>
+
+=head1 SYNOPSIS
+
+	use checkFormat;
+
+	checkFormat::::checkFormatFastq($fastqFile);
+
+
+=head1 DESCRIPTION
+
+This module aims to provide a set of functions related to check file format
+
+
+=head2 Functions
+
+
+=head3 checkFormat::checkFormatFastq()
+
+This function checks if a file is really a FASTQ file.
+Returns  boolean (1 if the format is fastq else 0)
+
+Example :
+C<checkFormat::checkFormatFastq("/data/projects/oryza/RC1.fastq"); >
+
+=head3 checkFormat::checkSamOrBamFormat()
+
+This function verifies the SAM/BAM format based on samtools view system. One argument is required : filename to analyze.
+Returns  boolean (1 if the fileformat is sam, 2 bam and 0 neither bam or sam)
+
+Example :
+C<checkFormat::checkSamOrBamFormat($samFile); >
+
+=head3 checkFormat::checkVcfFormat()
+
+This function checks if the format of the given as argument is VCF.
+Returns 1  if the file format is validated else 0 (an error is maneged by toolbox::exportLog)
+
+Example :
+C<checkFormat::checkVcfForm($file); >
+
+=head3 checkFormat::checkFormatFasta()
+
+This function checks if a given file is a true DNA fasta file
+The only required argument is the filemane. The file can be plain text
+Returns a 1 for success, and a 0 for failure. Will send a warning to the log in case of failure.
+Will return a maximum of 20 errors.
+Will stop immediatly if the first line is misformatted
+
+Example :
+C<( checkFormat::checkFormatFasta($fastaFile);); >
+
+
+=head1 AUTHORS
+
+Cecile Monat, Ayite Kougbeadjo, Julie Orjuela-Bouniol, Marilyne Summo, Cedric Farcy, Mawusse Agbessi, Christine Tranchant and Francois Sabot
+
+L<http://www.southgreen.fr/>
+
+
+=cut

@@ -34,6 +34,7 @@ use strict;
 use warnings;
 use localConfig;
 use toolbox;
+use checkFormat;
 use Data::Translate;#To convert ASCII to decimal, required!
 use Data::Dumper;
 
@@ -50,7 +51,7 @@ use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 sub checkEncodeByASCIIcontrol
 { 
     my ($fileName)=@_;		# recovery of informations
-    if (toolbox::checkFormatFastq($fileName)== 1)		# check if the file you give is a FASTQ file
+    if (checkFormat::checkFormatFastq($fileName)== 1)		# check if the file you give is a FASTQ file
     {
 	toolbox::exportLog("INFOS: fastqUtils::checkEncodeByASCIIcontrol : The file $fileName is a fastq file\n",1);
     }
@@ -99,7 +100,7 @@ sub checkEncodeByASCIIcontrol
 sub changeEncode
 {
     my ($fileIn,$fileOut,$formatInit,$formatOut)=@_;#The format must be numerical (eg 33 or 64)
-    if (toolbox::checkFormatFastq($fileIn)== 1)		# check if the file you give is a FASTQ file
+    if (checkFormat::checkFormatFastq($fileIn)== 1)		# check if the file you give is a FASTQ file
     {
 	toolbox::exportLog("INFOS: fastqUtils::changeEncode : The file $fileIn is a fastq file\n",1);
     }

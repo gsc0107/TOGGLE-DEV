@@ -49,7 +49,7 @@ sub trinityRun
           my $i=0;
           foreach my $file (@{$firstListOfFastq})       # for each Fastq file(s)
           {
-               if ($file ne "NA" and toolbox::checkFormatFastq($file)==1 )
+               if ($file ne "NA" and checkFormat::checkFormatFastq($file)==1 )
                { ##Check if entry file exist and is not empty
                     if (++$i < scalar (@{$firstListOfFastq}))
                     {
@@ -82,7 +82,7 @@ sub trinityRun
               $i=0;
               foreach my $file (@{$secondListOfFastq})       # for each Fastq file(s)
                {
-                    if ($file ne "NA" and toolbox::checkFormatFastq($file)==1 )              
+                    if ($file ne "NA" and checkFormat::checkFormatFastq($file)==1 )              
                     {
                          if (++$i < scalar (@{$firstListOfFastq}))
                          {

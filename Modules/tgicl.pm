@@ -40,7 +40,7 @@ use Data::Dumper;
 sub tgiclRun
 {
     my($outputDir,$FastaFileIn,$optionsHachees)=@_;
-    if ($FastaFileIn ne "NA" and  toolbox::checkFormatFasta($FastaFileIn)==1)
+    if ($FastaFileIn ne "NA" and  checkFormat::checkFormatFasta($FastaFileIn)==1)
     {
         
         my $options=toolbox::extractOptions($optionsHachees, " ");		##Get given options

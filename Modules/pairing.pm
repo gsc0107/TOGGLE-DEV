@@ -39,6 +39,7 @@ use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 #TOGGLE Modules
 use localConfig;
 use toolbox;
+use checkFormat;
 
 #########################################
 #pairRecognition
@@ -81,7 +82,7 @@ sub pairRecognition
 	{  
 		if ($checkFastq == 0 )
 		{	
-			my $isFastq=toolbox::checkFormatFastq($currentFile);		# check the file is a fastq one
+			my $isFastq=checkFormat::checkFormatFastq($currentFile);		# check the file is a fastq one
 			if ($isFastq == 0)		# If the file is not a Fastq File, we cannot consider it
 			{
 				next; # go to the next sequence
@@ -180,8 +181,8 @@ sub repairing
     #Check Fastq format
 	if ($checkFastq == 0 )
 	{
-		toolbox::checkFormatFastq($forwardFile);		# check if forward file is a fastq one
-		toolbox::checkFormatFastq($reverseFile);		# check if reverse file is a fastq one
+		checkFormat::checkFormatFastq($forwardFile);		# check if forward file is a fastq one
+		checkFormat::checkFormatFastq($reverseFile);		# check if reverse file is a fastq one
 	}
 
     #Extraction of the name and creation of output names
