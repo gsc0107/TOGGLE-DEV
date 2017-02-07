@@ -43,6 +43,7 @@ use samTools;
 use gatk;
 use Data::Dumper;
 use picardTools;
+use checkFormat;
 ##initialization of parameters
 
 ###fastq files in arg
@@ -99,7 +100,7 @@ foreach my $pairFolder (@pairFolders){
     my $fastqFiles=toolbox::readDir($pairFolder,".fastq");
     foreach my $fastqfile (@{$fastqFiles}){
         if(toolbox::sizeFile($fastqfile)==1){
-            if (toolbox::checkFormatFastq($fastqfile)==1) {
+            if (checkFormat::checkFormatFastq($fastqfile)==1) {
                 fastqc::exec($fastqfile,$pairFolder);
             }else{
                 toolbox::exportLog("$fastqfile  is not a fastq file",0)
@@ -120,7 +121,7 @@ foreach my $pairFolder (@pairFolders){
         my $fastqFiles=toolbox::readDir($pairFolder,".fastq");
         foreach my $fastqfile (@{$fastqFiles}){
             if(toolbox::sizeFile($fastqfile)==1){
-                if (toolbox::checkFormatFastq($fastqfile)==1) {
+                if (checkFormat::checkFormatFastq($fastqfile)==1) {
                     my $fileOut=toolbox::extractName($fastqfile)."_cutadapt.fastq";
                     cutadapt::exec( $fastqfile,$confFile,$fileOut);
                 }else{
@@ -147,7 +148,7 @@ foreach my $pairFolder (@pairFolders){
     $fastqFiles=toolbox::readDir($pairFolder,"_repaired.fastq");
     foreach my $fastqfile (@{$fastqFiles}){
         if(toolbox::sizeFile($fastqfile)==1){
-                if (toolbox::checkFormatFastq($fastqfile)==1) {
+                if (checkFormat::checkFormatFastq($fastqfile)==1) {
                     bwa::bwaAln($refFastaFileIn,$fastqfile,$optionsAln);
                 }else{
                     toolbox::exportLog("$fastqfile  is not a fastq file",0)
@@ -185,7 +186,7 @@ foreach my $pairFolder (@pairFolders){
     $fastqFiles=toolbox::readDir($pairFolder,"_single.fastq");
     foreach my $fastqfile (@{$fastqFiles}){
         if(toolbox::sizeFile($fastqfile)==1){
-                if (toolbox::checkFormatFastq($fastqfile)==1) {
+                if (checkFormat::checkFormatFastq($fastqfile)==1) {
                     bwa::bwaAln($refFastaFileIn,$fastqfile,$optionsAln);
                 }else{
                     toolbox::exportLog("$fastqfile  is not a fastq file",0)

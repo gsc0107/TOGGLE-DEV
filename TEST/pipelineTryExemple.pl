@@ -44,6 +44,7 @@ use gatk;
 use Data::Dumper;
 use picardTools;
 use Getopt::Long;
+use checkFormat;
 
 my %Options;
 my $ok=GetOptions(\%Options,"c=s","f=s");
@@ -140,7 +141,7 @@ my $bwaSampeDir="$pairFolder/5_bwaSampe";
     my $fastqFiles=toolbox::readDir($pairFolder,".fastq");
     foreach my $fastqfile (@{$fastqFiles}){
         if(toolbox::sizeFile($fastqfile)==1){
-            if (toolbox::checkFormatFastq($fastqfile)==1) {
+            if (checkFormat::checkFormatFastq($fastqfile)==1) {
                 fastqc::execution($fastqfile,$fastqCDir);
             }else{
                 toolbox::exportLog("$fastqfile  is not a fastq file",0)
@@ -163,7 +164,7 @@ my $bwaSampeDir="$pairFolder/5_bwaSampe";
         my $fastqFiles=toolbox::readDir($pairFolder,".fastq");
         foreach my $fastqfile (@{$fastqFiles}){
             if(toolbox::sizeFile($fastqfile)==1){
-                if (toolbox::checkFormatFastq($fastqfile)==1) {
+                if (checkFormat::checkFormatFastq($fastqfile)==1) {
                     my $fileOut="$CutAdaptDir/".toolbox::extractName($fastqfile)."_cutadapt.fastq";
                     cutadapt::execution( $fastqfile,$confFile,$fileOut);
                 }else{
@@ -193,7 +194,7 @@ my $bwaSampeDir="$pairFolder/5_bwaSampe";
     toolbox::makeDir($bwaAlnDir);
     foreach my $fastqfile (@{$fastqFiles}){
         if(toolbox::sizeFile($fastqfile)==1){
-                if (toolbox::checkFormatFastq($fastqfile)==1) {
+                if (checkFormat::checkFormatFastq($fastqfile)==1) {
                     my $saifileOut="$bwaAlnDir/".toolbox::extractName($fastqfile)."_aln.sai";
                     bwa::bwaAln($refFastaFileIn,$fastqfile,$saifileOut,$optionsAln);
                 }else{
