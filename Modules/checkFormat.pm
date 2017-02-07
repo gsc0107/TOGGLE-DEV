@@ -226,5 +226,74 @@ sub checkSamOrBamFormat
 ################################################################################################
 
 
+################################################################################################
+# sub checkVcfFormat=> checks if the fileformat is VCF
+################################################################################################
+# arguments : file name to analyze
+# Returns 1 if the file format is validated else 0 (error are managed by toolbox::exportLog)
+################################################################################################
+sub checkVcfFormat
+{
+    #Inspired from The vcftools vcf-validator
+    my ($file)=@_;
+
+    #Check if we can read the file
+    my $rightToRead = readFile($file);
+    if ($rightToRead == 0)
+    {
+	exportLog("ERROR: toolbox::checkVcfFormat : The file $file is not readable\n",0);
+	return 0;
+    }
+
+    #Parsing the file
+    my @header;#List to gather the header
+    my @listOfFields;
+    open(my $inputHandle, "<",$file) or toolbox::exportLog("ERROR: checkFormat::checkVcfFormat : Cannot open the file $file\n$!\n",0);
+
+    # if the input file is a gz file
+    if($file =~ m/\.gz$/)
+    {
+	$inputHandle = new IO::Uncompress::Gunzip $inputHandle or toolbox::exportLog("ERROR: checkFormat::checkVcfFormat : Cannot open the gz file $file: $GunzipError\n",0);
+    }
+    while (my $line=<$inputHandle>)
+    {
+	chomp $line;
+
+	##DEBUG print $line."\n";
+	if ($line =~ m/^#/)
+	{
+	   push (@header, $line);
+	}
+	else {@listOfFields = split /\t/, $line;}
+    }
+
+    #Check if the first line of the header is including the version
+    my $versionLine=defined $header[0]? $header[0]:undef;
+    exportLog("ERROR: checkFormat::checkVcfFormat : There is no header of the file $file\n",0) unless (defined $versionLine); #Thrown an error if the $version cannot be obtained (misformatted line)
+
+    my @version=split /VCFv/,$versionLine;
+    exportLog("ERROR: checkFormat::checkVcfFormat : Cannot evaluate the VCF version of the file $file file\n",0) if (scalar(@version)==0); #Thrown an error if the $version cannot be obtained (misformatted line)
+    ##DEBUG print "DEBUG: $0: vcf version $versionLine : ".scalar(@version)." : $version[1] \n";
+    eval ($version[1] == $version[1]) or exportLog("ERROR: checkFormat::checkVcfFormat : Cannot obtain the VCF version of $file\n",0); #Verifying if the value obtained is numerical.
+
+    # Check the first line format as recommanded
+    #CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  Individual1
+    #Chr1    228069  .       A       .       31.23   LowQual AN=2;DP=1;MQ=37.00;MQ0=0        GT:DP   0/0:1
+    if (scalar @listOfFields < 10) #Less than the 10 minimum fields
+    {
+	exportLog("ERROR: checkFormat::checkVcfFormat : The file $file is misformatted (less than 10 colums) ".Dumper(\@listOfFields)."\n",0);
+    }
+
+    #Check if the second field (the position) is numerical
+    eval ($listOfFields[1] == $listOfFields [1]) or exportLog("ERROR: checkFormat::checkVcfFormat : Cannot confirm that $file is a VCF.\nAborting.\n",0); #Verifying if numerical. Die if not
+
+    close $inputHandle;
+
+    return 1; #Return correct if all check are Ok
+}
+################################################################################################
+# END sub checkVcfFormat
+################################################################################################
+
 1;
 
