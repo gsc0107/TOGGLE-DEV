@@ -43,6 +43,7 @@ use fileConfigurator;
 
 # references files
 my $dataRefIrigin = "../DATA/Bank/referenceIrigin.fasta";
+my $dataFasta = "../DATA/Bank/";
 my $dataOneBam = "../DATA/testData/samBam/oneBam/";
 my $dataFastq = "..DATA/testData/fastq/pairedOneIndividuArcad/";
 my $dataVcf = "../DATA/testData/vcf/singleVCF";
@@ -60,7 +61,7 @@ system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test dire
 my @listSoft = ("checkFormatFasta");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
-my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataRefIrigin." -r ".$dataRefIrigin." -o ".$testingDir;
+my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFasta." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for checkFormatFasta";
 
