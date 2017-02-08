@@ -48,10 +48,10 @@ use toolbox;
 ########################################
 
 use_ok('checkFormat');
-can_ok('checkFormat','checkVcfFormat');
+can_ok('checkFormat','checkFormatVcf');
 can_ok('checkFormat','checkFormatFasta');
 can_ok('checkFormat','checkFormatFastq');
-can_ok('checkFormat','checkSamOrBamFormat');
+can_ok('checkFormat','checkFormatSamOrBam');
 
 
 use checkFormat;
@@ -110,10 +110,10 @@ my $wrongFasta=$expectedData."wrongReference.fasta";
 is(checkFormat::checkFormatFastq($fastqFile),'1', 'checkFormat::checkFormatFastq - OK');
 
 ########################################
-#toolbox::checkSamOrBamFormat
+#toolbox::checkFormatSamOrBam
 ########################################
-is (checkFormat::checkSamOrBamFormat($samFile),'1', 'checkFormat::checkSamOrBamFormat - sam format');
-is (checkFormat::checkSamOrBamFormat($bamFile),'2', 'checkFormat::checkSamOrBamFormat - bam format');
+is (checkFormat::checkFormatSamOrBam($samFile),'1', 'checkFormat::checkFormatSamOrBam - sam format');
+is (checkFormat::checkFormatSamOrBam($bamFile),'2', 'checkFormat::checkFormatSamOrBam - bam format');
 
 ########################################
 #toolbox::checkFormatFasta
@@ -122,7 +122,7 @@ is (checkFormat::checkFormatFasta($reference),'1','checkFormat::checkFormatFasta
 is (checkFormat::checkFormatFasta($wrongFasta),'0','checkFormat::checkFormatFasta - Format not Ok, warnings send');
 
 ########################################
-#toolbox::checkVcfFormat test TODO add test negatif
+#toolbox::checkFormatVcf test TODO add test negatif
 ########################################
-is (checkFormat::checkVcfFormat($vcfFile),'1','checkFormat::checkVcfFormat - vcf file');
+is (checkFormat::checkFormatVcf($vcfFile),'1','checkFormat::checkFormatVcf - vcf file');
 #isnt (toolbox::checkVcfFormat($samFile),'1','Test for checkVcfFormat - sam file');
