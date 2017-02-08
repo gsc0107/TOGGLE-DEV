@@ -34,6 +34,7 @@ use strict;
 use warnings;
 use Test::More 'no_plan';
 use Test::Deep;
+use lib qw(../Modules/);
 use fileConfigurator;
 
 #####################
@@ -43,6 +44,8 @@ use fileConfigurator;
 # references files
 my $dataRefIrigin = "../DATA/Bank/referenceIrigin.fasta";
 my $dataOneBam = "../DATA/testData/samBam/oneBam/";
+my $dataFastq = "..DATA/testData/fastq/pairedOneIndividuArcad/";
+my $dataVcf = "../DATA/testData/vcf/singleVCF";
 
 print "\n\n#################################################\n";
 print "#### TEST checkFormatFasta\n";
@@ -57,20 +60,57 @@ system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test dire
 my @listSoft = ("checkFormatFasta");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
-my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
+my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataRefIrigin." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for checkFormatFasta";
 
-# check final results
-print "\n### TEST Ouput list & content : $runCmd\n";
-my $observedOutput = `ls $testingDir/finalResults`;
-my @observedOutput = split /\n/,$observedOutput;
-my @expectedOutput = ('RC3-SAMTOOLSVIEW.GATKBASERECALIBRATOR.tableReport');
+print "\n\n#################################################\n";
+print "#### TEST checkFormatFastq\n";
+print "#################################################\n";
 
-# expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) gatkBaseRecalibrator file list ');
+# Remove files and directory created by previous test
+$testingDir="../DATA-TEST/checkFormatFastq";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-# expected output content
-$observedOutput=`wc -l $testingDir/finalResults/RC3-SAMTOOLSVIEW.GATKBASERECALIBRATOR.tableReport`; # We pick up only the position field
-chomp $observedOutput;
-is($observedOutput,"6273 $testingDir/finalResults/RC3-SAMTOOLSVIEW.GATKBASERECALIBRATOR.tableReport", 'toggleGenerator - One Bam (no SGE) gatkBaseRecalibrator content');
+#Creating config file for this test
+@listSoft = ("checkFormatFastq");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFastq." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for checkFormatFastq";
+
+print "\n\n#################################################\n";
+print "#### TEST checkFormatVcf\n";
+print "#################################################\n";
+
+# Remove files and directory created by previous test
+$testingDir="../DATA-TEST/checkFormatVcf";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+@listSoft = ("checkFormatVcf");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataVcf." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for checkFormatVcf";
+
+print "\n\n#################################################\n";
+print "#### TEST checkFormatSamOrBam\n";
+print "#################################################\n";
+
+# Remove files and directory created by previous test
+$testingDir="../DATA-TEST/checkFormatSamOrBam";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+@listSoft = ("checkFormatSamOrBam");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for checkFormatSamOrBam";
