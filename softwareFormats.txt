@@ -204,10 +204,10 @@ $checkFormatFasta
 IN=fasta
 OUT=NA
 
-$checkVcfFormat
+$checkFormatVcf
 IN=vcf
 OUT=NA
 
-$checkSamOrBamFormat
+$checkFormatSamOrBam
 IN=sam,bam
 OUT=NA
