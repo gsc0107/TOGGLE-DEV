@@ -63,7 +63,7 @@ fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
 my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFasta." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for checkFormatFasta";
+system("$runCmd") and warn "#### ERROR : Can't run TOGGLE for checkFormatFasta";
 
 print "\n\n#################################################\n";
 print "#### TEST checkFormatFastq\n";
@@ -80,7 +80,7 @@ fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
 $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFastq." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for checkFormatFastq";
+system("$runCmd") and warn "#### ERROR : Can't run TOGGLE for checkFormatFastq";
 
 print "\n\n#################################################\n";
 print "#### TEST checkFormatVcf\n";
@@ -97,7 +97,7 @@ fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
 $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataVcf." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for checkFormatVcf";
+system("$runCmd") and warn "#### ERROR : Can't run TOGGLE for checkFormatVcf";
 
 print "\n\n#################################################\n";
 print "#### TEST checkFormatSamOrBam\n";
@@ -114,4 +114,4 @@ fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
 $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
-system("$runCmd") and die "#### ERROR : Can't run TOGGLE for checkFormatSamOrBam";
+system("$runCmd") and warn "#### ERROR : Can't run TOGGLE for checkFormatSamOrBam";
