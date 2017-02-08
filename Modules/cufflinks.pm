@@ -126,7 +126,7 @@ sub cuffdiff
     
     
     foreach my $bam (@bamFileIn) {
-        if (checkFormat::checkSamOrBamFormat($bam)==0)
+        if (checkFormat::checkFormatSamOrBam($bam)==0)
         
         {
             toolbox::exportLog("ERROR : cuffdiff : $bam is neither sam nor bam\n",1);
