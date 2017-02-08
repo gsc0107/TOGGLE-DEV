@@ -219,6 +219,9 @@ sub writeLogVersion
 
 			#FOR trinity
 			case ($softOrder =~ m/^trinity/i){$softPathVersion{"trinity"}= trinityVersion if not defined $softPathVersion{"trinity"};}
+			
+			#For format checking
+			case($softOrder =~ m/^check/i){next;}
 
 			else {toolbox::exportLog("ERROR : $0 : the $softOrder function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
 		}
