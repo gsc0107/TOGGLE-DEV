@@ -83,7 +83,7 @@ sub samToolsIndex
      { ##Check if entry file exist and is not empty
           
           #Check if the format is correct
-          if (checkFormat::checkSamOrBamFormat($bamFileIn)==0) {#The file is not a BAM/SAM file
+          if (checkFormat::checkFormatSamOrBam($bamFileIn)==0) {#The file is not a BAM/SAM file
                toolbox::exportLog("ERROR: samTools::samToolsIndex : The file $bamFileIn is not a SAM/BAM file\n",0);
                return 0;
           }
@@ -119,7 +119,7 @@ sub samToolsView
      { ##Check if entry file exist and is not empty
           
           #Check if the format is correct
-          if (checkFormat::checkSamOrBamFormat($bamFileIn)==0)
+          if (checkFormat::checkFormatSamOrBam($bamFileIn)==0)
           {
                #The file is not a BAM/SAM file
                toolbox::exportLog("ERROR: samTools::samToolsView : The file $bamFileIn is not a SAM/BAM file\n",0);
@@ -133,7 +133,7 @@ sub samToolsView
           }
           
           #Automatic adding the -S option for samtools view if not added (i.e. input is in Sam format and not BAM)
-          if (checkFormat::checkSamOrBamFormat($bamFileIn)==1)
+          if (checkFormat::checkFormatSamOrBam($bamFileIn)==1)
           {
                #The file is a SAM file
               $options .= " -S" unless $options =~ m/-S/;
@@ -170,7 +170,7 @@ sub samToolsSort
      { ##Check if entry file exist and is not empty
           
           #Check if the format is correct
-          if (checkFormat::checkSamOrBamFormat($bamFileIn)==0)
+          if (checkFormat::checkFormatSamOrBam($bamFileIn)==0)
           {#The file is not a BAM/SAM file
                toolbox::exportLog("ERROR: samTools::samToolsSort : The file $bamFileIn is not a SAM/BAM file\n",0);
                return 0;
@@ -218,7 +218,7 @@ sub mergeHeader
      
      foreach my $bamfile (@listOfBam)
      {
-            checkFormat::checkSamOrBamFormat($bamfile);#Check if the file is a correct one (SAM or BAM)
+            checkFormat::checkFormatSamOrBam($bamfile);#Check if the file is a correct one (SAM or BAM)
             my $command=$samtools." view -H ".$bamfile." | grep '\@RG'"; #Just pick up the ReadGroup line
             my $header_char=`$command`;#Compute the command
             print FILE $header_char;#Add the RG info in the new header file
@@ -239,7 +239,7 @@ sub samToolsMerge
      {
           if (toolbox::sizeFile($putativeBam)==1)                     #The file exists and is not empty
           {
-               if (checkFormat::checkSamOrBamFormat($putativeBam)==2)     #check if it is a BAM
+               if (checkFormat::checkFormatSamOrBam($putativeBam)==2)     #check if it is a BAM
                {
                     $bamToMerge.=" ".$putativeBam;                    #The file is a BAM
                }
@@ -286,7 +286,7 @@ sub samToolsIdxstats
      if (toolbox::sizeFile($bamFileIn)==1)                       ##Check if entry file exists and is not empty
      { 
           #Check if the format is correct
-          if (checkFormat::checkSamOrBamFormat($bamFileIn)==0)       #The file is not a BAM/SAM file
+          if (checkFormat::checkFormatSamOrBam($bamFileIn)==0)       #The file is not a BAM/SAM file
           {
                toolbox::exportLog("ERROR: samTools::samToolsIdxstats : The file $bamFileIn is not a SAM/BAM file\n",0);
                return 0;
@@ -325,7 +325,7 @@ sub samToolsDepth
           if (toolbox::sizeFile($putativeBam)==1)
           {#The file exists and is not empty
                #check if it is a BAM
-               if (checkFormat::checkSamOrBamFormat($putativeBam)==2)
+               if (checkFormat::checkFormatSamOrBam($putativeBam)==2)
                {
                     #The file is a BAM
                     $bamFilesToCompute.=" ".$putativeBam;
@@ -372,14 +372,14 @@ sub samToolsFlagstat
      if (toolbox::sizeFile($bamFile)==1)##Check if entry file exist and is not empty
      { 
           #Check if the format is correct
-          if (checkFormat::checkSamOrBamFormat($bamFile)!=2)#The file is not a BAM file
+          if (checkFormat::checkFormatSamOrBam($bamFile)!=2)#The file is not a BAM file
           {
-               if (checkFormat::checkSamOrBamFormat($bamFile)==1)#The file is a SAM file
+               if (checkFormat::checkFormatSamOrBam($bamFile)==1)#The file is a SAM file
                {
                     toolbox::exportLog("ERROR: samTools::samToolsFlagstat : The file $bamFile is a SAM file and samTools::samToolsFlagstat accept only BAM file\n",0);
                     return 0;
                }
-	       elsif (checkFormat::checkSamOrBamFormat($bamFile)==0)#The file is not a SAM/BAM file
+	       elsif (checkFormat::checkFormatSamOrBam($bamFile)==0)#The file is not a SAM/BAM file
 	       {
                     toolbox::exportLog("ERROR: samTools::samToolsFlagstat : The file $bamFile is not either a SAM or BAM file and samTools::samToolsFlagstat accept only BAM file\n",0);
                     return 0;
@@ -424,7 +424,7 @@ sub samToolsMpileUp
           { ##Check if entry file exist and is not empty
                
                #Check if the format is correct
-               if (checkFormat::checkSamOrBamFormat($bamFileIn)==0)
+               if (checkFormat::checkFormatSamOrBam($bamFileIn)==0)
                {#The file is not a BAM/SAM file
                     toolbox::exportLog("ERROR: samTools::samToolsMpileUp : The file $bamFileIn is not a SAM/BAM file\n",0);
                     return 0;

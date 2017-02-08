@@ -59,21 +59,21 @@ sub checkFormatFastq
     my ($beginLines, $endLines);
     if ($fileToTest =~ m/gz$/)
     { # The file is in gzipped format
-	#using zcat command for head and tail
-	$beginLines = `zcat $fileToTest | head -n 4`;
-	$endLines = `zcat $fileToTest | tail -n 4`;
+        #using zcat command for head and tail
+        $beginLines = `zcat $fileToTest | head -n 4`;
+        $endLines = `zcat $fileToTest | tail -n 4`;
     }
     else
     {
-	$beginLines = `head -n 4 $fileToTest`;
-	$endLines = `tail -n 4 $fileToTest`;
+        $beginLines = `head -n 4 $fileToTest`;
+        $endLines = `tail -n 4 $fileToTest`;
     }
     chomp $beginLines;
     chomp $endLines;
 
     if ($beginLines !~ m/^@/ and $endLines !~ m/^@/) # The file is not containing a 4 lines sequence in FASTQ format
     {
-	toolbox::exportLog("ERROR: checkFormat::checkFormatFastq : Number of lines is not a multiple of 4 in file $fileToTest, thus not a FASTQ file.\n",0);
+        toolbox::exportLog("ERROR: checkFormat::checkFormatFastq : Number of lines is not a multiple of 4 in file $fileToTest, thus not a FASTQ file.\n",0);
     }
 
 
@@ -87,7 +87,7 @@ sub checkFormatFastq
     #If $fileToTest is in gzip format
     if($fileToTest =~ m/\.gz$/)
     {
-	$inputHandle = new IO::Uncompress::Gunzip $inputHandle or toolbox::exportLog("ERROR: checkFormat::checkFormatFastq : Cannot open the gz file $fileToTest: $GunzipError\n",0);
+        $inputHandle = new IO::Uncompress::Gunzip $inputHandle or toolbox::exportLog("ERROR: checkFormat::checkFormatFastq : Cannot open the gz file $fileToTest: $GunzipError\n",0);
     }
 
     while ((my $line = <$inputHandle>))                                           # scanning file and stocking in an array the four lines of a read.
@@ -165,7 +165,7 @@ sub checkFormatFastq
     if (($notOk == 0))                    						# if any error occured in the file, the format is right.
     {
         toolbox::exportLog("INFOS: checkFormat::checkFormatFastq : The file $fileToTest is a FASTQ file.\n",1);
-	return 1;
+        return 1;
     }
     else                                						# if one or some error(s) occured on the file, the fastq format is not right.
     {
@@ -180,119 +180,122 @@ sub checkFormatFastq
 ################################################################################################
 
 ################################################################################################
-# sub checkSamOrBamFormat => verifying the SAM/BAM format based on samtools view system
+# sub checkFormatSamOrBam => verifying the SAM/BAM format based on samtools view system
 # samtools view gave an error in case of non SAM or BAM format
 ################################################################################################
 # arguments : filename to analyze
 # Returns boolean (1 if the fileformat is sam, 2 bam and 0 neither bam or sam)
 ################################################################################################
-sub checkSamOrBamFormat
+sub checkFormatSamOrBam
 {
 
     my ($samFile)=@_;
 
-    existsFile($samFile); # Will check if the submitted file exists
+    toolbox::existsFile($samFile); # Will check if the submitted file exists
 
     #Is the file sam of bam through the binary mode? Requested for the -S option in samtools view
     my ($inputOption,$binary);
     if (-B $samFile) #The file is a binary BAM file
     {
-	$inputOption = ""; #no specific option in samtools view requested
-	$binary = 1; # the file is binary
+        $inputOption = ""; #no specific option in samtools view requested
+        $binary = 1; # the file is binary
     }
     else #the file is a not binary SAM file
     {
-	$inputOption = " -S ";#-S mean input is SAM
-	$binary = 0; # the file is not binary
+        $inputOption = " -S ";#-S mean input is SAM
+        $binary = 0; # the file is not binary
     }
     my $checkFormatCommand="$samtools view $inputOption $samFile -H > /dev/null";
     # The samtools view will ask only for the header to be outputted (-H option), and the STDOUT is redirected to nowher (>/dev/null);
-    my $formatValidation=run($checkFormatCommand,"noprint");
+    my $formatValidation=toolbox::run($checkFormatCommand,"noprint");
 
     if ($formatValidation == 1)                    # if no error occured in extracting header, ok
     {
         ##DEBUG toolbox::exportLog("INFOS: toolbox::checkSamOrBamFormat : The file $samFile is a SAM/BAM file\n",1);
-	return 1 if $binary == 0;# Return 1 if the file is a SAM
-	return 2 if $binary == 1;# Return 2 if the file is a BAM
+        return 1 if $binary == 0;# Return 1 if the file is a SAM
+        return 2 if $binary == 1;# Return 2 if the file is a BAM
     }
     else                                # if one or some error(s) occured in extracting header, not ok
     {
-        toolbox::exportLog("ERROR: checkFormat::checkSamOrBamFormat : The file $samFile is not a SAM/BAM file\n",0);
-	return 0;
+        toolbox::exportLog("ERROR: checkFormat::checkFormatSamOrBam : The file $samFile is not a SAM/BAM file\n",0);
+        return 0;
     }
 }
 ################################################################################################
-# END checkSamOrBamFormat
+# END checkFormatSamOrBam
 ################################################################################################
 
 
 ################################################################################################
-# sub checkVcfFormat=> checks if the fileformat is VCF
+# sub checkFormatVcf=> checks if the fileformat is VCF
 ################################################################################################
 # arguments : file name to analyze
 # Returns 1 if the file format is validated else 0 (error are managed by toolbox::exportLog)
 ################################################################################################
-sub checkVcfFormat
+sub checkFormatVcf
 {
     #Inspired from The vcftools vcf-validator
     my ($file)=@_;
 
     #Check if we can read the file
-    my $rightToRead = readFile($file);
+    my $rightToRead = toolbox::readFile($file);
     if ($rightToRead == 0)
     {
-	exportLog("ERROR: toolbox::checkVcfFormat : The file $file is not readable\n",0);
-	return 0;
+        toolbox::exportLog("ERROR: toolbox::checkFormatVcf : The file $file is not readable\n",0);
+        return 0;
     }
 
     #Parsing the file
     my @header;#List to gather the header
     my @listOfFields;
-    open(my $inputHandle, "<",$file) or toolbox::exportLog("ERROR: checkFormat::checkVcfFormat : Cannot open the file $file\n$!\n",0);
+    open(my $inputHandle, "<",$file) or toolbox::exportLog("ERROR: checkFormat::checkFormatVcf : Cannot open the file $file\n$!\n",0);
 
     # if the input file is a gz file
     if($file =~ m/\.gz$/)
     {
-	$inputHandle = new IO::Uncompress::Gunzip $inputHandle or toolbox::exportLog("ERROR: checkFormat::checkVcfFormat : Cannot open the gz file $file: $GunzipError\n",0);
+        $inputHandle = new IO::Uncompress::Gunzip $inputHandle or toolbox::exportLog("ERROR: checkFormat::checkFormatVcf : Cannot open the gz file $file: $GunzipError\n",0);
     }
     while (my $line=<$inputHandle>)
     {
-	chomp $line;
+        chomp $line;
 
-	##DEBUG print $line."\n";
-	if ($line =~ m/^#/)
-	{
-	   push (@header, $line);
-	}
-	else {@listOfFields = split /\t/, $line;}
+        ##DEBUG print $line."\n";
+        if ($line =~ m/^#/)
+        {
+           push (@header, $line);
+        }
+        else
+        {
+            @listOfFields = split /\t/, $line;
+        }
     }
 
     #Check if the first line of the header is including the version
     my $versionLine=defined $header[0]? $header[0]:undef;
-    exportLog("ERROR: checkFormat::checkVcfFormat : There is no header of the file $file\n",0) unless (defined $versionLine); #Thrown an error if the $version cannot be obtained (misformatted line)
+    toolbox::exportLog("ERROR: checkFormat::checkFormatVcf : There is no header of the file $file\n",0) unless (defined $versionLine); #Thrown an error if the $version cannot be obtained (misformatted line)
 
     my @version=split /VCFv/,$versionLine;
-    exportLog("ERROR: checkFormat::checkVcfFormat : Cannot evaluate the VCF version of the file $file file\n",0) if (scalar(@version)==0); #Thrown an error if the $version cannot be obtained (misformatted line)
+    exportLog("ERROR: checkFormat::checkfFormatVcf : Cannot evaluate the VCF version of the file $file file\n",0) if (scalar(@version)==0); #Thrown an error if the $version cannot be obtained (misformatted line)
     ##DEBUG print "DEBUG: $0: vcf version $versionLine : ".scalar(@version)." : $version[1] \n";
-    eval ($version[1] == $version[1]) or exportLog("ERROR: checkFormat::checkVcfFormat : Cannot obtain the VCF version of $file\n",0); #Verifying if the value obtained is numerical.
+    eval ($version[1] == $version[1]) or exportLog("ERROR: checkFormat::checkFormatVcf : Cannot obtain the VCF version of $file\n",0); #Verifying if the value obtained is numerical.
 
     # Check the first line format as recommanded
     #CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  Individual1
     #Chr1    228069  .       A       .       31.23   LowQual AN=2;DP=1;MQ=37.00;MQ0=0        GT:DP   0/0:1
     if (scalar @listOfFields < 10) #Less than the 10 minimum fields
     {
-	exportLog("ERROR: checkFormat::checkVcfFormat : The file $file is misformatted (less than 10 colums) ".Dumper(\@listOfFields)."\n",0);
+        toolbox::exportLog("ERROR: checkFormat::checkFormatVcf : The file $file is misformatted (less than 10 colums) ".Dumper(\@listOfFields)."\n",0);
     }
 
     #Check if the second field (the position) is numerical
-    eval ($listOfFields[1] == $listOfFields [1]) or exportLog("ERROR: checkFormat::checkVcfFormat : Cannot confirm that $file is a VCF.\nAborting.\n",0); #Verifying if numerical. Die if not
+    eval ($listOfFields[1] == $listOfFields [1]) or toolbox::exportLog("ERROR: checkFormat::checkFormatVcf : Cannot confirm that $file is a VCF.\nAborting.\n",0); #Verifying if numerical. Die if not
 
     close $inputHandle;
 
     return 1; #Return correct if all check are Ok
 }
 ################################################################################################
-# END sub checkVcfFormat
+# END sub checkFormatVcf
 ################################################################################################
 
 ################################################################################################
@@ -312,8 +315,8 @@ sub checkFormatFasta{
     my $rightToRead = toolbox::readFile($file);
     if ($rightToRead == 0)
     {
-	toolbox::exportLog("ERROR: checkFormat::checkFormatFasta : The file $file is not readable\n",0);
-	return 0;
+        toolbox::exportLog("ERROR: checkFormat::checkFormatFasta : The file $file is not readable\n",0);
+        return 0;
     }
 
     #Opening file
@@ -324,46 +327,46 @@ sub checkFormatFasta{
     my %errors; # Will score all the error types
     my $lineNumber=0;#Recording line position
     while (my $line = <FILE>)
-       {
-	chomp $line;
-	$lineNumber++;#Counter for scoring lines with errors
-    #Checking first line, that must be '>NAME'
-	if ($initiator == 0)
-	    {
-	    #very first line
-	    $initiator = 1; #no need for any other lines beginning with ##
-	    next if $line =~ m/^>/; #Correct first line, let's go to the following ones
-	    #First line is not correct
-	    $errors{$lineNumber} = "Not correctly formatted, must be a header name such as '>NAME'.";
-            #Will stop immediatly as the file is not correct at all
-            last;
-	    }
-    #Other lines
-	next if $line =~ m/^$/;# Representing empty lines
-	if ($line =~ m/^>/) #A new sequence beginning
-	    {
-	    next;
-	    }
-	else # The sequence is read
-	    {
-	    my $modifiedLine = $line;
-	    $modifiedLine =~ s/[A|T|G|C|a|g|t|c|N|n]//g;
-	    #DEBUG : print "\n**",$modifiedLine,"**\n";
-	    #DEBUG : exit;
-	    next if length($modifiedLine eq "");
-	    $errors{$lineNumber} = "Not basic IUPAC letter, only ATGCNatgcn characters are allowed: unauthorized characters are $modifiedLine.";
-	    }
-	#Check if there are too much errors...
-        if (scalar (keys %errors) > 19)
-          {
-          #Will stop after 20 errors
-          my $tooMuchErrors = "WARNING : checkFormat::checkFormatFasta : Too much errors in the Fasta file $file, only the first 20 errors are shown..."; #Will be printed before all errors
-	  toolbox::exportLog($tooMuchErrors,2);
-          last;
-          }
-        next;
+    {
+         chomp $line;
+         $lineNumber++;#Counter for scoring lines with errors
+         #Checking first line, that must be '>NAME'
+         if ($initiator == 0)
+         {
+             #very first line
+             $initiator = 1; #no need for any other lines beginning with ##
+             next if $line =~ m/^>/; #Correct first line, let's go to the following ones
+             #First line is not correct
+             $errors{$lineNumber} = "Not correctly formatted, must be a header name such as '>NAME'.";
+             #Will stop immediatly as the file is not correct at all
+             last;
+         }
+ #Other lines
+         next if $line =~ m/^$/;# Representing empty lines
+         if ($line =~ m/^>/) #A new sequence beginning
+         {
+             next;
+         }
+         else # The sequence is read
+         {
+             my $modifiedLine = $line;
+             $modifiedLine =~ s/[A|T|G|C|a|g|t|c|N|n]//g;
+             #DEBUG : print "\n**",$modifiedLine,"**\n";
+             #DEBUG : exit;
+             next if length($modifiedLine eq "");
+             $errors{$lineNumber} = "Not basic IUPAC letter, only ATGCNatgcn characters are allowed: unauthorized characters are $modifiedLine.";
+         }
+ #Check if there are too much errors...
+         if (scalar (keys %errors) > 19)
+         {
+           #Will stop after 20 errors
+           my $tooMuchErrors = "WARNING : checkFormat::checkFormatFasta : Too much errors in the Fasta file $file, only the first 20 errors are shown..."; #Will be printed before all errors
+           toolbox::exportLog($tooMuchErrors,2);
+           last;
+         }
+         next;
 
-        }
+     }
     close FILE;
 
     #Checking if there are errors
@@ -372,23 +375,23 @@ sub checkFormatFasta{
     #Sending the warning message, if any
     if ($numberOfErrors)#There are errors, we will send a warning to the system
 	{
-	#Formatting errors for the warning
-	my $warningLog;
-	$warningLog.="WARNING : checkFormat::checkFormatFasta : There are $numberOfErrors errors detected for file $file\n";
-	foreach my $individualError (sort {$a <=> $b} keys %errors)#Sorting error per line number
-	    {
-	    $warningLog.="WARNING : checkFormat::checkFormatFasta : Line $individualError does not respect FASTA standard : $errors{$individualError}\n";
-	    }
-	#Sending the warning
-	toolbox::exportLog($warningLog,2);
-	#returning for failure
-	return 0;
+        #Formatting errors for the warning
+        my $warningLog;
+        $warningLog.="WARNING : checkFormat::checkFormatFasta : There are $numberOfErrors errors detected for file $file\n";
+        foreach my $individualError (sort {$a <=> $b} keys %errors)#Sorting error per line number
+        {
+            $warningLog.="WARNING : checkFormat::checkFormatFasta : Line $individualError does not respect FASTA standard : $errors{$individualError}\n";
         }
+        #Sending the warning
+        toolbox::exportLog($warningLog,2);
+        #returning for failure
+        return 0;
+    }
 
     #returning ok
     toolbox::exportLog("INFOS: checkFormat::checkFormatFasta : The file $file is a FASTA file\n",1);
     return 1;
-    }
+}
 
 
 ################################################################################################
@@ -424,21 +427,21 @@ Returns  boolean (1 if the format is fastq else 0)
 Example :
 C<checkFormat::checkFormatFastq("/data/projects/oryza/RC1.fastq"); >
 
-=head3 checkFormat::checkSamOrBamFormat()
+=head3 checkFormat::checkFormatSamOrBam()
 
 This function verifies the SAM/BAM format based on samtools view system. One argument is required : filename to analyze.
 Returns  boolean (1 if the fileformat is sam, 2 bam and 0 neither bam or sam)
 
 Example :
-C<checkFormat::checkSamOrBamFormat($samFile); >
+C<checkFormat::checkFormatSamOrBam($samFile); >
 
-=head3 checkFormat::checkVcfFormat()
+=head3 checkFormat::checkFormatVcf()
 
 This function checks if the format of the given as argument is VCF.
 Returns 1  if the file format is validated else 0 (an error is maneged by toolbox::exportLog)
 
 Example :
-C<checkFormat::checkVcfForm($file); >
+C<checkFormat::checkFormatVcf($file); >
 
 =head3 checkFormat::checkFormatFasta()
 
