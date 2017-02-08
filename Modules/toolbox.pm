@@ -38,6 +38,7 @@ use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 
 use localConfig;
 use namingConvention;
+use checkFormat;
 
 #Global infos
 #our @ISA=qw(Exporter);
@@ -727,7 +728,7 @@ sub addInfoHeader
     my ($bamFile,$textToAdd)=@_;
 
     #Is the file sam of bam ?
-    my $formatCheck=checkSamOrBamFormat($bamFile);
+    my $formatCheck=checkFormat::checkSamOrBamFormat($bamFile);
 
     if ($formatCheck == 0)	#The file is not a BAM nor a SAM and cannot be treated here
     {

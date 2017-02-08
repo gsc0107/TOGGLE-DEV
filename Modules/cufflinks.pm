@@ -35,6 +35,7 @@ use warnings;
 use localConfig;
 use toolbox;
 use Data::Dumper;
+use checkFormat;
 
 
 
@@ -125,7 +126,7 @@ sub cuffdiff
     
     
     foreach my $bam (@bamFileIn) {
-        if (toolbox::checkSamOrBamFormat($bam)==0)
+        if (checkFormat::checkSamOrBamFormat($bam)==0)
         
         {
             toolbox::exportLog("ERROR : cuffdiff : $bam is neither sam nor bam\n",1);

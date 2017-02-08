@@ -35,6 +35,7 @@ use warnings;
 use localConfig;
 use toolbox;
 use Data::Dumper;
+use checkFormat;
 
 
 sub trinityRun
