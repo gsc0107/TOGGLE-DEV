@@ -97,7 +97,12 @@ our %testParams=    (
         #BreakDancer
         breakdancer => [""],
         #SGE
-        sge => ["-q bioinfo.q","-b Y"]
+        sge => ["-q bioinfo.q","-b Y"],
+        #checkFormat
+        checkFormatFasta => [""],
+        checkFormatFastq => [""],
+        checkFormatVcf => [""],
+        checkFormatSamOrBam => [""]
         );
 
 sub softParams
