@@ -90,9 +90,6 @@ chomp $path;
 
 #Input file
 my $reference = $path."/../../../DATA/testData/fasta/TGICL/contig_tgicl.fasta";  
-#my $reference = "/home/adiall/TOGGLE-DEV/DATA/testData/fasta/TGICL/contig_tgicl.fasta";  ### TODO: remplacer par chemin relatif mais bug dans module
-#Output file
-#my $readGroup = 'g02L5'; ## à remplacer par le readGroup
 
 #########################################################
 ###  Test for tgiclRun 

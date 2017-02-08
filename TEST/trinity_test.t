@@ -155,7 +155,7 @@ chomp($observedAnswer);
 
 SKIP:
 {
-    skip "Non reproducible tgicl results", 1 if ($observedAnswer == 15 );
+    skip "Non reproducible trinity results", 1 if ($observedAnswer == 15 );
     is($observedAnswer,$expectedAnswer,'trinity::trinityRun- output content - Several banks');
 }
 
