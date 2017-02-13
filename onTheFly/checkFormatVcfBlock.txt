@@ -10,7 +10,26 @@
 $softParameters = toolbox::extractHashSoft($optionRef, $stepName);                       
 
 
+my $checkValue;
+open (my $fhOut, ">", "checkFormatVcf.log") or toolbox::exportLog("ERROR: checkFormatVcf step: Cannot create the log file",0);
+
+
 foreach my $file (@{$fileList})
 {
-    checkFormat::checkFormatVcf($file);
+    $checkValue = checkFormat::checkFormatVcf($file);
+	my $outline;
+
+	if ($checkValue == 1)
+	{
+		#The format is Ok
+		$outline = "The file $file is a correct VCF file\n";
+	}
+	else
+	{
+		#The format is not Ok
+		$outline = "The file $file is misformatted. See the error log for more infos.\n";
+	}
+	print $fhOut, $outline
 }
+
+close $fhOut;
