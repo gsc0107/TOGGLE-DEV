@@ -46,6 +46,7 @@ use toolbox;
 use onTheFly;
 use scheduler;
 use radseq;
+use versionSofts;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
@@ -68,7 +69,6 @@ my $parser = Getopt::ArgParse->new_parser(
         help            => 'a framework to build quickly NGS pipelines'."\n\n".$version,
         error_prefix    => "\n\tERROR MSG: "
 );
-
 
 $parser->add_args(
                     [
@@ -155,7 +155,6 @@ if ("-v" ~~ @ARGV or "--version" ~~ @ARGV or "-version" ~~ @ARGV)
 
 my $args = $parser->parse_args();
 
-
 #Recovery obligatory arguments
 my $initialDir = toolbox::relativeToAbsolutePath($parser->namespace->directory, 0);       # recovery of the name of the directory to analyse
 my $fileConf = toolbox::relativeToAbsolutePath($parser->namespace->config, 0);            # recovery of the name of the software.configuration.txt file
@@ -175,8 +174,6 @@ my @listFilesMandatory=($initialDir, $fileConf);
 push (@listFilesMandatory,$refFastaFile) if $refFastaFile !~ m/None$/;
 push (@listFilesMandatory,$gffFile) if $gffFile !~ m/None$/;
 push (@listFilesMandatory,$keyfile) if $keyfile !~ m/None$/;
-
-
 
 ##########################################
 # Creation of the output folder
@@ -233,26 +230,8 @@ foreach my $file (@listFilesMandatory)
 ########################################
 
 toolbox::exportLog("#########################################\nINFOS: Software version/location \n#########################################\n",1);
-open (my $fhConfig, "<", "$toggle/Modules/localConfig.pm");
-while (my $line = <$fhConfig>)
-{
-  chomp $line;
-  chop $line; #Remove the last character, ie ";"
-  next unless $line =~ m/^our \$/;
-  my ($soft,$value) = split /=/, $line;
-  $soft =~ s/our| |\$//g;
-  if (defined $value)
-  {
-    $value =~ s/\"//g;
-    $value =~ s/\w+ |\$|-//g unless $soft =~ m/java|toggle/i;
-    $value =~ s/^ //;
-  }
-  else
-  {
-    $value = "NOT DEFINED";
-  }
-  toolbox::exportLog("$soft : $value",1);
-}
+
+versionSofts::writeLogVersion($fileConf,$version);
 
 toolbox::exportLog("\n#########################################\nINFOS: Data checking \n#########################################\n",1);
 toolbox::checkFile($fileConf);                              # check if this file exists
