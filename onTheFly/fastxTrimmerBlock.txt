@@ -36,7 +36,7 @@ $softParameters = toolbox::extractHashSoft($optionRef, $stepName);              
 foreach my $file (@{$fileList})
 {
     ($fileWithoutExtension) = pairing::extractName($file);                           # extract name of file without the extension
-    $fastqFileOut = "$newDir"."/"."$fileWithoutExtension".".FASTXTRIMMER.fastq";
+    my $fastqFileOut = "$newDir"."/"."$fileWithoutExtension".".FASTXTRIMMER.fastq";
     
     if ($file=~m/.gz$/)                                          
     {
