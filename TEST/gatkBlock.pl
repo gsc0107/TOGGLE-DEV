@@ -137,9 +137,9 @@ $observedOutput = `ls $testingDir/finalResults`;
 is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) gatkIndelRealigner file list ');
 
 # expected output content
-$observedOutput=`wc -l $testingDir/finalResults/RC3-SAMTOOLSVIEW.GATKINDELREALIGNER.bam`; # We pick up only the position field
+$observedOutput=`samtools view $testingDir/finalResults/RC3-SAMTOOLSVIEW.GATKINDELREALIGNER.bam | wc -l`; # We pick up only the position field
 chomp $observedOutput;
-is($observedOutput,"947 $testingDir/finalResults/RC3-SAMTOOLSVIEW.GATKINDELREALIGNER.bam", 'toggleGenerator - One Bam (no SGE) gatkIndelRealigner content');
+is($observedOutput,"1998", 'toggleGenerator - One Bam (no SGE) gatkIndelRealigner content');
 
 
 
