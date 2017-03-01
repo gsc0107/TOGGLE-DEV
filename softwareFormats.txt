@@ -131,9 +131,9 @@ MANDATORY=reference
 #IN=fastq
 #OUT=fastq
 
-#$fastxTrimmer
-#IN=fastq
-#OUT=fastq
+$fastxTrimmer
+IN=fastq
+OUT=fastq
 
 $snpEffAnnotation
 IN=vcf
