@@ -45,7 +45,7 @@ use fileConfigurator;
 my $dataRefIrigin = "../DATA/Bank/referenceIrigin.fasta";
 my $dataFasta = "../DATA/testData/fasta/TGICL/";
 my $dataOneBam = "../DATA/testData/samBam/oneBam/";
-my $dataFastq = "..DATA/testData/fastq/pairedOneIndividuArcad/";
+my $dataFastq = "../DATA/testData/fastq/pairedOneIndividuArcad/";
 my $dataVcf = "../DATA/testData/vcf/singleVCF";
 
 print "\n\n#################################################\n";
