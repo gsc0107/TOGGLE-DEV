@@ -45,10 +45,10 @@ print "\n\n#################################################\n";
 print "#### INDIVIDUAL BLOCK TEST \n";
 print "#################################################\n";
 
-system("perl assemblyBlock.pl") and warn "ERROR: $0: Cannot run test for assemblyBlock.pl  \n$!\n";
-system("perl gatkBlock.pl") and warn "ERROR: $0: Cannot run test for gatkBlock.pl  \n$!\n";
-system("perl picardtoolsBlock.pl") and warn "ERROR: $0: Cannot run test for assemblyBlock.pl  \n$!\n";
-system("perl samtoolsBlock.pl") and warn "ERROR: $0: Cannot run test for assemblyBlock.pl  \n$!\n";
+system("perl assemblyBlock.pl") and warn "ERROR: $0: Cannot run test for assemblyBlock.pl or failed tests \n$!\n";
+system("perl gatkBlock.pl") and warn "ERROR: $0: Cannot run test for gatkBlock.pl or failed tests \n$!\n";
+system("perl picardtoolsBlock.pl") and warn "ERROR: $0: Cannot run test for assemblyBlock.pl or failed tests \n$!\n";
+system("perl samtoolsBlock.pl") and warn "ERROR: $0: Cannot run test for assemblyBlock.pl or failed tests \n$!\n";
 
 
 #####################
