@@ -10,7 +10,7 @@
 $softParameters = toolbox::extractHashSoft($optionRef, $stepName);                       
 
 my $checkValue;
-open (my $fhOut, ">", "checkFormatFasta.log") or toolbox::exportLog("ERROR: checkFormatFasta step: Cannot create the log file",0);
+open (my $fhOut, ">", $newDir."/checkFormatFasta.log") or toolbox::exportLog("ERROR: checkFormatFasta step: Cannot create the log file",0);
 
 
 foreach my $file (@{$fileList})
@@ -28,7 +28,7 @@ foreach my $file (@{$fileList})
 		#The format is not Ok
 		$outline = "The file $file is misformatted. See the error log for more infos.\n";
 	}
-	print $fhOut, $outline
+	print $fhOut $outline
 }
 
 close $fhOut;
