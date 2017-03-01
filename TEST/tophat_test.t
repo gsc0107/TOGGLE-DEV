@@ -204,7 +204,7 @@ is($observedMD5sum,$expectedMD5sum,'tophat::bowtie2Build - output content rev.2.
 #################################################################################################
 
 #input file
-my $gffRef=$expectedData."/referenceRNASeq.gff3";
+my $gffRef=$expectedData."/referenceRNASeqGFF.gff3";
 
 my $fastqFile1=$expectedData."/RNASeq_1.fastq";
 my $fastqFile2=$expectedData."/RNASeq_2.fastq";
