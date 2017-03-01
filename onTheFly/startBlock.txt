@@ -50,6 +50,7 @@ use bwa;
 use cutadapt;
 use fastqc;
 use fastqUtils;
+use fastxToolkit;
 use gatk;
 use pairing;
 use picardTools;
