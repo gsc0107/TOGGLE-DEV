@@ -32,8 +32,8 @@
 
 use strict;
 use warnings;
-use Test::More 'no_plan';
-use Test::Deep;
+#use Test::More 'no_plan';
+#use Test::Deep;
 use lib qw(../Modules/);
 use fileConfigurator;
 
