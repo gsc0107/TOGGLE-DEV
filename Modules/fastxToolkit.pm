@@ -53,6 +53,13 @@ sub fastxTrimmer
         ## DEBUG toolbox::exportLog("DEBUG: fastxToolkit::fastxTrimmer : fastxTrimmer option equals to $options",1);
         my $command=$fastxTrimmer." ".$options." -i ".$fastqFileIn." -o ".$fastqFileOut; ## Command initialization
         
+        if ($fastqFileIn=~ m/.gz$/)
+        {
+            #fastq file is gzip we need to decompress it.
+            $command="zcat ".$fastqFileIn."| ".$fastxTrimmer." ".$options." -z -o ".$fastqFileOut;
+        }
+        
+        
         # Command is executed with the run function (package toolbox)
         if (toolbox::run($command)==1)
         {
