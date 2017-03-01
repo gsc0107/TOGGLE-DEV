@@ -416,7 +416,7 @@ is (toolbox::checkInitialDirContent('initialDir'),'0','toolbox::checkInitialDirC
 #is (toolbox::relativeToAbsolutePath('./'),'0','toolbox::relativeToAbsolutePath - OK');
 
 $optionLine=toolbox::relativeToAbsolutePath('./');
-print $optionLine;
+## DEBUG print $optionLine;
 is ($optionLine =~ m/INFOS/,'1','toolbox::relativeToAbsolutePath - OK');
 
 
