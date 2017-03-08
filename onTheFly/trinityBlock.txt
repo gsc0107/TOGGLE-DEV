@@ -5,7 +5,7 @@
 
 #Correct variable populating
 
-my $hashOfPairs = pairing::pairRecognition($previousDir);
+my $hashOfPairs = pairing::pairRecognition($previousDir, $checkFastq);
 #my @listOfSequences = keys %{$hashOfPairs}; #Pick up the names of first sequences (key values of the reference)
 my ($paired,$single)=(-1,-1);
 my $firstListOfFastq=();
