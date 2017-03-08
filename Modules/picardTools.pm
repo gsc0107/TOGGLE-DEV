@@ -50,11 +50,21 @@ sub picardToolsSamToFastq
 	{
             $options=toolbox::extractOptions($optionsHachees,"=");      # recovery of options if they are provided
         }
-        my $picardToolsSamToFastqCmd = "$picard SamToFastq $options INPUT=$bamToAnalyze FASTQ=$bamAnalyzed ";      #command line
-        if (toolbox::run($picardToolsSamToFastqCmd)==1)
-	{
-	    return 1;
-	}
+	
+	# Test if the bam/sam files contains paired or single reads
+	my $samtoolsViewCmd = "$samtools view -f 1 $bamToAnalyze | head -n 1";
+	my $samtoolsViewOutput = `$samtools view -f 1 $bamToAnalyze | head -n 1` or toolbox::exportLog("ERROR: picardTools::picardToolsSamToFastq : Uncorrectly done (samtools view check) : $samtoolsViewCmd\n",0);
+	if($samtoolsViewOutput =~ /^.+$/)
+        {
+	    toolbox::exportLog("DEBUG: $0 : $samtoolsViewCmd - OK paired reads\n",1); 
+        }
+	else { toolbox::exportLog("DEBUG: $0 : OK not paired reads\n",1);  }
+     
+#        my $picardToolsSamToFastqCmd = "$picard SamToFastq $options INPUT=$bamToAnalyze FASTQ=$bamAnalyzed ";      #command line
+#        if (toolbox::run($picardToolsSamToFastqCmd)==1)
+#	{
+#	    return 1;
+#	}
     }
     else        # if something wrong (size, format) in the file to examine, don't run the module ...                                                                                                                                                                                                                                                                 # if previous files doesn't exists or are empty or if picardToolsMarkDuplicates failed
     {
