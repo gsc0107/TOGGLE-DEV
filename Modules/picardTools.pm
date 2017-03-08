@@ -34,6 +34,7 @@ use strict;
 use warnings;
 use localConfig;
 use toolbox;
+use checkFormat;
 
 ######################################
 #PicardTools MarkDuplicates
@@ -43,7 +44,7 @@ sub picardToolsMarkDuplicates
 {
 
     my ($bamToAnalyze, $bamAnalyzed, $bamDuplicates, $optionsHachees) = @_;     # recovery of information
-    if (toolbox::checkSamOrBamFormat($bamToAnalyze)==2 && toolbox::sizeFile($bamToAnalyze)==1)      # check if file are really bam file; if file exists and isn't empty
+    if (checkFormat::checkFormatSamOrBam($bamToAnalyze)==2 && toolbox::sizeFile($bamToAnalyze)==1)      # check if file are really bam file; if file exists and isn't empty
     {
         my $options="";
         if ($optionsHachees)
@@ -102,7 +103,7 @@ sub picardToolsCreateSequenceDictionary
 sub picardToolsSortSam
 {
     my($bamOrSamFileIn,$bamOrSamFileOut,$optionsHachees)= @_;       # recovery of informations
-    if ((toolbox::checkSamOrBamFormat($bamOrSamFileIn)) && (toolbox::sizeFile($bamOrSamFileIn)==1))        # check if the file to sort is a ".sam" one and is not empty
+    if ((checkFormat::checkFormatSamOrBam($bamOrSamFileIn)) && (toolbox::sizeFile($bamOrSamFileIn)==1))        # check if the file to sort is a ".sam" one and is not empty
     {
         my $options="";
         if ($optionsHachees)
@@ -129,7 +130,7 @@ sub picardToolsSortSam
 sub picardToolsValidateSamFile
 {
     my($bamOrSamFileIn,$infoFileOut,$optionsHachees)= @_;       # recovery of informations
-    if ((toolbox::checkSamOrBamFormat($bamOrSamFileIn)) && (toolbox::sizeFile($bamOrSamFileIn)==1))        # check if the file to validate is a ".sam" one and is not empty
+    if ((checkFormat::checkFormatSamOrBam($bamOrSamFileIn)) && (toolbox::sizeFile($bamOrSamFileIn)==1))        # check if the file to validate is a ".sam" one and is not empty
     {
         my $options="";
         if ($optionsHachees)
@@ -156,7 +157,7 @@ sub picardToolsValidateSamFile
 sub picardToolsCleanSam
 {
     my($samFileIn,$samFileOut,$optionsHachees)= @_;       # recovery of informations
-    if ((toolbox::checkSamOrBamFormat($samFileIn)) && (toolbox::sizeFile($samFileIn)==1))        # check if the file to sort is a ".sam" one and is not empty
+    if ((checkFormat::checkFormatSamOrBam($samFileIn)) && (toolbox::sizeFile($samFileIn)==1))        # check if the file to sort is a ".sam" one and is not empty
     {
         my $options="";
         if ($optionsHachees)
@@ -183,7 +184,7 @@ sub picardToolsCleanSam
 sub picardToolsSamFormatConverter
 {
     my($samFileIn,$bamFileOut,$optionsHachees)= @_;       # recovery of informations
-    if ((toolbox::checkSamOrBamFormat($samFileIn)) && (toolbox::sizeFile($samFileIn)==1))        # check if the file to sort is a ".sam" one and is not empty
+    if ((checkFormat::checkFormatSamOrBam($samFileIn)) && (toolbox::sizeFile($samFileIn)==1))        # check if the file to sort is a ".sam" one and is not empty
     {
         my $options="";
         if ($optionsHachees)
@@ -210,7 +211,7 @@ sub picardToolsSamFormatConverter
 sub picardToolsAddOrReplaceReadGroups
 {
     my($samFileIn,$bamFileOut,$optionsHachees)= @_;       # recovery of informations
-    if ((toolbox::checkSamOrBamFormat($samFileIn)) && (toolbox::sizeFile($samFileIn)==1))        # check if the file to sort is a ".sam" one and is not empty
+    if ((checkFormat::checkFormatSamOrBam($samFileIn)) && (toolbox::sizeFile($samFileIn)==1))        # check if the file to sort is a ".sam" one and is not empty
     {
         my $options="";
         if ($optionsHachees)

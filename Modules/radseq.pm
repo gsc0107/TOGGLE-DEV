@@ -37,7 +37,7 @@ use Data::Dumper;
 use lib qw(.);
 use localConfig;
 use toolbox;
-
+use checkFormat;
 
 
 
@@ -67,7 +67,7 @@ sub executeDemultiplexing
 	{
 		foreach my $file (@{$initialDirContent})
 		{
-			toolbox::checkFormatFastq($file);
+			checkFormat::checkFormatFastq($file);
 		}
 	}
 

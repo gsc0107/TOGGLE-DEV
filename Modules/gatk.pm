@@ -35,12 +35,13 @@ use warnings;
 use localConfig;
 use toolbox;
 use Data::Dumper;
+use checkFormat;
 
 # GATK Base Recalibrator: recalibrate the quality score of bases from informations stemming from SNP VCF file
 sub gatkBaseRecalibrator
 {
     my ($refFastaFileIn, $bamToRecalibrate, $tableReport, $optionsHachees) = @_;      # recovery of information
-    if ((toolbox::checkSamOrBamFormat($bamToRecalibrate)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamToRecalibrate)==1))     # check if files exists and arn't empty and stop else
+    if ((checkFormat::checkFormatSamOrBam($bamToRecalibrate)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamToRecalibrate)==1))     # check if files exists and arn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);       # extraction of options parameters
         #print $options,"\n";
@@ -70,7 +71,7 @@ sub gatkBaseRecalibrator
 sub gatkPrintReads
 {
     my ($refFastaFileIn, $bamToRecalibrate, $bamOut, $tableReport, $optionsHachees) = @_;      # recovery of information
-    if ((toolbox::checkSamOrBamFormat($bamToRecalibrate)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamToRecalibrate)==1))     # check if files exists and arn't empty and stop else
+    if ((checkFormat::checkFormatSamOrBam($bamToRecalibrate)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamToRecalibrate)==1))     # check if files exists and arn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);       # extraction of options parameters
         if ($options !~ m/-T/) # The type of walker is not informed in the options
@@ -117,7 +118,7 @@ sub gatkPrintReads
 sub gatkRealignerTargetCreator
 {
     my ($refFastaFileIn, $bamToRealigne, $intervalsFile, $optionsHachees) = @_;     # recovery of information
-    if ((toolbox::checkSamOrBamFormat($bamToRealigne)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamToRealigne)==1))     # check if files exists and arn't empty and stop else
+    if ((checkFormat::checkFormatSamOrBam($bamToRealigne)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamToRealigne)==1))     # check if files exists and arn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);       # extraction of options parameters
         if ($options !~ m/-T/) # The type of walker is not informed in the options
@@ -140,7 +141,7 @@ sub gatkRealignerTargetCreator
 sub gatkIndelRealigner
 {
     my ($refFastaFileIn, $bamToRealigne, $intervalsFile, $bamRealigned, $optionsHachees) = @_;      # recovery of information
-    if ((toolbox::checkSamOrBamFormat($bamToRealigne)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamToRealigne)==1) and (toolbox::readFile($intervalsFile)==1))      # check if files exists and arn't empty and stop else
+    if ((checkFormat::checkFormatSamOrBam($bamToRealigne)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamToRealigne)==1) and (toolbox::readFile($intervalsFile)==1))      # check if files exists and arn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);       # extraction of options parameters
         if ($options !~ m/-T/) # The type of walker is not informed in the options
@@ -194,7 +195,7 @@ sub gatkHaplotypeCaller
         my $bamFiles_names="";
         foreach my $file (@{$listOfBam})       # for each BAM file(s)
         {
-            if (toolbox::checkSamOrBamFormat($file)==2 and toolbox::sizeFile($file)==1)        # if current file is not empty
+            if (checkFormat::checkFormatSamOrBam($file)==2 and toolbox::sizeFile($file)==1)        # if current file is not empty
             {
                 $bamFiles_names.="-I ".$file." ";       # recovery of informations fo command line used later
             }
@@ -309,7 +310,7 @@ sub gatkUnifiedGenotyper
     my $bamFilesNames="";
     foreach my $file (@{$listOfBam})       # for each BAM file(s)
     {
-        if (toolbox::checkSamOrBamFormat($file)==2 and toolbox::sizeFile($file)==1)        # if current file is not empty and is a BAM
+        if (checkFormat::checkFormatSamOrBam($file)==2 and toolbox::sizeFile($file)==1)        # if current file is not empty and is a BAM
         {
             $bamFilesNames.="-I ".$file." ";       # recovery of informations fo command line used later
         }
@@ -342,7 +343,7 @@ sub gatkReadBackedPhasing
 {
     my ($refFastaFileIn, $bamFileIn,$vcfVariant, $vcfFileOut, $optionsHachees) = @_;         # recovery of information
     #TODO adding VCF type control
-    if ((toolbox::checkSamOrBamFormat($bamFileIn)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamFileIn)==1) and (toolbox::sizeFile($vcfVariant)==1))     # check if ref file exist and isn't empty and stop else
+    if ((checkFormat::checkFormatSamOrBam($bamFileIn)==2) and (toolbox::sizeFile($refFastaFileIn)==1) and (toolbox::sizeFile($bamFileIn)==1) and (toolbox::sizeFile($vcfVariant)==1))     # check if ref file exist and isn't empty and stop else
     {
         my $options=toolbox::extractOptions($optionsHachees);
         if ($options !~ m/-T/) # The type of walker is not informed in the options
