@@ -51,13 +51,28 @@ use versionSofts;
 ##########################################
 # recovery of parameters/arguments given when the program is executed
 ##########################################
-my $version = `grep -m 1 "Release" $toggle/docs/ReleaseNotes.md | cut -d"#" -f3,3 | sed -e 's/ //'`;
+my $version = "Release 0.3.2, 1st of March, 2017";
+
+my $url = "toggle.southgreen.fr/install/releaseNotes/index.html";
+my $lastRealease = `curl -m 5 --connect-timeout 5 --max-time 5 -s "$url" 2>&1 | grep -m 1 '<li><a href="\#0' | cut -f3 -d'>' | cut -f1 -d'<'`;
+chomp($lastRealease);
+my $newRelease="";
+if ($lastRealease ne $version)
+{
+    $newRelease =  "
+** NOTE: Latest version of TOGGLE is $lastRealease.
+The current version is $version and can be obtained at:
+    http://toggle.southgreen.fr/\n\n"
+    
+}
+
 my $cmd_line=$0." @ARGV"; # for printing in log file
 
 my $parser = Getopt::ArgParse->new_parser(
         prog            => "\n\ntoggleGenerator.pl",
         description     => '',
         epilog          => "
+ $newRelease       
 ##########################################################################
 # More information:
 #\thttps://github.com/SouthGreenPlatform/TOGGLE/blob/master/README.md
@@ -149,7 +164,7 @@ my @argv= $parser->argv;
 
 if ("-v" ~~ @ARGV or "--version" ~~ @ARGV or "-version" ~~ @ARGV)
 {
-    print $version;
+    print $version.$newRelease;
     exit;
 }
 
@@ -231,7 +246,7 @@ foreach my $file (@listFilesMandatory)
 
 toolbox::exportLog("#########################################\nINFOS: Software version/location \n#########################################\n",1);
 
-versionSofts::writeLogVersion($fileConf,$version);
+versionSofts::writeLogVersion($fileConf,$version.$newRelease);
 
 toolbox::exportLog("\n#########################################\nINFOS: Data checking \n#########################################\n",1);
 toolbox::checkFile($fileConf);                              # check if this file exists
