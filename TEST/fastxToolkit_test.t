@@ -49,7 +49,7 @@ can_ok('fastxToolkit','fastxTrimmer');
 use toolbox;
 use fastxToolkit;
 
-my $expectedData="../../DATA/expectedData/";
+my $fastqFile="../../DATA/testData/fastq/pairedOneIndividuArcad/arcad1_1.fastq";
 
 #########################################
 #Remove files and directory created by previous test
@@ -76,11 +76,8 @@ system($cleaningCommand) and die ("ERROR: $0: Cannot clean the previous log file
 
 
 ########################################
-##### fastxToolkit::fastxTrimmer
+##### fastxToolkit::fastxTrimmer with fastq
 ########################################
-
-# input file
-my $fastqFile = $expectedData."RC3_1.fastq";
 
 # output file
 my $fastqFileOut = "RC3_1.FASTXTRIMMER.fastq";  
@@ -101,11 +98,46 @@ is_deeply(\@observedOutput,\@expectedOutput,'fastxToolkit::fastxTrimmer - output
 
 ###Test for correct file value of fastq trimmed file using a md5sum file control
 # expected content test
-my $expectedMD5sum = "f9e6e28015919fab27f24dad62cb7a27";                                            # structure of the ref file for checking
+my $expectedMD5sum = "4550ec29721933d7dbd437952c535453";                                            # structure of the ref file for checking
 my $observedMD5sum = `md5sum $fastqFileOut`;                                                        # structure of the test file for checking
 my @withoutName = split (" ", $observedMD5sum);                                                     # to separate the structure and the name of file
 $observedMD5sum = $withoutName[0];                                                     #just to have the md5sum result
 is($observedMD5sum,$expectedMD5sum,'fastxToolkit::fastxTrimmer - output content');
 ##############################
+
+########################################
+##### fastxToolkit::fastxTrimmer with gz
+########################################
+
+# input file
+$fastqFile="../../DATA/testData/fastq/pairedTwoIndividusGzippedIrigin/irigin1_1.fastq.gz";
+
+# output file
+$fastqFileOut = "RC3_1.FASTXTRIMMER.fastq.gz";  
+
+# execution test
+%optionsHachees = ("-f" => "8", "-Q33" => "");                             # Hash containing informations
+$optionHachees = \%optionsHachees;                           # Ref of the hash
+
+is(fastxToolkit::fastxTrimmer($fastqFile, $fastqFileOut, $optionHachees),1, 'fastxToolkit::fastxTrimmer gzip');
+
+
+# expected output test
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput=('fastxToolkit_TEST_log.e','fastxToolkit_TEST_log.o','individuSoft.txt','RC3_1.FASTXTRIMMER.fastq','RC3_1.FASTXTRIMMER.fastq.gz');
+
+is_deeply(\@observedOutput,\@expectedOutput,'fastxToolkit::fastxTrimmer - output list gzip');
+
+###Test for correct file value of fastq trimmed file using a md5sum file control
+# expected content test
+$expectedMD5sum = "\@H3:C39R6ACXX:3:1101:1215:1877/1";                                            # structure of the ref file for checking
+$observedMD5sum = `zcat $fastqFileOut | head -n1`;                                                        # structure of the test file for checking
+
+chomp $observedMD5sum;                                                    #just to have the md5sum result
+is($observedMD5sum,$expectedMD5sum,'fastxToolkit::fastxTrimmer - output content gzip');
+##############################
+
+
 
 exit;
