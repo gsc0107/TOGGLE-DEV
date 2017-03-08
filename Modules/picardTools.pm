@@ -36,6 +36,32 @@ use localConfig;
 use toolbox;
 
 ######################################
+#PicardTools SamToFastq
+######################################
+# This module converts a SAM or BAM file to FASTQ. This tool extracts read sequences and base quality scores from the input SAM/BAM file and outputs them in FASTQ format. 
+sub picardToolsSamToFastq
+{
+
+    my ($bamToAnalyze, $bamAnalyzed, $optionsHachees) = @_;     # recovery of information
+    if (toolbox::checkSamOrBamFormat($bamToAnalyze)!=0 && toolbox::sizeFile($bamToAnalyze)==1)      # check if file are really bam or sam file; if file exists and isn't empty
+    {
+        my $options="";
+        if ($optionsHachees)
+	{
+            $options=toolbox::extractOptions($optionsHachees,"=");      # recovery of options if they are provided
+        }
+        my $comPicardToolsCmd = "$picard SamToFastq $options INPUT=$bamToAnalyze FASTQ=$bamAnalyzed ";      #command line
+        if (toolbox::run($comPicardToolsSamToFastq)==1)
+	{
+	    return 1;
+	}
+    }
+    else        # if something wrong (size, format) in the file to examine, don't run the module ...                                                                                                                                                                                                                                                                 # if previous files doesn't exists or are empty or if picardToolsMarkDuplicates failed
+    {
+        toolbox::exportLog("ERROR: picardTools::picardToolsSamToFastq : The file $bamToAnalyze is incorrect\n", 0);     # ... and report an error                                                                                                                                                                              # returns error message
+    }
+}
+######################################
 #PicardTools MarkDuplicates
 ######################################
 # This module examine aligned records in the supplied BAM file to locate duplicate molecules. All records are then written to the output file with the duplicate records flagged
