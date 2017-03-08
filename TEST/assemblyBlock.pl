@@ -36,7 +36,6 @@ use Test::More 'no_plan';
 use Test::Deep;
 use fileConfigurator;
 
-
 #####################
 ## PATH for datas test
 #####################
@@ -63,7 +62,7 @@ my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFasta." -o ".$
 
 print "\n### $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for TGICL-Pacaya";
-exit;
+
 
 # check final results
 #########################################################
@@ -90,8 +89,6 @@ SKIP:
     is($observedAnswer,$expectedAnswer,'tgicl::tgiclRun- output content');
 }
 
-exit;
-
 
 
 #####################
@@ -105,14 +102,25 @@ print "#################################################\n";
 #Creating config file for this test
 @listSoft = ("trinity");
 fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+#Output file
+my $readGroup = 'g02L5Mapped'; ## à remplacer par le readGroup
 
 # Remove files and directory created by previous test
 $testingDir="../DATA-TEST/pairedOneIndividuPacaya-noSGE-Blocks";
 $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
-
 $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFastqpairedOneIndividuPacaya." -o ".$testingDir;
 
 print "\n### $runCmd\n";
 system("$runCmd") and die "#### ERROR : Can't run TOGGLE for pairedOneIndividuPacaya";
+
+# expected output test
+my $observedOutput = `ls $testingDir"/finalResults"`;
+my @observedOutput = split /\n/,$observedOutput;
+
+my @expectedOutput = ($readGroup.'_both.fa',$readGroup.'_both.fa.ok',$readGroup.'_both.fa.read_count',$readGroup.'_inchworm.K25.L25.DS.fa',$readGroup.'_inchworm.K25.L25.DS.fa.finished',$readGroup.'_inchworm.kmer_count',$readGroup.'_jellyfish.kmers.fa',$readGroup.'_jellyfish.kmers.fa.histo',$readGroup.'_left.fa.ok',$readGroup.'_partitioned_reads.files.list',$readGroup.'_partitioned_reads.files.list.ok',$readGroup.'_recursive_trinity.cmds',$readGroup.'_recursive_trinity.cmds.completed',$readGroup.'_recursive_trinity.cmds.ok',$readGroup.'_right.fa.ok');
+
+is_deeply(\@observedOutput,\@expectedOutput,'trinity::trinityRun - output list - One paired bank');
+ 
+
