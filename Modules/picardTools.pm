@@ -50,8 +50,8 @@ sub picardToolsSamToFastq
 	{
             $options=toolbox::extractOptions($optionsHachees,"=");      # recovery of options if they are provided
         }
-        my $comPicardToolsCmd = "$picard SamToFastq $options INPUT=$bamToAnalyze FASTQ=$bamAnalyzed ";      #command line
-        if (toolbox::run($comPicardToolsSamToFastq)==1)
+        my $picardToolsSamToFastqCmd = "$picard SamToFastq $options INPUT=$bamToAnalyze FASTQ=$bamAnalyzed ";      #command line
+        if (toolbox::run($picardToolsSamToFastqCmd)==1)
 	{
 	    return 1;
 	}
