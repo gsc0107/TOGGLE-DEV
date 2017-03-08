@@ -14,7 +14,7 @@ OUT=sam
 MANDATORY=reference
 
 $bwaMem
-IN=fastq
+IN=fastq,fasta
 OUT=sam
 MANDATORY=reference
 
