@@ -261,6 +261,48 @@ $observedOutput=`samtools view -H RC3.PICARDTOOLSADDORREPLACEREADGROUPS.bam| gre
 chomp $observedOutput;
 is($observedOutput,$expectedLastLine,'picardTools::picardToolsAddOrReplaceReadGroups - output structure');
 
+##########################################
+#picardToolsSamToFastq test
+##########################################
+#input data
+## Input files test for single analysis
+my $samFile = $expectedData."RC3.BWASAMPE.sam";
+my $bamFileSingle = $expectedData."AG0003.PICARDTOOLSSORT.bam";
+
+#output data
+my $fastqFileOut = "RC3.PICARDTOOLSSAMTOFASTQ.fastq";
+
+my %optionsRef = ("INTERLEAVE" => "TRUE");   
+my $optionsHachees = \%optionsRef;
+
+#execution test
+is(picardTools::picardToolsSamToFastq($samFile,$fastqFileOut,$optionsHachees),1,'picardTools::picardToolsSamToFastq - sam paired reads');  
+
+
+#execution test
+is(picardTools::picardToolsSamToFastq($bamFileSingle,$fastqFileOut,$optionsHachees),1,'picardTools::picardToolsSamToFastq - bam single reads'); 
+
+## expected output test
+#$observedOutput = `ls`;
+#@observedOutput = split /\n/,$observedOutput;
+#@expectedOutput = ('individuSoft.txt','picardtools_TEST_log.e','picardtools_TEST_log.o','RC3.PICARDTOOLSSORT.bam','Reference.dict','Reference.fasta');
+#
+#is_deeply(\@observedOutput,\@expectedOutput,'picardTools::picardToolsSortSam - output list');
+#
+## expected content test
+##my $expectedMD5sum="df7c7657d50f6dbf93a5ba5b6900b981";      # structure of the ref file
+##my $observedMD5sum=`md5sum $bamFileOut`;       # structure of the test file
+##@withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
+##$observedMD5sum = $withoutName[0];       # just to have the md5sum result
+##is($observedMD5sum,$expectedMD5sum,'picardTools::picardToolsSortSam - output structure');
+#
+##test end of file because change in version 130
+#my $expectedEndLine="H2:C381HACXX:5:1101:9881:2219	141	*	0	0	*	*	0	0	CTCTTAGATCTTCTTTCTCCAATCTTGGATTAGGGAAGAAGGAGATATTCGCGACTCCTGGTGGTTTCATTATGGGGCAGCTCATGATCTTCATATCGATC	=;?DDAFBF>?<,<EF\@CIH:EHG4,<3+<293AF;:;?DBE8B\@9B<BF;\@D';@\@CDA).71'56??6(.6632;3>;8:(:@@(5:3(>\@:>BC?<?<	RG:Z:RC3
+#";
+#my $observedEndLine=`samtools view RC3.PICARDTOOLSSORT.bam | tail -1`  or die ("ERROR: $0 : Cannot execute: samtools view RC3.PICARDTOOLSSORT.bam | tail -1  \n$!\n");
+#is($observedEndLine,$expectedEndLine,'picardTools::picardToolsSortSam - output endFile');
+#
+
 
 ###########################################
 # picardToolsValidateSamFile test
