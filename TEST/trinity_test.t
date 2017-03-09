@@ -84,7 +84,7 @@ my $forwardFastqFileIn = "../../DATA/testData/fastq/assembly/pairedOneIndivuPaca
 my @forwardFastqList = ($forwardFastqFileIn);
 my @forwardFastqsList = ($forwardFastqFileIn,$forwardFastqFileIn);
 my $forwardFastqList = \@forwardFastqList;
-    
+
 
 my $reverseFastqFileIn = "../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R2.fq";
 my @reverseFastqList = ($reverseFastqFileIn);
@@ -94,9 +94,9 @@ my $reverseFastqList = \@reverseFastqList;
 my $trinityPairedOutDir = "./trinityPairedOutdir/"; # output directory must contain the word 'trinity' as a safety precaution, given that auto-deletion can take place
 my $trinitySingleOutDir = "./trinitySingleOutdir/";
 my $trinitySeveralOutDir = "./trinitySeveralOutdir/";
-#my $originalRefFile = $expectedData."/".$refFile;    
+#my $originalRefFile = $expectedData."/".$refFile;
 #my $cpCmd = "cp $originalRefFile ."; # command to copy the original Ref fasta file into the test directory
-#system ($cpCmd) and die ("ERROR: $0 : Cannot copy the file $originalRefFile in the test directory with the command $cpCmd\n$!\n"); 
+#system ($cpCmd) and die ("ERROR: $0 : Cannot copy the file $originalRefFile in the test directory with the command $cpCmd\n$!\n");
 
 #Output file
 my $readGroup = 'g02L5'; ## à remplacer par le readGroup
@@ -182,6 +182,10 @@ $observedAnswer=`$cmd`;
 chomp($observedAnswer);
 
 is($observedAnswer,$expectedAnswer,'trinity::trinityRun- output content - single mode');
+
+## rm readcount in initialDir
+`rm ../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.readcount'`;
+`rm ../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R2.readcount'`;
 
 1;
 
