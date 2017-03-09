@@ -1,10 +1,9 @@
 package localConfig;
 
 
-
 ###################################################################################################################################
 #
-# Copyright 2014 IRD-CIRAD
+# Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,8 +24,10 @@ package localConfig;
 # You should have received a copy of the CeCILL-C license with this program.
 #If not see <http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.txt>
 #
-# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform
-# Written by Cecile Monat, Christine Tranchant, Ayite Kougbeadjo, Cedric Farcy, Mawusse Agbessi, Marilyne Summo, and Francois Sabot
+# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
+# Version 1 written by Cecile Monat, Ayite Kougbeadjo, Christine Tranchant, Cedric Farcy, Mawusse Agbessi, Maryline Summo, and Francois Sabot
+# Version 2 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Enrique Ortega-Abboud, Julie Orjuela-Bouniol, Sebastien Ravel, Souhila Amanzougarene, and Francois Sabot
+# Version 3 written by Cecile Monat, Christine Tranchant, Laura Helou, Abdoulaye Diallo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
 #
 ###################################################################################################################################
 
@@ -37,57 +38,58 @@ use warnings;
 use Exporter;
 
 our @ISA=qw(Exporter);
+
 our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff);
 
+
 #toggle path
-our $toggle="/home/ftarkin/Development/TOGGLE-DEV";
+our $toggle="/path/to/toggleFolder";
 
 #PATH for Mapping on cluster
-our $java = "java -Xmx3g -jar";
+our $java = "/path/to/java -Xmx12g -jar";
 
-our $bwa = "/usr/bin/bwa";
-our $picard = "$java /home/ftarkin/sources/picard-tools/";
+our $bwa = "/path/to/bwa";
+our $picard = "$java /path/to/picard_tools/picard.jar";
 
-our $samtools = "/usr/local/bin/samtools";
-our $GATK = "java -Xmx3g -jar /home/ftarkin/sources/GenomeAnalysisTK/GenomeAnalysisTK.jar";
-our $fastqc = "/home/ftarkin/sources/FastQC/fastqc";
+our $samtools = "/path/to/samtools";
+our $GATK = "$java -Xmx12g -jar /path/to/GenomeAnalysisTK.jar";
+our $fastqc = "/path/to/fastqc";
 
 #Path for CutAdapt
-our $cutadapt = "/usr/local/bin/cutadapt";
+our $cutadapt = "/path/to/cutadapt";
+
 ##### FOR RNASEQ analysis
 #Path for fastq_trimmer
-our $fastxTrimmer="/usr/bin/fastx_trimmer";
+our $fastxTrimmer="/path/to/fastx_trimmer";
 
 #Path for tophat2
-our $tophat2="/usr/bin/tophat2";
+our $tophat2="/path/to/tophat2";
 
 #path for bowtie2-build
-our $bowtie2Build="/usr/bin/bowtie2-build";
+our $bowtie2Build="/path/to/bowtie2-build";
 
 #path for bowtie-build
-our $bowtieBuild="/usr/bin/bowtie-build";
+our $bowtieBuild="/path/to/bowtie-build";
 
 #path for htseqcount
-our $htseqcount = "/usr/local/bin/htseq-count";
+our $htseqcount = "/path/to/htseq-count";
 
-#path for cufflinks
-our $cufflinks;
-our $cuffmerge;
-our $cuffdiff;
+#path for Cufflinks
+our $cufflinks = "/path/to/cufflinks";
+our $cuffdiff = "/path/to/cuffdiff";
+our $cuffmerge = "/path/to/cuffmerge";
 
-#path to pindel
-our $pindel;
+#path for tgicl
+our $tgicl = "/path/to/tgicl";
 
-#path to stacks
-our $stacks;
+#path for trinity
+our $trinity = "/path/to/trinity";
 
-#path to tgicl
-our $tgicl;
-
-#path to Trinity
-our $trinity;
+#path for process_radtags
+our $stacks = "/path/to/process_radtags";
 
 #path to snpEff
-our $snpEff;
+our $snpEff = "/path/to/snpEff/snpEff.jar";
+
 
 1;
